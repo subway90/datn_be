@@ -10,20 +10,32 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         // Xác thực dữ liệu đầu vào
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Tạo người dùng mới
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            // Tạo người dùng mới
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+            ]);
 
-        return response()->json(['message' => 'Đăng kí thành công'], 201);
+            return response()->json([
+                'message' => 'Đăng ký thành công',
+                'user' => $user,
+            ], 201);
+
+        } catch (\Exception $e) {
+            // Xử lý lỗi nếu có
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function login(Request $request)
@@ -34,22 +46,46 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Kiểm tra thông tin đăng nhập
-        if (!auth()->attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Đăng nhập thất bại'], 401);
+        // Kiểm tra email có tồn tại không
+        $user = User::where('email', $request->email)->first();
+        
+        if (!$user) {
+            return response()->json([
+                'message' => 'Email này chưa được đăng ký.'
+            ], 404);
         }
 
-        // Tạo token cho người dùng
-        $user = auth()->user();
+        // Kiểm tra thông tin đăng nhập
+        if (!auth()->attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'message' => 'Mật khẩu không chính xác.'
+            ], 401);
+        }
+
+        // Tạo token cho người dùng khi đăng nhập thành công
         $token = $user->createToken('MyApp')->plainTextToken;
 
-        return response()->json(['token' => $token, 'user' => $user]);
+        return response()->json([
+            'message' => 'Đăng nhập thành công',
+            'token' => $token,
+            'user' => $user
+        ]);
     }
-
+    
     public function logout(Request $request)
     {
-        // Đăng xuất người dùng
+        // Kiểm tra xem người dùng có đăng nhập không
+        if (!auth()->user()) {
+            return response()->json([
+                'message' => 'Không có người dùng nào đang đăng nhập.'
+            ], 400);
+        }
+
+        // Xoá token của người dùng
         auth()->user()->tokens()->delete();
-        return response()->json(['message' => 'Đăng xuất thành công']);
+
+        return response()->json([
+            'message' => 'Đăng xuất thành công'
+        ]);
     }
 }
