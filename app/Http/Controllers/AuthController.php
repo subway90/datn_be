@@ -23,7 +23,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return response()->json(['message' => 'User registered successfully'], 201);
+        return response()->json(['message' => 'Đăng kí thành công'], 201);
     }
 
     public function login(Request $request)
@@ -36,7 +36,7 @@ class AuthController extends Controller
 
         // Kiểm tra thông tin đăng nhập
         if (!auth()->attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Đăng nhập thất bại'], 401);
         }
 
         // Tạo token cho người dùng
@@ -50,6 +50,6 @@ class AuthController extends Controller
     {
         // Đăng xuất người dùng
         auth()->user()->tokens()->delete();
-        return response()->json(['message' => 'Logged out successfully']);
+        return response()->json(['message' => 'Đăng xuất thành công']);
     }
 }
