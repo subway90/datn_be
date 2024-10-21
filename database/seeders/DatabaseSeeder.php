@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Nguyễn Minh Hiếu',
             'email' => 'nguyenhieu3105@gmail.com',
             'password' => Hash::make('12345678'),
-            'role' => 1,
+            'role' => 0,
         ]);
         User::create(attributes: [
             'name' => 'Tester 01',
