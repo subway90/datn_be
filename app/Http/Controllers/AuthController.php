@@ -4,38 +4,48 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
         // Xác thực dữ liệu đầu vào
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
+        ], [
+            'name.required' => 'Tên là bắt buộc.',
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Email không hợp lệ.',
+            'email.unique' => 'Email đã được sử dụng.',
+            'password.required' => 'Mật khẩu là bắt buộc.',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
         ]);
 
-        try {
-            // Tạo người dùng mới
-            $user = User::create([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
-            ]);
-
+        if ($validator->fails()) {
             return response()->json([
-                'message' => 'Đăng ký thành công',
-                'user' => $user,
-            ], 201);
-
-        } catch (\Exception $e) {
-            // Xử lý lỗi nếu có
-            return response()->json([
-                'message' => 'Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.',
-                'error' => $e->getMessage(),
-            ], 500);
+                'message' => 'Đã xảy ra lỗi xác thực',
+                'errors' => $validator->errors()
+            ], 422);
         }
+
+        // Tạo người dùng mới
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        // Tạo token cho người dùng
+        $token = $user->createToken('MyApp')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Đăng ký thành công',
+            'token' => $token,
+            'user' => $user,
+        ], 201); // Mã trạng thái 201 cho thành công
     }
 
     public function login(Request $request)
