@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('ma_giao_dich', 20);
             $table->boolean('trang_thai')->default(0);
             $table->$table->timestamps();
+            $table->foreign('id_hop_dong')->references('id')->on('hop_dong');
         });
     }
 

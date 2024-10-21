@@ -6,7 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PhongController;
 use App\Http\Controllers\ToaNhaController;
 use App\Http\Controllers\KhuVucController;
-
+use App\Http\Controllers\HopDongController;
+use App\Http\Controllers\ThanhToanController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -25,3 +26,8 @@ Route::get('/toa-nha/all', [ToaNhaController::class, 'listName']);
 Route::get('/toa-nha/{slug}', [ToaNhaController::class, 'detail']);
 
 Route::get('khu_vuc/getAll', [KhuVucController::class, 'getAll']);
+//! API GET: hop-dong/{id_user}
+Route::get('hop-dong/{id_user}', [HopDongController::class, 'getHopDong']);
+
+//! API GET: thanh-toan/{id_hop_dong}
+Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
