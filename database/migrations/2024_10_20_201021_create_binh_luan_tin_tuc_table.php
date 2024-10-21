@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('id_bai_viet')->nullable();
             $table->text('noi_dung')->nullable();
             $table->string('trang_thai_binhluan')->nullable();
-            $table->timestamp('crest_at')->nullable();
+            $table->timestamps();
         });
     }
 
