@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('khu_vuc_id');
             $table->string('slug', length: 255);
-            $table->string('ten_toa_nha', 255);
+            $table->string('ten', 255);
             $table->integer('gia_thue');
             $table->integer('dien_tich');
             $table->text('image');

@@ -11,7 +11,7 @@ class ToaNhaSeeder extends Seeder
     {
         ToaNha::create(attributes: [
             'khu_vuc_id' => 1,
-            'ten_toa_nha' => 'Số 165/9 Phan Văn Hớn',
+            'ten' => 'Số 165/9 Phan Văn Hớn',
             'slug' => 'so-165-9-phan-van-hon',
             'image' => 'toa_nha_01.jpg;toa_nha_02.jpg;toa_nha_03.jpgtoa_nha_04.jpg;toa_nha_05.jpg',
             'gia_thue' => 2500000,
@@ -23,7 +23,7 @@ class ToaNhaSeeder extends Seeder
 
         ToaNha::create([
             'khu_vuc_id' => 4,
-            'ten_toa_nha' => 'Số 622/14 đường Cộng Hòa',
+            'ten' => 'Số 622/14 đường Cộng Hòa',
             'slug' => 'so-622-14-duong-cong-hoa',
             'image' => 'toa_nha_01.jpg;toa_nha_02.jpg;toa_nha_03.jpgtoa_nha_04.jpg;toa_nha_05.jpg',
             'gia_thue' => 3700000,
@@ -35,7 +35,7 @@ class ToaNhaSeeder extends Seeder
 
         ToaNha::create([
             'khu_vuc_id' => 4,
-            'ten_toa_nha' => 'Số 30 Nhất Chi Mai',
+            'ten' => 'Số 30 Nhất Chi Mai',
             'slug' => 'so-30-nhat-chi-mai',
             'image' => 'toa_nha_01.jpg;toa_nha_02.jpg;toa_nha_03.jpgtoa_nha_04.jpg;toa_nha_05.jpg',
             'gia_thue' => 1800000,
@@ -47,7 +47,7 @@ class ToaNhaSeeder extends Seeder
 
         ToaNha::create([
             'khu_vuc_id' => 1,
-            'ten_toa_nha' => 'Số 228 Lê Văn Khương',
+            'ten' => 'Số 228 Lê Văn Khương',
             'slug' => 'so-228-le-van-khuong',
             'image' => 'toa_nha_01.jpg;toa_nha_02.jpg;toa_nha_03.jpgtoa_nha_04.jpg;toa_nha_05.jpg',
             'gia_thue' => 4500000,

@@ -21,7 +21,7 @@ Route::get('/phong/{id_toa_nha}', [PhongController::class, 'index']);
 Route::get('/phong', [PhongController::class, 'getAll']);
 
 Route::get('/toa-nha', [ToaNhaController::class, 'showByID']);
-Route::get('/toa-nha/all', [ToaNhaController::class, 'all']);
+Route::get('/toa-nha/all', [ToaNhaController::class, 'listName']);
 Route::get('/toa-nha/{slug}', [ToaNhaController::class, 'detail']);
 
 Route::get('khu_vuc/getAll', [KhuVucController::class, 'getAll']);

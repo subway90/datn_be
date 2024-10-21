@@ -16,7 +16,7 @@ class ToaNha extends Model
     protected $fillable = [
         'khu_vuc_id',
         'slug',
-        'ten_toa_nha',
+        'ten',
         'image',
         'gia_thue',
         'dien_tich',
