@@ -7,6 +7,6 @@ if "%seed_name%"=="" (
     exit /b
 )
 
-php artisan make:seeder %seed_name%
+php artisan make:seeder %seed_name%Seeder
 
 endlocal

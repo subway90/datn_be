@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('hop_dong', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_phong')->index();
-            $table->unsignedBigInteger('id_tai_khoan')->index();
+            $table->unsignedBigInteger('phong_id')->index();
+            $table->unsignedBigInteger('tai_khoan_id')->index();
             $table->dateTime('ngay_bat_dau');
             $table->dateTime('ngay_ket_thuc');
             $table->boolean('trang_thai')->default(0);
             $table->integer('gia_thue');
             $table->timestamps();
-            $table->foreign('id_phong')->references('id')->on('phong');
-            $table->foreign('id_tai_khoan')->references('id')->on('tai_khoan');
+            $table->foreign('phong_id')->references('id')->on('phong');
+            $table->foreign('tai_khoan_id')->references('id')->on('users');
         });
     }
 

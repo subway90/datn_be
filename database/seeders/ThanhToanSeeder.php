@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\ThanhToan;
 
 class ThanhToanSeeder extends Seeder
 {
@@ -13,40 +12,33 @@ class ThanhToanSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('thanh_toan')->insert([
-            [
-                'token' => 'abc123',
-                'id_hop_dong' => 1,
-                'code' => 123456,
-                'so_tien' => 1000000,
-                'hinh_thuc' => 1, // chuyển khoản
-                'ma_giao_dich' => 'TRANS001',
-                'trang_thai' => 1,
-                'creat_at' => now(),
-                'update_at' => now(),
-            ],
-            [
-                'token' => 'def456',
-                'id_hop_dong' => 2,
-                'code' => 654321,
-                'so_tien' => 2000000,
-                'hinh_thuc' => 2, // tiền mặt
-                'ma_giao_dich' => 'TRANS002',
-                'trang_thai' => 0,
-                'creat_at' => now(),
-                'update_at' => now(),
-            ],
-            [
-                'token' => 'ghi789',
-                'id_hop_dong' => 3,
-                'code' => 654321,
-                'so_tien' => 3000000,
-                'hinh_thuc' => 2, // tiền mặt
-                'ma_giao_dich' => 'TRANS003',
-                'trang_thai' => 0,
-                'creat_at' => now(),
-                'update_at' => now(),
-            ]
+        ThanhToan::create([
+            'hop_dong_id' => 1,
+            'so_tien' => 3450000,
+            'hinh_thuc' => 1, // chuyển khoản
+            'ma_giao_dich' => 'VNPAY0001',
+            'noi_dung' => 'Thanh toán tiền thuê trọ tháng 2',
+            'trang_thai' => 1, // thành công
+            'ngay_giao_dich' => '2024-02-01',
+        ]);
+
+        ThanhToan::create([
+            'hop_dong_id' => 2,
+            'code_uu_dai' => 'CODE100K',
+            'so_tien' => 1850000,
+            'hinh_thuc' => 2, // tiền mặt
+            'ma_giao_dich' => 'COD0001',
+            'trang_thai' => 1, // thành công
+            'ngay_giao_dich' => '2024-02-16',
+        ]);
+
+        ThanhToan::create([
+            'hop_dong_id' => 1,
+            'so_tien' => 3000000,
+            'hinh_thuc' => 1, // chuyển khoản
+            'ma_giao_dich' => 'TRANS002',
+            'trang_thai' => 0, // thất bại
+            'ngay_giao_dich' => '2024-03-01',
         ]);
     }
 }

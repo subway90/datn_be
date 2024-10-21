@@ -3,23 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
-class HopDongModel extends Model
+class HopDong extends Model
 {
     protected $table = 'hop_dong';
 
     protected $fillable = [
-        'id_phong',
-        'id_tai_khoan',
+        'phong_id',
+        'tai_khoan_id',
         'ngay_bat_dau',
         'ngay_ket_thuc',
         'trang_thai',
         'gia_thue',
-        'created_at',
-        'updated_at'
     ];
     public function user()
     {
-        return $this->belongsTo(Tai_Khoan::class, 'id_tai_khoan');
+        return $this->belongsTo(User::class, 'tai_khoan_id');
     }
 }

@@ -12,9 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ma_uu_dai', function (Blueprint $table) {
-            $table->id();
+            $table->string('code',20)->primary();
             $table->string('mo_ta', 255);
+            $table->tinyInteger('hinh_thuc')->default(1); //1: giảm VND, 2: giảm %
+            $table->integer('gia_tri');
             $table->integer('so_luong');
+            $table->dateTime('ngay_ket_thuc');
             $table->boolean('trang_thai')->default(1);
             $table->timestamps();
         });

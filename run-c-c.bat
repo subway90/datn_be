@@ -7,6 +7,6 @@ if "%controller_name%"=="" (
     exit /b
 )
 
-php artisan make:controller %controller_name%
+php artisan make:controller %controller_name%Controller
 
 endlocal

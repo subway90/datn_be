@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ThanhToanModel;
+use App\Models\ThanhToan;
 
 class ThanhToanController extends Controller
 {
     public function getThanhToan($id_hop_dong)
     {
-        $thanhToan = ThanhToanModel::where('id_hop_dong', $id_hop_dong)->get();
+        $thanhToan = ThanhToan::where('hop_dong_id', $id_hop_dong)->get();
 
         if ($thanhToan->isEmpty()) {
             return response()->json([

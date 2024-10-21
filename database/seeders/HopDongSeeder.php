@@ -2,48 +2,38 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\HopDong;
 
 class HopDongSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        DB::table('hop_dong')->insert([
-            [
-                'id_phong' => 1,
-                'id_tai_khoan' => 2,
-                'ngay_bat_dau' => now(),
-                'ngay_ket_thuc' => now()->addMonths(6),
-                'trang_thai' => 1,
-                'gia_thue' => 5000000,
-                'creat_at' => now(),
-                'update_at' => now(),
-            ],
-            [
-                'id_phong' => 2,
-                'id_tai_khoan' => 3,
-                'ngay_bat_dau' => now(),
-                'ngay_ket_thuc' => now()->addMonths(12),
-                'trang_thai' => 1,
-                'gia_thue' => 8000000,
-                'creat_at' => now(),
-                'update_at' => now(),
-            ],
-            [
-                'id_phong' => 3,
-                'id_tai_khoan' => 4,
-                'ngay_bat_dau' => now(),
-                'ngay_ket_thuc' => now()->addMonths(12),
-                'trang_thai' => 1,
-                'gia_thue' => 8000000,
-                'creat_at' => now(),
-                'update_at' => now(),
-            ]
+        HopDong::create([
+            'phong_id' => 1,
+            'tai_khoan_id' => 2,
+            'ngay_bat_dau' => '2024-01-01',
+            'ngay_ket_thuc' => '2024-12-31',
+            'trang_thai' => 1,
+            'gia_thue' => 3450000,
+        ]);
+
+        HopDong::create([
+            'phong_id' => 2,
+            'tai_khoan_id' => 3,
+            'ngay_bat_dau' => '2024-02-01',
+            'ngay_ket_thuc' => '2025-01-31',
+            'trang_thai' => 1,
+            'gia_thue' => 1950000,
+        ]);
+
+        HopDong::create([
+            'phong_id' => 3,
+            'tai_khoan_id' => 4,
+            'ngay_bat_dau' => '2024-03-01',
+            'ngay_ket_thuc' => '2025-02-28',
+            'trang_thai' => 2,
+            'gia_thue' => 2450000,
         ]);
     }
 }

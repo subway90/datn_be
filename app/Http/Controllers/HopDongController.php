@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\HopDongModel;
+use App\Models\HopDong;
 
 class HopDongController extends Controller
 {
     public function getHopDong($id_user)
     {
-        $hopDong = HopDongModel::with('user')
+        $hopDong = HopDong::with('user')
             ->where('id_tai_khoan', $id_user)
             ->get();
 

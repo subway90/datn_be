@@ -26,8 +26,7 @@ Route::get('/toa-nha/all', [ToaNhaController::class, 'listName']);
 Route::get('/toa-nha/{slug}', [ToaNhaController::class, 'detail']);
 
 Route::get('khu_vuc/getAll', [KhuVucController::class, 'getAll']);
-//! API GET: hop-dong/{id_user}
-Route::get('hop-dong/{id_user}', [HopDongController::class, 'getHopDong']);
 
-//! API GET: thanh-toan/{id_hop_dong}
+
+Route::get('hop-dong/{id_user}', [HopDongController::class, 'getHopDong']);
 Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
