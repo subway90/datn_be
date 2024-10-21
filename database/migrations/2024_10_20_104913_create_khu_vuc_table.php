@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('khu_vuc', function (Blueprint $table) {
             $table->id();
             $table->string('ten', 255);
+            $table->string('image', 255);
             $table->string('slug', 255);
             $table->integer('thu_tu');
             $table->timestamps();

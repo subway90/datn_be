@@ -14,8 +14,9 @@ class KhuVuc extends Model
 
     // Các thuộc tính có thể gán
     protected $fillable = [
-        'ten_khu_vuc',
+        'ten',
         'slug',
+        'image',
         'thu_tu',
     ];
 }
