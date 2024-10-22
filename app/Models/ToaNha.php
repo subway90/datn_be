@@ -23,6 +23,8 @@ class ToaNha extends Model
         'mo_ta',
         'vi_tri',
         'tien_ich',
+        'noi_bat',
+        'luot_xem',
     ];
 
     // Định nghĩa mối quan hệ với model KhuVuc
@@ -32,6 +34,6 @@ class ToaNha extends Model
     }
     public function phongTro()
     {
-        return $this->hasMany(Phong::class);
+        return $this->hasMany(Phong::class,'toa_nha_id');
     }
 }

@@ -16,12 +16,14 @@ return new class extends Migration
             $table->unsignedBigInteger('khu_vuc_id');
             $table->string('slug', length: 255);
             $table->string('ten', 255);
-            $table->integer('gia_thue');
             $table->integer('dien_tich');
             $table->text('image');
             $table->text('mo_ta');
             $table->string('tien_ich',255);
             $table->text('vi_tri');
+            $table->integer('gia_thue');
+            $table->boolean('noi_bat')->default(0);
+            $table->integer('luot_xem')->default(0);
             $table->timestamps();
             $table->foreign('khu_vuc_id')->references('id')->on('khu_vuc');
         });

@@ -19,6 +19,7 @@ class ToaNhaSeeder extends Seeder
             'mo_ta' => 'Giá từ 04 triệu, diện tích từ 12 - 24 m², trang bị 11/14 tiện ích. Khu trọ là một không gian sống an ninh, yên tĩnh, văn minh, tiện nghi và hiện đại. Vị trí thuận tiện di chuyển đến Sân bay Tân Sơn Nhất, đường Cộng Hòa, đường Trường Chinh di chuyển dễ dàng sang những quận lân cận như Quận Tân Bình, Quận 12, Quận 3.',
             'vi_tri' => 'Bách Hóa Xanh 450m;điểm chợ Nhất Chi Mai 680m;đường Cộng Hòa 980m;đường Quang Trung 1.2km',
             'tien_ich' => '2;3;4;5;6;7',
+            'luot_xem' => 112,
         ]);
 
         ToaNha::create([
@@ -31,6 +32,8 @@ class ToaNhaSeeder extends Seeder
             'mo_ta' => 'Giá từ 04 triệu, diện tích từ 12 - 24 m², trang bị 11/14 tiện ích. Khu trọ là một không gian sống an ninh, yên tĩnh, văn minh, tiện nghi và hiện đại. Vị trí thuận tiện di chuyển đến Sân bay Tân Sơn Nhất, đường Cộng Hòa, đường Trường Chinh di chuyển dễ dàng sang những quận lân cận như Quận Tân Bình, Quận 12, Quận 3.',
             'vi_tri' => 'Bách Hóa Xanh 750m;điểm chợ Nhất Chi Mai 480m;đường Cộng Hòa 890m;đường Quang Trung 6.2km',
             'tien_ich' => '1;2;6;7',
+            'noi_bat' => 1,
+            'luot_xem' => 247,
         ]);
 
         ToaNha::create([
@@ -43,6 +46,7 @@ class ToaNhaSeeder extends Seeder
             'mo_ta' => 'Giá từ 04 triệu, diện tích từ 12 - 24 m², trang bị 11/14 tiện ích. Khu trọ là một không gian sống an ninh, yên tĩnh, văn minh, tiện nghi và hiện đại. Vị trí thuận tiện di chuyển đến Sân bay Tân Sơn Nhất, đường Cộng Hòa, đường Trường Chinh di chuyển dễ dàng sang những quận lân cận như Quận Tân Bình, Quận 12, Quận 3.',
             'vi_tri' => 'Bách Hóa Xanh 950m;điểm chợ Nhất Chi Mai 280m;đường Cộng Hòa 680m;đường Quang Trung 3.2km',
             'tien_ich' => '1;2;5;6;7',
+            'luot_xem' => 1102,
         ]);
 
         ToaNha::create([
@@ -55,6 +59,7 @@ class ToaNhaSeeder extends Seeder
             'mo_ta' => 'Giá từ 04 triệu, diện tích từ 12 - 24 m², trang bị 11/14 tiện ích. Khu trọ là một không gian sống an ninh, yên tĩnh, văn minh, tiện nghi và hiện đại. Vị trí thuận tiện di chuyển đến Sân bay Tân Sơn Nhất, đường Cộng Hòa, đường Trường Chinh di chuyển dễ dàng sang những quận lân cận như Quận Tân Bình, Quận 12, Quận 3.',
             'vi_tri' => 'Bách Hóa Xanh 230m;điểm chợ Nhất Chi Mai 180m;đường Cộng Hòa 280m;đường Quang Trung 2.2km',
             'tien_ich' => '1;2;3;4',
+            'luot_xem' => 453,
         ]);
     }
 }
