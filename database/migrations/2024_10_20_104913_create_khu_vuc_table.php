@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('image', 255);
             $table->string('slug', 255);
             $table->integer('thu_tu');
+            $table->boolean('noi_bat')->default(0);
             $table->timestamps();
         });
     }

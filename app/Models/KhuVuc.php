@@ -18,5 +18,6 @@ class KhuVuc extends Model
         'slug',
         'image',
         'thu_tu',
+        'noi_bat',
     ];
 }

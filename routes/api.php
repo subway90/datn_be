@@ -39,7 +39,7 @@ Route::get('toa-nha/listView',[ToaNhaController::class,'listView']);
 Route::get('toa-nha/listCheap',[ToaNhaController::class,'listCheap']);
 
 #
-Route::get('khu_vuc/getAll', [KhuVucController::class, 'getAll']);
+Route::get('khu_vuc/listHot', [KhuVucController::class, 'listHot']);
 
 #
 Route::get('hop-dong/{id_user}', [HopDongController::class, 'getHopDong']);

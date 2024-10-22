@@ -14,6 +14,7 @@ class KhuVucSeeder extends Seeder
             'slug' => 'quan-12',
             'image' => 'quan12.jpg',
             'thu_tu' => 1,
+            'noi_bat'=> 1,
         ]);
 
         KhuVuc::create([
@@ -21,6 +22,7 @@ class KhuVucSeeder extends Seeder
             'slug' => 'quan-go-vap',
             'image' => 'quangovap.jpg',
             'thu_tu' => 2,
+            'noi_bat'=> 1,
         ]);
 
         KhuVuc::create([
@@ -28,6 +30,7 @@ class KhuVucSeeder extends Seeder
             'slug' => 'quan-hoc-mon',
             'image' => 'quanhocmon.jpg',
             'thu_tu' => 3,
+            'noi_bat'=> 1,
         ]);
 
         KhuVuc::create([
@@ -35,6 +38,7 @@ class KhuVucSeeder extends Seeder
             'slug' => 'quan-tan-binh',
             'image' => 'quantanbinh.jpg',
             'thu_tu' => 4,
+            'noi_bat'=> 1,
         ]);
 
         KhuVuc::create([
@@ -49,6 +53,7 @@ class KhuVucSeeder extends Seeder
             'slug' => 'quan-phu-nhuan',
             'image' => 'quanphunhuan.jpg',
             'thu_tu' => 6,
+            'noi_bat'=> 1,
         ]);
 
         KhuVuc::create([
@@ -56,6 +61,7 @@ class KhuVucSeeder extends Seeder
             'slug' => 'quan-tan-phu',
             'image' => 'quantanphu.jpg',
             'thu_tu' => 7,
+            'noi_bat'=> 1,
         ]);
     }
 }
