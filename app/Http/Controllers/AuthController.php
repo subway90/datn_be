@@ -20,19 +20,18 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
         ], [
-            'name.required' => 'Tên là bắt buộc.',
-            'email.required' => 'Email là bắt buộc.',
-            'email.email' => 'Email không hợp lệ.',
-            'email.unique' => 'Email đã được sử dụng.',
-            'password.required' => 'Mật khẩu là bắt buộc.',
+            'name.required' => 'Chưa nhập họ và tên',
+            'email.required' => 'Chưa nhập email',
+            'email.email' => 'Email không đúng định dạng',
+            'email.unique' => 'Email đã được sử dụng',
+            'password.required' => 'Chưa nhập mật khẩu',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Đã xảy ra lỗi xác thực',
-                'errors' => $validator->errors()
-            ], 422);
+                'message' => $validator->errors(),
+            ], 400);
         }
 
         // Tạo người dùng mới
