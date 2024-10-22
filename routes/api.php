@@ -13,20 +13,31 @@ use App\Http\Controllers\ThanhToanController;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-
+# Đăng kí
 Route::post('register', [AuthController::class, 'register']);
+# Đăng nhập
 Route::post('login', [AuthController::class, 'login']);
+# Đăng xuất
 Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
 
-Route::get('/phong/{id_toa_nha}', [PhongController::class, 'index']);
-Route::get('/phong', [PhongController::class, 'getAll']);
+#
+Route::get('phong/{id_toa_nha}', [PhongController::class, 'index']);
+#
+Route::get('phong', [PhongController::class, 'getAll']);
 
-Route::get('/toa-nha', [ToaNhaController::class, 'showByID']);
-Route::get('/toa-nha/all', [ToaNhaController::class, 'listName']);
-Route::get('/toa-nha/{slug}', [ToaNhaController::class, 'detail']);
+# Chi tiết 1 tòa nhà bởi slug (Trang chi tiết)
+Route::get('toa-nha', [ToaNhaController::class, 'detail']);
+# Danh sách tòa nhà (List cho option của filter)
+Route::get('toa-nha/all', [ToaNhaController::class, 'listName']);
+# Danh sách tòa nhà theo section (Section trang chủ)
+Route::get('toa-nha/listHot',[ToaNhaController::class,'listHot']);
 
+#
 Route::get('khu_vuc/getAll', [KhuVucController::class, 'getAll']);
 
-
+#
 Route::get('hop-dong/{id_user}', [HopDongController::class, 'getHopDong']);
+
+#
 Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
+

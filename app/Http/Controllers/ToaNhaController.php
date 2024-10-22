@@ -8,23 +8,12 @@ use function PHPUnit\Framework\isEmpty;
 
 class ToaNhaController extends Controller
 {
-    public function showByID(Request $request)
+    public function detail(Request $request)
     {
-        $result = ToaNha::with('phongTro')->find($request->id);
+        $result = ToaNha::with('phongTro')->where('slug', $request->slug)->first();
 
         if (!$result) {
-            return response()->json(['message' => 'content not found'], 404);
-        }
-
-        return response()->json($result);
-    }
-
-    public function detail($slug)
-    {
-        $result = ToaNha::with('phongTro')->where('slug', $slug)->first();
-
-        if (!$result) {
-            return response()->json(['message' => 'content not found'], 404);
+            return response()->json(['message' => 'Tòa nhà không tồn tại'], 404);
         }
 
         return response()->json($result);
@@ -33,22 +22,59 @@ class ToaNhaController extends Controller
     public function listName()
     {
         // Lấy tất cả các tòa nhà cùng với số lượng phòng
-        $result = ToaNha::select('id', 'ten', 'slug')
-            ->withCount('phongTro')
+        $list = ToaNha::select('id', 'ten', 'slug')
+            ->withCount('phongTro as so_luong_phong')
             ->get();
     
         // Kiểm tra xem có dữ liệu hay không
-        if ($result->isEmpty()) {
-            return response()->json(['message' => 'Không có dữ l'], 404);
+        if ($list->isEmpty()) {
+            return response()->json(['message' => 'Không có dữ liệu'], 404);
         }
     
-        // Đổi tên trường `phong_tro_count` thành `quantity_room`
-        $result->transform(function ($item) {
-            $item->quantity_room = $item->phong_tro_count;
-            unset($item->phong_tro_count); // Xóa trường `phong_tro_count` gốc
-            return $item;
+        $result = $list->map(function ($rows) {
+            return [
+                'id' => $rows->id,
+                'slug' => $rows->slug,
+                'name' => $rows->ten,
+                'count_rooms' => $rows->so_luong_phong,
+            ];
         });
     
         return response()->json($result);
+    }
+
+    public function listHot()
+    {
+        // Truy vấn
+        $toaNhas = ToaNha::where('noi_bat', 1)
+            ->withCount(['phongTro as so_luong_phong' => function ($query) {
+                $query->where('trang_thai', 1); // Đếm số lượng phòng có trạng thái = 1
+            }])
+            ->with('khuVuc')
+            ->get();
+
+        // Kiểm tra nếu không có dữ liệu
+        if ($toaNhas->isEmpty()) {
+            return response()->json([
+                'message' => 'Danh sách trống'
+            ], 404);
+        }
+
+        // Chuyển đổi dữ liệu để trả JSON
+        $result = $toaNhas->map(function ($toaNha) {
+            return [
+                'id' => $toaNha->id,
+                'slug' => $toaNha->slug,
+                'name' => $toaNha->ten,
+                'image' => $toaNha->image,
+                'count_rooms' => $toaNha->so_luong_phong,
+                'name_area' =>$toaNha->khuVuc->ten,
+            ];
+        });
+        
+        // Trả JSON
+        return response()->json([
+            'data' => $result,
+        ]);
     }
 }
