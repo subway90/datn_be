@@ -8,6 +8,7 @@ use App\Http\Controllers\ToaNhaController;
 use App\Http\Controllers\KhuVucController;
 use App\Http\Controllers\HopDongController;
 use App\Http\Controllers\ThanhToanController;
+use App\Http\Controllers\TinTucController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -46,4 +47,7 @@ Route::get('hop-dong/{id_user}', [HopDongController::class, 'getHopDong']);
 
 #
 Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
-
+# Lấy hết toàn bộ tin tức
+Route::get('blog/get_all', [TinTucController::class, 'tinTucgetall']);
+# Lấy 1 tin tức
+Route::get('blog', [TinTucController::class, 'getOne']);
