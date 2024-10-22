@@ -47,7 +47,8 @@ Route::get('hop-dong/{id_user}', [HopDongController::class, 'getHopDong']);
 
 #
 Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
-# Lấy hết toàn bộ tin tức
-Route::get('blog/get_all', [TinTucController::class, 'tinTucgetall']);
-# Lấy 1 tin tức
+
+# Danh sách tin tức
+Route::get('blog/all', [TinTucController::class, 'getAll']);
+# Chi tiết tin tức & bình luận
 Route::get('blog', [TinTucController::class, 'getOne']);
