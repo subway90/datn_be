@@ -5,6 +5,7 @@ use App\Models\ToaNha;
 use App\Models\Phong;
 use Illuminate\Http\Request;
 use function PHPUnit\Framework\isEmpty;
+use Illuminate\Support\Str;
 
 class ToaNhaController extends Controller
 {
@@ -66,7 +67,8 @@ class ToaNhaController extends Controller
                 'id' => $toaNha->id,
                 'slug' => $toaNha->slug,
                 'name' => $toaNha->ten,
-                'image' => $toaNha->image,
+                'image' => Str::before('$toaNha->image', ';'),
+                'gia_thue' => $toaNha->gia_thue,
                 'count_rooms' => $toaNha->so_luong_phong,
                 'name_area' =>$toaNha->khuVuc->ten,
             ];
@@ -101,8 +103,9 @@ class ToaNhaController extends Controller
                 'id' => $toaNha->id,
                 'slug' => $toaNha->slug,
                 'name' => $toaNha->ten,
-                'image' => $toaNha->image,
+                'image' => Str::before($toaNha->image, ';'),
                 'luot_xem' => $toaNha->luot_xem,
+                'gia_thue' => $toaNha->gia_thue,
                 'count_rooms' => $toaNha->so_luong_phong,
                 'name_area' =>$toaNha->khuVuc->ten,
             ];
@@ -137,7 +140,7 @@ class ToaNhaController extends Controller
                 'id' => $toaNha->id,
                 'slug' => $toaNha->slug,
                 'name' => $toaNha->ten,
-                'image' => $toaNha->image,
+                'image' => Str::before($toaNha->image, ';'),
                 'gia_thue' => $toaNha->gia_thue,
                 'count_rooms' => $toaNha->so_luong_phong,
                 'name_area' =>$toaNha->khuVuc->ten,
