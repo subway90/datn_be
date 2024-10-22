@@ -51,11 +51,22 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         // Xác thực dữ liệu đầu vào
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'email' => 'required|string|email',
             'password' => 'required|string',
+        ], [
+            'email.required' => 'Chưa nhập email',
+            'email.email' => 'Email không đúng định dạng',
+            'password.required' => 'Chưa nhập mật khẩu',
         ]);
-
+    
+        // Kiểm tra xem có lỗi xác thực không
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+    
         // Kiểm tra email có tồn tại không
         $user = User::where('email', $request->email)->first();
         
@@ -64,17 +75,17 @@ class AuthController extends Controller
                 'message' => 'Email này chưa được đăng ký.'
             ], 404);
         }
-
+    
         // Kiểm tra thông tin đăng nhập
         if (!auth()->attempt($request->only('email', 'password'))) {
             return response()->json([
                 'message' => 'Mật khẩu không chính xác.'
             ], 401);
         }
-
+    
         // Tạo token cho người dùng khi đăng nhập thành công
         $token = $user->createToken('MyApp')->plainTextToken;
-
+    
         return response()->json([
             'message' => 'Đăng nhập thành công',
             'token' => $token,
