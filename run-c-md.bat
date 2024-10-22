@@ -7,6 +7,6 @@ if "%model_name%"=="" (
     exit /b
 )
 
-php artisan make:model %model_name%Model
+php artisan make:model %model_name%
 
 endlocal
