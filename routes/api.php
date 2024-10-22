@@ -19,6 +19,8 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 # Đăng xuất
 Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
+# Profile
+Route::middleware('auth:sanctum')->get('profile', [AuthController::class, 'profile']);
 
 #
 Route::get('phong/{id_toa_nha}', [PhongController::class, 'index']);

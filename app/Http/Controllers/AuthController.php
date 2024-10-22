@@ -5,6 +5,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use PHPUnit\Framework\Constraint\IsEmpty;
+use function PHPUnit\Framework\isEmpty;
 
 class AuthController extends Controller
 {
@@ -86,11 +90,7 @@ class AuthController extends Controller
         // Tạo token cho người dùng khi đăng nhập thành công
         $token = $user->createToken('MyApp')->plainTextToken;
     
-        return response()->json([
-            'message' => 'Đăng nhập thành công',
-            'token' => $token,
-            'user' => $user
-        ]);
+        return response()->json(['token' => $token],200);
     }
     
     public function logout(Request $request)
@@ -108,5 +108,18 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Đăng xuất thành công'
         ]);
+    }
+
+    public function profile(Request $request)
+    {
+        // Lấy người dùng đã xác thực
+        $user = $request->user();
+    
+        // Kiểm tra xem người dùng có xác thực hay không
+        if (!$user) {
+            return response()->json(['message' => 'Token không hợp lệ'], 401);
+        }
+    
+        return response()->json([$user], 200);
     }
 }
