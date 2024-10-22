@@ -31,8 +31,12 @@ Route::get('phong', [PhongController::class, 'getAll']);
 Route::get('toa-nha', [ToaNhaController::class, 'detail']);
 # Danh sách tòa nhà (List cho option của filter)
 Route::get('toa-nha/all', [ToaNhaController::class, 'listName']);
-# Danh sách tòa nhà theo section (Section trang chủ)
+# Danh sách tòa nhà theo section (Section Hot)
 Route::get('toa-nha/listHot',[ToaNhaController::class,'listHot']);
+# Danh sách tòa nhà theo lượt xem (Section View)
+Route::get('toa-nha/listView',[ToaNhaController::class,'listView']);
+# Danh sách tòa nhà theo giá phòng thấp nhất (Section View)
+Route::get('toa-nha/listCheap',[ToaNhaController::class,'listCheap']);
 
 #
 Route::get('khu_vuc/getAll', [KhuVucController::class, 'getAll']);

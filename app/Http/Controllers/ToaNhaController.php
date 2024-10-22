@@ -77,4 +77,76 @@ class ToaNhaController extends Controller
             'data' => $result,
         ]);
     }
+
+    public function listView()
+    {
+        // Truy vấn
+        $toaNhas = ToaNha::orderBy('luot_xem','DESC')->limit(12)
+            ->withCount(['phongTro as so_luong_phong' => function ($query) {
+                $query->where('trang_thai', 1); // Đếm số lượng phòng có trạng thái = 1
+            }])
+            ->with('khuVuc')
+            ->get();
+
+        // Kiểm tra nếu không có dữ liệu
+        if ($toaNhas->isEmpty()) {
+            return response()->json([
+                'message' => 'Danh sách trống'
+            ], 404);
+        }
+
+        // Chuyển đổi dữ liệu để trả JSON
+        $result = $toaNhas->map(function ($toaNha) {
+            return [
+                'id' => $toaNha->id,
+                'slug' => $toaNha->slug,
+                'name' => $toaNha->ten,
+                'image' => $toaNha->image,
+                'luot_xem' => $toaNha->luot_xem,
+                'count_rooms' => $toaNha->so_luong_phong,
+                'name_area' =>$toaNha->khuVuc->ten,
+            ];
+        });
+        
+        // Trả JSON
+        return response()->json([
+            'data' => $result,
+        ]);
+    }
+
+    public function listCheap()
+    {
+        // Truy vấn
+        $toaNhas = ToaNha::orderBy('gia_thue','ASC')->limit(12)
+            ->withCount(['phongTro as so_luong_phong' => function ($query) {
+                $query->where('trang_thai', 1); // Đếm số lượng phòng có trạng thái = 1
+            }])
+            ->with('khuVuc')
+            ->get();
+
+        // Kiểm tra nếu không có dữ liệu
+        if ($toaNhas->isEmpty()) {
+            return response()->json([
+                'message' => 'Danh sách trống'
+            ], 404);
+        }
+
+        // Chuyển đổi dữ liệu để trả JSON
+        $result = $toaNhas->map(function ($toaNha) {
+            return [
+                'id' => $toaNha->id,
+                'slug' => $toaNha->slug,
+                'name' => $toaNha->ten,
+                'image' => $toaNha->image,
+                'gia_thue' => $toaNha->gia_thue,
+                'count_rooms' => $toaNha->so_luong_phong,
+                'name_area' =>$toaNha->khuVuc->ten,
+            ];
+        });
+        
+        // Trả JSON
+        return response()->json([
+            'data' => $result,
+        ]);
+    }
 }
