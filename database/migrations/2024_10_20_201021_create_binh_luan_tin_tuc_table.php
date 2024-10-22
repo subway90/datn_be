@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('binh_luan_tin_tuc', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_tai_khoan')->nullable();
-            $table->integer('id_bai_viet')->nullable();
+            $table->unsignedBigInteger('id_tai_khoan');
+            $table->unsignedBigInteger('id_bai_viet');
             $table->text('noi_dung')->nullable();
-            $table->string('trang_thai_binhluan')->nullable();
+            $table->string('trang_thai')->nullable();
             $table->timestamps();
+
+            $table->foreign('id_tai_khoan')->references('id')->on('user');
+            $table->foreign('id_bai_viet')->references('id')->on('tin_tuc');
         });
     }
 

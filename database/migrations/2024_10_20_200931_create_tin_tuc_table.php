@@ -13,17 +13,15 @@ return new class extends Migration
     {
         Schema::create('tin_tuc', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_tai_khoan')->nullable();
-            $table->integer('id_danh_muc')->nullable();
+            $table->unsignedBigInteger('id_tai_khoan')->index();
+            $table->unsignedBigInteger('id_danh_muc')->index();
             $table->timestamps();
-
-            
+    
+            $table->foreign('id_tai_khoan')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('id_danh_muc')->references('id')->on('danh_muc_tin_tuc')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('tin_tuc');
