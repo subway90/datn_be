@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\BinhLuanTinTuc;
 use App\Models\TinTuc;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TinTucController extends Controller
 {
@@ -83,62 +85,100 @@ class TinTucController extends Controller
 
     public function postComment(Request $request)
     {
-        // Validate dữ liệu nhận vào
-        $validated = $request->validate([
+        // Xác định các quy tắc xác thực
+        $validator = Validator::make($request->all(), [
             'slug' => 'required|string',
-            'tai_khoan_id' => 'required|integer',
-            'noi_dung' => 'required|string',
+            'user_id' => 'required|integer',
+            'message' => 'required|string',
+        ], [
+            'slug.required' => 'Slug của bài viết là bắt buộc.',
+            'slug.string' => 'Slug phải là chuỗi ký tự hợp lệ.',
+            'user_id.required' => 'ID người dùng là bắt buộc.',
+            'user_id.integer' => 'ID người dùng phải là một số nguyên hợp lệ.',
+            'message.required' => 'Nội dung bình luận không được để trống.',
+            'message.string' => 'Nội dung bình luận phải là chuỗi ký tự hợp lệ.',
         ]);
-
+    
+        // Kiểm tra nếu có lỗi xác thực
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422); // Trả về mã 422 nếu có lỗi
+        }
+    
+        // Lấy dữ liệu đã xác thực
+        $validated = $validator->validated();
+    
         // Tìm bài viết theo slug
         $tinTuc = TinTuc::where('slug', $validated['slug'])->first();
-
+        
         // Kiểm tra nếu không tìm thấy bài viết
         if (!$tinTuc) {
             return response()->json([
-                'status' => 'error',
                 'message' => 'Bài viết không tồn tại.',
             ], 404);
         }
-
+        
+        // Tìm user theo user_id
+        $erro_user =TinTuc::where('tai_khoan_id', $validated['user_id'])->first();
+    
+        // Kiểm tra nếu không tìm thấy user_id
+        if (!$erro_user) {
+            return response()->json([
+                'message' => 'User không tồn tại.',
+            ], 404);
+        }
+        
         // Tạo bình luận mới
         $comment = new BinhLuanTinTuc();
-        $comment->tai_khoan_id = $validated['tai_khoan_id'];
+        $comment->tai_khoan_id = $validated['user_id'];
         $comment->tin_tuc_id = $tinTuc->id;  
-        $comment->noi_dung = $validated['noi_dung'];
-
+        $comment->noi_dung = $validated['message'];
+    
         // Lưu bình luận vào DB
         $comment->save();
-
+    
         // Trả về phản hồi JSON thành công
         return response()->json([
-            'status' => 'success',
             'message' => 'Bình luận đã được đăng thành công.',
             'data' => $comment
         ], 201);
-    }
-    public function updateComment(Request $request)
+    }   
+     public function updateComment(Request $request)
     {
-        // Validate dữ liệu đầu vào
-        $validated = $request->validate([
+        // Xác định các quy tắc xác thực
+        $validator = Validator::make($request->all(), [
             'id' => 'required|integer',  // kiểm tra ID bình luận có tồn tại
-            'trang_thai' => 'required|boolean',
-            'noi_dung' => 'required|string',
+            'status' => 'required|boolean',
+            'message' => 'required|string',
+        ], [
+            'id.required' => 'ID bình luận là bắt buộc.',
+            'id.integer' => 'ID bình luận phải là một số nguyên.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.boolean' => 'Trạng thái phải là 1',
+            'message.required' => 'Nội dung bình luận là bắt buộc.',
+            'message.string' => 'Nội dung bình luận phải là một chuỗi.',
         ]);
 
+        // Kiểm tra nếu có lỗi xác thực
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422); // Trả về mã 422 nếu có lỗi
+        }
+
         // Tìm bình luận theo ID
-        $comment = BinhLuanTinTuc::find($validated['id']);
+        $comment = BinhLuanTinTuc::find($validator->validated()['id']);
 
         if (!$comment) {
             return response()->json([
-                'status' => 'error',
                 'message' => 'Bình luận không tồn tại.'
             ], 404);
         }
 
         // Cập nhật các trường cho phép
-        $comment->noi_dung = $validated['noi_dung'];
-        $comment->trang_thai = $validated['trang_thai'];
+        $comment->noi_dung = $validator->validated()['message'];
+        $comment->trang_thai = $validator->validated()['status'];
         $comment->updated_at = now();  // sử dụng thời gian hiện tại
 
         // Lưu bình luận đã chỉnh sửa
@@ -146,10 +186,8 @@ class TinTucController extends Controller
 
         // Trả về phản hồi JSON thành công
         return response()->json([
-            'status' => 'success',
             'message' => 'Bình luận đã được cập nhật thành công.',
             'data' => $comment
         ], 200);
     }
-
 }
