@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logou
 # Profile
 Route::middleware('auth:sanctum')->get('profile', [AuthController::class, 'profile']);
 
+Route::middleware('auth:sanctum')->put('updateProfile', [AuthController::class, 'updateProfile']);
 #
 Route::get('phong/{id_toa_nha}', [PhongController::class, 'index']);
 #
@@ -32,11 +33,11 @@ Route::get('toa-nha', [ToaNhaController::class, 'detail']);
 # Danh sách tòa nhà (List cho option của filter)
 Route::get('toa-nha/all', [ToaNhaController::class, 'listName']);
 # Danh sách tòa nhà theo section (Section Hot)
-Route::get('toa-nha/listHot',[ToaNhaController::class,'listHot']);
+Route::get('toa-nha/listHot', [ToaNhaController::class, 'listHot']);
 # Danh sách tòa nhà theo lượt xem (Section View)
-Route::get('toa-nha/listView',[ToaNhaController::class,'listView']);
+Route::get('toa-nha/listView', [ToaNhaController::class, 'listView']);
 # Danh sách tòa nhà theo giá phòng thấp nhất (Section View)
-Route::get('toa-nha/listCheap',[ToaNhaController::class,'listCheap']);
+Route::get('toa-nha/listCheap', [ToaNhaController::class, 'listCheap']);
 
 #
 Route::get('khu_vuc/getAll', [KhuVucController::class, 'getAll']);
@@ -46,4 +47,3 @@ Route::get('hop-dong/{id_user}', [HopDongController::class, 'getHopDong']);
 
 #
 Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
-

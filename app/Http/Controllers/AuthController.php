@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -63,36 +64,36 @@ class AuthController extends Controller
             'email.email' => 'Email không đúng định dạng',
             'password.required' => 'Chưa nhập mật khẩu',
         ]);
-    
+
         // Kiểm tra xem có lỗi xác thực không
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors()
             ], 422);
         }
-    
+
         // Kiểm tra email có tồn tại không
         $user = User::where('email', $request->email)->first();
-        
+
         if (!$user) {
             return response()->json([
                 'message' => 'Email này chưa được đăng ký.'
             ], 404);
         }
-    
+
         // Kiểm tra thông tin đăng nhập
         if (!auth()->attempt($request->only('email', 'password'))) {
             return response()->json([
                 'message' => 'Mật khẩu không chính xác.'
             ], 401);
         }
-    
+
         // Tạo token cho người dùng khi đăng nhập thành công
         $token = $user->createToken('MyApp')->plainTextToken;
-    
-        return response()->json(['token' => $token],200);
+
+        return response()->json(['token' => $token], 200);
     }
-    
+
     public function logout(Request $request)
     {
         // Kiểm tra xem người dùng có đăng nhập không
@@ -114,12 +115,56 @@ class AuthController extends Controller
     {
         // Lấy người dùng đã xác thực
         $user = $request->user();
-    
+
         // Kiểm tra xem người dùng có xác thực hay không
         if (!$user) {
             return response()->json(['message' => 'Token không hợp lệ'], 401);
         }
-    
+
         return response()->json([$user], 200);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        // Validate dữ liệu
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,webp,gif,png|max:2048',
+            'phone' => 'nullable|size:10',
+            'born' => 'nullable|date',
+        ], [
+            'name.required' => 'Tên là bắt buộc.',
+            'name.string' => 'Tên phải là chuỗi ký tự.',
+            'name.max' => 'Tên vượt quá ký tự.',
+            'avatar.image' => 'Tệp tải lên phải là hình ảnh.',
+            'avatar.mimes' => 'Chỉ chấp nhận các định dạng jpg, jpeg, webp, gif, png.',
+            'avatar.max' => 'Kích thước tệp phải nhỏ hơn 2MB.',
+            'phone.size' => 'SĐT phải có độ dài 10 ký tự.',
+            'born.date' => 'Ngày sinh phải có định dạng hợp lệ.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $user->name = $request->name;
+
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $avatarPath;
+        }
+
+        $user->born = $request->born;
+        $user->phone = $request->phone;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Thông tin người dùng đã được cập nhật thành công',
+            'user' => $user,
+        ]);
     }
 }
