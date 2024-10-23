@@ -103,14 +103,14 @@ class TinTucController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
-            ], 422); // Trả về mã 422 nếu có lỗi
+            ], 400); // Trả về mã 422 nếu có lỗi
         }
     
         // Lấy dữ liệu đã xác thực
         $validated = $validator->validated();
     
         // Tìm bài viết theo slug
-        $tinTuc = TinTuc::where('slug', $validated['slug'])->first();
+        $tinTuc = TinTuc::where('slug', $validated['slug'])->get();
         
         // Kiểm tra nếu không tìm thấy bài viết
         if (!$tinTuc) {
@@ -120,10 +120,10 @@ class TinTucController extends Controller
         }
         
         // Tìm user theo user_id
-        $erro_user =TinTuc::where('tai_khoan_id', $validated['user_id'])->first();
+        $checkUser =TinTuc::where('tai_khoan_id', $validated['user_id'])->get();
     
         // Kiểm tra nếu không tìm thấy user_id
-        if (!$erro_user) {
+        if (!$checkUser) {
             return response()->json([
                 'message' => 'User không tồn tại.',
             ], 404);
