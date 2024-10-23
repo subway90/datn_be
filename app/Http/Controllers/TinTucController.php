@@ -102,7 +102,7 @@ class TinTucController extends Controller
         // Kiểm tra nếu có lỗi xác thực
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors(),
+                'message' => $validator->errors()->all(),
             ], 400); // Trả về mã 422 nếu có lỗi
         }
     
