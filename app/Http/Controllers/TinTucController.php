@@ -89,6 +89,39 @@ class TinTucController extends Controller
             'data' => $comment
         ], 201);
     }
+    public function updateComment(Request $request)
+    {
+        // Validate dữ liệu đầu vào
+        $validated = $request->validate([
+            'id' => 'required|integer',  // kiểm tra ID bình luận có tồn tại
+            'trang_thai' => 'required|boolean',
+            'noi_dung' => 'required|string',
+        ]);
 
+        // Tìm bình luận theo ID
+        $comment = BinhLuanTinTuc::find($validated['id']);
+
+        if (!$comment) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Bình luận không tồn tại.'
+            ], 404);
+        }
+
+        // Cập nhật các trường cho phép
+        $comment->noi_dung = $validated['noi_dung'];
+        $comment->trang_thai = $validated['trang_thai'];
+        $comment->updated_at = now();  // sử dụng thời gian hiện tại
+
+        // Lưu bình luận đã chỉnh sửa
+        $comment->save();
+
+        // Trả về phản hồi JSON thành công
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Bình luận đã được cập nhật thành công.',
+            'data' => $comment
+        ], 200);
+    }
 
 }
