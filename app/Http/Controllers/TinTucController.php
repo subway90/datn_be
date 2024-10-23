@@ -41,18 +41,46 @@ class TinTucController extends Controller
         // Lấy slug từ query parameter
         $slug = $request->query('slug');
 
-        // Tìm tin tức dựa trên slug
-        $tintuc = TinTuc::where('slug', $slug)->with('BinhLuanTinTuc')->first();
-        
+        // Thông tin tin tức
+        $tintuc = TinTuc::where('slug', $slug)
+            ->with('danhMuc',)
+            ->first();
+
+        // Danh sách bình luận
+        $list_cmt = BinhLuanTinTuc::where('tin_tuc_id', $tintuc->id)
+            ->with('user')
+            ->get();
+
+        // Chuyển đổi danh sách bình luận thành mảng
+        $result_list_cmt = $list_cmt->map(function ($cmt) {
+            return [
+                'id_user' => $cmt->user->id,
+                'name' => $cmt->user->name,
+                'avatar' => $cmt->user->avatar,
+                'content' => $cmt->noi_dung,
+                'created_at' => $cmt->created_at,
+            ];
+        });
 
         // Kiểm tra nếu không tìm thấy tin tức
         if (!$tintuc) {
-            return response()->json(['error' => 'Tin tức không tồn tại'], 404);
+            return response()->json(['message' => 'Tin tức không tồn tại'], 404);
         }
-
+        
         // Trả về JSON với tin tức và các bình luận
-        return response()->json($tintuc);
+        return response()->json([
+            'id' => $tintuc->id,
+            'slug' => $tintuc->slug,
+            'image' => $tintuc->image,
+            'name_category' => $tintuc->danhMuc->ten_danh_muc,
+            'title' => $tintuc->tieu_de,
+            'body' => $tintuc->noi_dung,
+            'created_at' => $tintuc->created_at,
+            'updated_at' => $tintuc->updated_at,
+            'list_cmt' => $result_list_cmt,
+    ]);
     }
+
     public function postComment(Request $request)
     {
         // Validate dữ liệu nhận vào
