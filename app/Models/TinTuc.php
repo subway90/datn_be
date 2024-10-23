@@ -34,4 +34,8 @@ class TinTuc extends Model
     {
         return $this->belongsTo(DanhMucTinTuc::class, 'danh_muc_id');
     }
+    public function binhLuanTinTuc()
+    {
+        return $this->hasMany(BinhLuanTinTuc::class, 'tin_tuc_id');
+    }
 }
