@@ -163,8 +163,8 @@ class TinTucController extends Controller
         // Kiểm tra nếu có lỗi xác thực
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors(),
-            ], 422); // Trả về mã 422 nếu có lỗi
+                'message' => $validator->errors()->all(),
+            ], 400);
         }
 
         // Tìm bình luận theo ID
