@@ -54,3 +54,5 @@ Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToa
 Route::get('blog/all', [TinTucController::class, 'getAll']);
 # Chi tiết tin tức & bình luận
 Route::get('blog', [TinTucController::class, 'getOne']);
+# Bình luận tin tức 
+Route::post('blog/comment',[TinTucController::class, 'postComment']);

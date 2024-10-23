@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BinhLuanTinTuc;
 use App\Models\TinTuc;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,7 @@ class TinTucController extends Controller
             return response()->json(['message' => 'Không có dữ liệu'], 404);
         }
     
-        $result = $list->map(function ($rows) {
+        $result = $list->map(function (TinTuc $rows) {
             return [
                 'id' => $rows->id,
                 'slug' => $rows->slug,
@@ -51,6 +52,42 @@ class TinTucController extends Controller
 
         // Trả về JSON với tin tức và các bình luận
         return response()->json($tintuc);
+    }
+    public function postComment(Request $request)
+    {
+        // Validate dữ liệu nhận vào
+        $validated = $request->validate([
+            'slug' => 'required|string',
+            'tai_khoan_id' => 'required|integer',
+            'noi_dung' => 'required|string',
+        ]);
+
+        // Tìm bài viết theo slug
+        $tinTuc = TinTuc::where('slug', $validated['slug'])->first();
+
+        // Kiểm tra nếu không tìm thấy bài viết
+        if (!$tinTuc) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Bài viết không tồn tại.',
+            ], 404);
+        }
+
+        // Tạo bình luận mới
+        $comment = new BinhLuanTinTuc();
+        $comment->tai_khoan_id = $validated['tai_khoan_id'];
+        $comment->tin_tuc_id = $tinTuc->id;  
+        $comment->noi_dung = $validated['noi_dung'];
+
+        // Lưu bình luận vào DB
+        $comment->save();
+
+        // Trả về phản hồi JSON thành công
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Bình luận đã được đăng thành công.',
+            'data' => $comment
+        ], 201);
     }
 
 
