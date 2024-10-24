@@ -14,22 +14,24 @@ class ThanhToanController extends Controller
     {
         $user = Auth::user();
 
-        $thanhToan = ThanhToan::with('hopDong', 'maUuDai')
-            ->where('id', $id_hop_dong)
-            ->first();
+        $thanhToans = ThanhToan::with('hopDong')
+            ->where('hop_dong_id', $id_hop_dong)
+            ->get();
 
-        if (!$thanhToan) {
+        if ($thanhToans->isEmpty()) {
             return response()->json([
-                'message' => 'Thanh toán không tồn tại.'
+                'message' => 'Không có thanh toán nào tồn tại cho hợp đồng này.'
             ], 404);
         }
 
-        if ($thanhToan->hopDong->tai_khoan_id !== $user->id) {
+        $hopDong = $thanhToans->first()->hopDong;
+
+        if ($hopDong->tai_khoan_id !== $user->id) {
             return response()->json([
                 'message' => 'Bạn không có quyền xem thông tin thanh toán này.'
             ], 403);
         }
 
-        return response()->json($thanhToan);
+        return response()->json($thanhToans);
     }
 }
