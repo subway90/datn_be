@@ -46,7 +46,7 @@ Route::get('khu_vuc/all', [KhuVucController::class, 'all']);
 Route::get('khu_vuc/listHot', [KhuVucController::class, 'listHot']);
 
 #
-Route::get('hop-dong/{id_user}', [HopDongController::class, 'getHopDong'])->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->get('/hop-dong', [HopDongController::class, 'show']);
 
 #
 Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan'])->middleware('auth:sanctum');
