@@ -127,108 +127,44 @@ class AuthController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $user = $request->user();
+        $user = $request->user(); // Lấy người dùng đã xác thực
 
-        // Validate dữ liệu
+        // Kiểm tra xem có dữ liệu nào được gửi lên không
+        if (!$request->hasAny(['name', 'phone', 'born'])) {
+            return response()->json([
+                'message' => 'Có lỗi xảy ra ! Có lẽ bạn chưa nhập dữ liệu cho key name|phone|born',
+            ], 400); // Trả về mã 400 nếu không có dữ liệu
+        }
+
+        // Validate dữ liệu nếu có
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'avatar' => 'nullable|image|mimes:jpg,jpeg,webp,gif,png|max:2048',
+            'name' => 'nullable|string|max:255',
             'phone' => 'nullable|size:10',
             'born' => 'nullable|date',
         ], [
-            'name.required' => 'Tên là bắt buộc.',
             'name.string' => 'Tên phải là chuỗi ký tự.',
             'name.max' => 'Tên vượt quá ký tự.',
-            'avatar.image' => 'Tệp tải lên phải là hình ảnh.',
-            'avatar.mimes' => 'Chỉ chấp nhận các định dạng jpg, jpeg, webp, gif, png.',
-            'avatar.max' => 'Kích thước tệp phải nhỏ hơn 2MB.',
             'phone.size' => 'SĐT phải có độ dài 10 ký tự.',
             'born.date' => 'Ngày sinh phải có định dạng hợp lệ.',
         ]);
 
-        try {
-            $user->update($request->only(['name', 'avatar', 'phone', 'born']));
-
-            if ($request->file('avatar')) {
-                if ($request->avatar) {
-                    $oldImage = $user->avatar;
-                    Storage::delete($oldImage);
-
-                    $newImage = $user->file('avatar')->store('public/avatars');
-                }
-
-                $user->update([
-                    "name" => $user->name,
-                    "avatar" => $newImage,
-                    "phone" => $user->phone,
-                    "born" => $user->born
-                ]);
-            }
-
-            $user->save();
-
-            return response()->json([
-                'message' => 'Thông tin người dùng đã được cập nhật thành công',
-                'user' => $user,
-                'avatar_url' =>  Storage::url('avatars/' . basename($user->avatar)),
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Lỗi khi cập nhật thông tin người dùng: ' . $e->getMessage());
-            return response()->json([
-                'message' => 'Có lỗi xảy ra khi cập nhật thông tin người dùng.',
-            ], 500);
-        }
-    }
-
-    public function store(Request $request)
-    {
-        // Validate dữ liệu người dùng gửi lên
-        $validator = Validator::make($request->all(), [
-            'name' => 'nullable|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'avatar' => 'nullable|image|mimes:jpg,jpeg,webp,gif,png|max:2048',
-            'role' => 'required|integer|in:0,1',
-            'phone' => 'nullable|size:10',
-            'born' => 'nullable|date',
-        ], [
-            'email.required' => 'Email là bắt buộc.',
-            'email.email' => 'Email không hợp lệ.',
-            'email.unique' => 'Email đã tồn tại.',
-            'avatar.image' => 'Tệp tải lên phải là hình ảnh.',
-            'avatar.mimes' => 'Chỉ chấp nhận các định dạng jpg, jpeg, webp, gif, png.',
-            'avatar.max' => 'Kích thước tệp phải nhỏ hơn 2MB.',
-            'phone.size' => 'Số điện thoại phải có độ dài 10 ký tự.',
-            'born.date' => 'Ngày sinh phải là định dạng hợp lệ.',
-            'role.required' => 'Vai trò là bắt buộc.',
-            'role.in' => 'Vai trò không hợp lệ.',
-        ]);
-
-        // Trả về lỗi nếu không vượt qua validation
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors(),
-            ], 422);
+                'message' => $validator->errors()->all(),
+            ], 422); // Trả về mã 422 nếu có lỗi xác thực
         }
 
-        // Tạo mới người dùng
-        $user = new User();
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->password = $request->input('password');
-        $user->role = $request->input('role');
-        $user->phone = $request->input('phone');
-        $user->born = $request->input('born');
+        $user->name = $request->name;
 
-        // Nếu có avatar thì lưu vào storage
         if ($request->hasFile('avatar')) {
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
             $user->avatar = $avatarPath;
         }
 
-        // Lưu thông tin người dùng
+        $user->born = $request->born;
+        $user->phone = $request->phone;
         $user->save();
 
-        // Trả về response khi tạo mới người dùng thành công
         return response()->json([
             'message' => 'Người dùng đã được tạo thành công',
             'user' => [
