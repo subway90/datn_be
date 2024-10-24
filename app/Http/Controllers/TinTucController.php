@@ -85,65 +85,63 @@ class TinTucController extends Controller
 
     public function postComment(Request $request)
     {
+        // Xác định người dùng đã đăng nhập qua request
+        $user = $request->user();
+
+        // Nếu người dùng chưa đăng nhập, trả về lỗi
+        if (!$user) {
+            return response()->json([
+                'message' => 'Bạn cần đăng nhập để thực hiện bình luận.'
+            ], status: 400); // Trả về mã 400 nếu chưa đăng nhập
+        }
+
         // Xác định các quy tắc xác thực
         $validator = Validator::make($request->all(), [
             'slug' => 'required|string',
-            'user_id' => 'required|integer',
             'message' => 'required|string',
         ], [
             'slug.required' => 'Slug của bài viết là bắt buộc.',
             'slug.string' => 'Slug phải là chuỗi ký tự hợp lệ.',
-            'user_id.required' => 'ID người dùng là bắt buộc.',
-            'user_id.integer' => 'ID người dùng phải là một số nguyên hợp lệ.',
             'message.required' => 'Nội dung bình luận không được để trống.',
             'message.string' => 'Nội dung bình luận phải là chuỗi ký tự hợp lệ.',
         ]);
-    
+
         // Kiểm tra nếu có lỗi xác thực
         if ($validator->fails()) {
             return response()->json([
                 'message' => $validator->errors()->all(),
-            ], 400); // Trả về mã 422 nếu có lỗi
+            ], 400); // Mã 400 nếu có lỗi
         }
-    
+
         // Lấy dữ liệu đã xác thực
         $validated = $validator->validated();
-    
+
         // Tìm bài viết theo slug
-        $tinTuc = TinTuc::where('slug', $validated['slug'])->get();
-        
+        $tinTuc = TinTuc::where('slug', $validated['slug'])->first();
+
         // Kiểm tra nếu không tìm thấy bài viết
         if (!$tinTuc) {
             return response()->json([
                 'message' => 'Bài viết không tồn tại.',
             ], 404);
         }
-        
-        // Tìm user theo user_id
-        $checkUser =TinTuc::where('tai_khoan_id', $validated['user_id'])->get();
-    
-        // Kiểm tra nếu không tìm thấy user_id
-        if (!$checkUser) {
-            return response()->json([
-                'message' => 'User không tồn tại.',
-            ], 404);
-        }
-        
+
         // Tạo bình luận mới
         $comment = new BinhLuanTinTuc();
-        $comment->tai_khoan_id = $validated['user_id'];
-        $comment->tin_tuc_id = $tinTuc->id;  
+        $comment->tai_khoan_id = $user->id;  // Lấy user ID từ thông tin đăng nhập
+        $comment->tin_tuc_id = $tinTuc->id;
         $comment->noi_dung = $validated['message'];
-    
+
         // Lưu bình luận vào DB
         $comment->save();
-    
+
         // Trả về phản hồi JSON thành công
         return response()->json([
             'message' => 'Bình luận đã được đăng thành công.',
             'data' => $comment
         ], 201);
-    }   
+    }
+    
      public function updateComment(Request $request)
     {
         // Xác định các quy tắc xác thực

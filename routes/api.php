@@ -55,6 +55,6 @@ Route::get('blog/all', [TinTucController::class, 'getAll']);
 # Chi tiết tin tức & bình luận
 Route::get('blog', [TinTucController::class, 'getOne']);
 # Bình luận tin tức 
-Route::post('blog/comment',[TinTucController::class, 'postComment']);
+Route::middleware('auth:sanctum')->post('blog/comment', [TinTucController::class, 'postComment']);
 # Cập nhật bình luận
 Route::put('blog/update_comment', [TinTucController::class, 'updateComment']);
