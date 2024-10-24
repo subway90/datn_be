@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\ToaNha;
@@ -26,12 +27,12 @@ class ToaNhaController extends Controller
         $list = ToaNha::select('id', 'ten', 'slug')
             ->withCount('phongTro as so_luong_phong')
             ->get();
-    
+
         // Kiểm tra xem có dữ liệu hay không
         if ($list->isEmpty()) {
             return response()->json(['message' => 'Không có dữ liệu'], 404);
         }
-    
+
         $result = $list->map(function ($rows) {
             return [
                 'id' => $rows->id,
@@ -40,7 +41,7 @@ class ToaNhaController extends Controller
                 'count_rooms' => $rows->so_luong_phong,
             ];
         });
-    
+
         return response()->json($result);
     }
 
@@ -70,10 +71,10 @@ class ToaNhaController extends Controller
                 'image' => Str::before('$toaNha->image', ';'),
                 'gia_thue' => $toaNha->gia_thue,
                 'count_rooms' => $toaNha->so_luong_phong,
-                'name_area' =>$toaNha->khuVuc->ten,
+                'name_area' => $toaNha->khuVuc->ten,
             ];
         });
-        
+
         // Trả JSON
         return response()->json([
             'data' => $result,
@@ -83,7 +84,7 @@ class ToaNhaController extends Controller
     public function listView()
     {
         // Truy vấn
-        $toaNhas = ToaNha::orderBy('luot_xem','DESC')->limit(12)
+        $toaNhas = ToaNha::orderBy('luot_xem', 'DESC')->limit(12)
             ->withCount(['phongTro as so_luong_phong' => function ($query) {
                 $query->where('trang_thai', 1); // Đếm số lượng phòng có trạng thái = 1
             }])
@@ -107,10 +108,10 @@ class ToaNhaController extends Controller
                 'luot_xem' => $toaNha->luot_xem,
                 'gia_thue' => $toaNha->gia_thue,
                 'count_rooms' => $toaNha->so_luong_phong,
-                'name_area' =>$toaNha->khuVuc->ten,
+                'name_area' => $toaNha->khuVuc->ten,
             ];
         });
-        
+
         // Trả JSON
         return response()->json([
             'data' => $result,
@@ -120,7 +121,7 @@ class ToaNhaController extends Controller
     public function listCheap()
     {
         // Truy vấn
-        $toaNhas = ToaNha::orderBy('gia_thue','ASC')->limit(12)
+        $toaNhas = ToaNha::orderBy('gia_thue', 'ASC')->limit(12)
             ->withCount(['phongTro as so_luong_phong' => function ($query) {
                 $query->where('trang_thai', 1); // Đếm số lượng phòng có trạng thái = 1
             }])
@@ -143,10 +144,10 @@ class ToaNhaController extends Controller
                 'image' => Str::before($toaNha->image, ';'),
                 'gia_thue' => $toaNha->gia_thue,
                 'count_rooms' => $toaNha->so_luong_phong,
-                'name_area' =>$toaNha->khuVuc->ten,
+                'name_area' => $toaNha->khuVuc->ten,
             ];
         });
-        
+
         // Trả JSON
         return response()->json([
             'data' => $result,
