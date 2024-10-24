@@ -202,4 +202,74 @@ public function detail(Request $request)
             'data' => $result,
         ]);
     }
+
+    public function filter(Request $request)
+    {
+        $query = ToaNha::query();
+
+        // Lọc theo keyword
+        if ($request->has('keyword')) {
+            $keyword = $request->input('keyword');
+            $query->where('mo_ta', 'LIKE', "%$keyword%")
+                  ->orWhere('vi_tri', 'LIKE', "%$keyword%")
+                  ->orWhere('tien_ich', 'LIKE', "%$keyword%");
+            ;
+        }
+
+        // Lọc theo area
+        if ($request->has('area')) {
+            $slug = $request->input('area');
+            $query->whereHas('khuVuc', function($q) use ($slug) {
+                $q->where('slug', $slug);
+            });
+        }
+
+        // Lọc theo price
+        if ($request->has('price')) {
+            $array_price = explode('to',$request->input('price'));
+            $query->where('gia_thue', '>=', $array_price[0]);
+            $query->where('gia_thue', '<=', $array_price[1]);
+        }
+
+        // Lọc theo size
+        if ($request->has('size')) {
+            $array_size = explode('to',$request->input('size'));
+            $query->where('dien_tich', '>=', $array_size[0]);
+            $query->where('dien_tich', '<=', $array_size[1]);
+        }
+
+        // Lấy kết quả
+        $toaNhas = $query->withCount('phongTro as so_luong_phong')->get();
+
+        $result = $toaNhas->map(function ($toaNha) {
+            // Chuyển đổi "tien_ich" thành mảng
+            $array_tien_ich = explode(';', $toaNha->tien_ich);
+            $result_tien_ich = [];
+            foreach ($array_tien_ich as $key => $value) {
+                $result_tien_ich["tien_ich_".($key+1)] = trim($value);
+            }
+            // Chuyển đổi "vi_tri" thành mảng
+            $array_vi_tri = explode(';', $toaNha->vi_tri);
+            $result_vi_tri = [];
+            foreach ($array_vi_tri as $key => $value) {
+                $result_vi_tri["vi_tri_".($key+1)] = trim($value);
+            }
+    
+            return [
+                'id' => $toaNha->id,
+                'slug' => $toaNha->slug,
+                'name' => $toaNha->ten,
+                'image' => Str::before($toaNha->image, ';'),
+                'view' => $toaNha->luot_xem,
+                'price' => $toaNha->gia_thue,
+                'size' => $toaNha->dien_tich,
+                'count_rooms' => $toaNha->so_luong_phong,
+                'name_area' => $toaNha->khuVuc->ten,
+                '(hidden)description' => $toaNha->mo_ta,
+                '(hidden)tien_ich' => $result_tien_ich,
+                '(hidden)vi_tri' => $result_vi_tri,
+            ];
+        });
+        return response()->json($result);
+    }
 }

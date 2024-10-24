@@ -40,6 +40,9 @@ Route::get('toa-nha/listView', [ToaNhaController::class, 'listView']);
 # Danh sách tòa nhà theo giá phòng thấp nhất (Section View)
 Route::get('toa-nha/listCheap', [ToaNhaController::class, 'listCheap']);
 
+# Chức năng lọc
+Route::get('/filter', [ToaNhaController::class, 'filter']);
+
 # Danh sách khu vực (option của Area để Filter)
 Route::get('khu_vuc/all', [KhuVucController::class, 'all']);
 # Danh sách khu vực nổi bật (Section Area Hot để Filter)
