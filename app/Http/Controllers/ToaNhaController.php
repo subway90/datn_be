@@ -206,16 +206,15 @@ public function detail(Request $request)
     public function filter(Request $request)
     {
         $query = ToaNha::query();
-
+    
         // Lọc theo keyword
         if ($request->has('keyword')) {
             $keyword = $request->input('keyword');
             $query->where('mo_ta', 'LIKE', "%$keyword%")
                   ->orWhere('vi_tri', 'LIKE', "%$keyword%")
                   ->orWhere('tien_ich', 'LIKE', "%$keyword%");
-            ;
         }
-
+    
         // Lọc theo area
         if ($request->has('area')) {
             $slug = $request->input('area');
@@ -223,36 +222,56 @@ public function detail(Request $request)
                 $q->where('slug', $slug);
             });
         }
-
+    
         // Lọc theo price
         if ($request->has('price')) {
-            $array_price = explode('to',$request->input('price'));
-            $query->where('gia_thue', '>=', $array_price[0]);
-            $query->where('gia_thue', '<=', $array_price[1]);
+            $priceInput = $request->input('price');
+            
+            // Kiểm tra định dạng {int}to{int}
+            if (!preg_match('/^\d+to\d+$/', $priceInput)) {
+                return response()->json(['message' => 'Định dạng giá không hợp lệ. Vui lòng sử dụng {int}to{int}.'], 400);
+            }
+    
+            $array_price = explode('to', $priceInput);
+            $query->where('gia_thue', '>=', (int)$array_price[0])
+                  ->where('gia_thue', '<=', (int)$array_price[1]);
         }
-
+    
         // Lọc theo size
         if ($request->has('size')) {
-            $array_size = explode('to',$request->input('size'));
-            $query->where('dien_tich', '>=', $array_size[0]);
-            $query->where('dien_tich', '<=', $array_size[1]);
+            $sizeInput = $request->input('size');
+            // Kiểm tra định dạng {int}to{int}
+            if (!preg_match('/^\d+to\d+$/', $sizeInput)) {
+                return response()->json(['message' => 'Định dạng diện tích không hợp lệ. Vui lòng sử dụng {int}to{int}.'], 400);
+            }
+
+            $array_size = explode('to', $request->input('size'));
+            $query->where('dien_tich', '>=', $array_size[0])
+                  ->where('dien_tich', '<=', $array_size[1]);
         }
-
+    
         // Lấy kết quả
-        $toaNhas = $query->withCount('phongTro as so_luong_phong')->get();
-
+        $toaNhas = $query->withCount('phongTro as so_luong_phong')->with('khuVuc')->get();
+    
+        // Kiểm tra nếu không có dữ liệu
+        if ($toaNhas->isEmpty()) {
+            return response()->json(['message' => 'Không tìm thấy dữ liệu.'], 404);
+        }
+    
+        // Chuyển đổi kết quả
         $result = $toaNhas->map(function ($toaNha) {
             // Chuyển đổi "tien_ich" thành mảng
             $array_tien_ich = explode(';', $toaNha->tien_ich);
             $result_tien_ich = [];
             foreach ($array_tien_ich as $key => $value) {
-                $result_tien_ich["tien_ich_".($key+1)] = trim($value);
+                $result_tien_ich["tien_ich_" . ($key + 1)] = trim($value);
             }
+    
             // Chuyển đổi "vi_tri" thành mảng
             $array_vi_tri = explode(';', $toaNha->vi_tri);
             $result_vi_tri = [];
             foreach ($array_vi_tri as $key => $value) {
-                $result_vi_tri["vi_tri_".($key+1)] = trim($value);
+                $result_vi_tri["vi_tri_" . ($key + 1)] = trim($value);
             }
     
             return [
@@ -260,16 +279,17 @@ public function detail(Request $request)
                 'slug' => $toaNha->slug,
                 'name' => $toaNha->ten,
                 'image' => Str::before($toaNha->image, ';'),
-                'view' => $toaNha->luot_xem,
-                'price' => $toaNha->gia_thue,
-                'size' => $toaNha->dien_tich,
+                'luot_xem' => $toaNha->luot_xem,
+                'gia_thue' => $toaNha->gia_thue,
+                'mo_ta' => $toaNha->mo_ta,
+                'tien_ich' => $result_tien_ich,
+                'vi_tri' => $result_vi_tri,
                 'count_rooms' => $toaNha->so_luong_phong,
                 'name_area' => $toaNha->khuVuc->ten,
-                '(hidden)description' => $toaNha->mo_ta,
-                '(hidden)tien_ich' => $result_tien_ich,
-                '(hidden)vi_tri' => $result_vi_tri,
+                'slug_area' => $toaNha->khuVuc->slug,
             ];
         });
+    
         return response()->json($result);
     }
 }
