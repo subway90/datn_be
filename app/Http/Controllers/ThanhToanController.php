@@ -12,20 +12,24 @@ class ThanhToanController extends Controller
 {
     public function getThanhToan($id_hop_dong)
     {
-        if (!Auth::check()) {
-            return response()->json([
-                'message' => 'Bạn cần đăng nhập để xem thanh toán'
-            ], 401);
-        }
+        $user = Auth::user();
 
-        $thanhToan = ThanhToan::where('hop_dong_id', $id_hop_dong)->get();
+        $thanhToan = ThanhToan::with('hopDong', 'maUuDai')
+            ->where('id', $id_hop_dong)
+            ->first();
 
-        if ($thanhToan->isEmpty()) {
+        if (!$thanhToan) {
             return response()->json([
-                'message' => 'Không tìm thấy thanh toán cho hợp đồng này.'
+                'message' => 'Thanh toán không tồn tại.'
             ], 404);
         }
 
-        return response()->json($thanhToan, 200);
+        if ($thanhToan->hopDong->tai_khoan_id !== $user->id) {
+            return response()->json([
+                'message' => 'Bạn không có quyền xem thông tin thanh toán này.'
+            ], 403);
+        }
+
+        return response()->json($thanhToan);
     }
 }
