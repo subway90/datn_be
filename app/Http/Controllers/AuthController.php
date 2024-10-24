@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Constraint\IsEmpty;
 use function PHPUnit\Framework\isEmpty;
@@ -145,26 +146,158 @@ class AuthController extends Controller
             'born.date' => 'Ngày sinh phải có định dạng hợp lệ.',
         ]);
 
+        try {
+            $user->update($request->only(['name', 'avatar', 'phone', 'born']));
+
+            if ($request->file('avatar')) {
+                if ($request->avatar) {
+                    $oldImage = $user->avatar;
+                    Storage::delete($oldImage);
+
+                    $newImage = $user->file('avatar')->store('public/avatars');
+                }
+
+                $user->update([
+                    "name" => $user->name,
+                    "avatar" => $newImage,
+                    "phone" => $user->phone,
+                    "born" => $user->born
+                ]);
+            }
+
+            $user->save();
+
+            return response()->json([
+                'message' => 'Thông tin người dùng đã được cập nhật thành công',
+                'user' => $user,
+                'avatar_url' =>  Storage::url('avatars/' . basename($user->avatar)),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Lỗi khi cập nhật thông tin người dùng: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Có lỗi xảy ra khi cập nhật thông tin người dùng.',
+            ], 500);
+        }
+    }
+
+    public function store(Request $request)
+    {
+        // Validate dữ liệu người dùng gửi lên
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,webp,gif,png|max:2048',
+            'role' => 'required|integer|in:0,1',
+            'phone' => 'nullable|size:10',
+            'born' => 'nullable|date',
+        ], [
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Email không hợp lệ.',
+            'email.unique' => 'Email đã tồn tại.',
+            'avatar.image' => 'Tệp tải lên phải là hình ảnh.',
+            'avatar.mimes' => 'Chỉ chấp nhận các định dạng jpg, jpeg, webp, gif, png.',
+            'avatar.max' => 'Kích thước tệp phải nhỏ hơn 2MB.',
+            'phone.size' => 'Số điện thoại phải có độ dài 10 ký tự.',
+            'born.date' => 'Ngày sinh phải là định dạng hợp lệ.',
+            'role.required' => 'Vai trò là bắt buộc.',
+            'role.in' => 'Vai trò không hợp lệ.',
+        ]);
+
+        // Trả về lỗi nếu không vượt qua validation
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
             ], 422);
         }
 
-        $user->name = $request->name;
+        // Tạo mới người dùng
+        $user = new User();
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = $request->input('password');
+        $user->role = $request->input('role');
+        $user->phone = $request->input('phone');
+        $user->born = $request->input('born');
 
+        // Nếu có avatar thì lưu vào storage
         if ($request->hasFile('avatar')) {
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
             $user->avatar = $avatarPath;
         }
 
-        $user->born = $request->born;
-        $user->phone = $request->phone;
+        // Lưu thông tin người dùng
         $user->save();
 
+        // Trả về response khi tạo mới người dùng thành công
         return response()->json([
-            'message' => 'Thông tin người dùng đã được cập nhật thành công',
-            'user' => $user,
-        ]);
+            'message' => 'Người dùng đã được tạo thành công',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar' => $user->avatar ? Storage::url($user->avatar) : null,
+                'role' => $user->role,
+                'phone' => $user->phone,
+                'born' => $user->born,
+                'created_at' => $user->created_at,
+                'updated_at' => $user->updated_at,
+            ]
+        ], 201);
     }
+
+    // public function updateAvatar(Request $request)
+    // {
+    //     $user = $request->user();
+
+    //     $request->validate([
+    //         'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    //     ]);
+
+
+    //     // Xóa ảnh cũ nếu có
+    //     if ($user->avatar) {
+    //         Storage::delete($user->avatar);
+    //     }
+
+    //     // Lưu ảnh mới
+    //     $imageName = time() . '.' . $request->avatar->extension();
+    //     $imagePath = $request->avatar->storeAs('avatars', $imageName, 'public');
+
+    //     // Resize ảnh (tùy chọn)
+    //     // $img = Image::make(storage_path('app/public/' . $imagePath));
+    //     // $img->resize(200, 200);
+    //     // $img->save();
+
+    //     // Cập nhật đường dẫn ảnh trong database
+    //     $user->avatar = 'storage/' . $imagePath;
+    //     $user->save();
+
+    //     return response()->json(['message' => 'Ảnh đại diện đã được cập nhật']);
+    // }
 }
+
+// if ($request->file('avatar')) {
+//     $path = $request->file('avatar')->storage('public/avatars');
+
+//     Storage::url($path);
+// }
+
+// if ($request->file('avatar')) {
+//     $path = $user->avatar;
+//     Storage::delete($path);
+
+//     $pathImage = $user->file('avatar')->store('public/avatars');
+
+//     $user->update([
+//         "name" => $user->name,
+//         "avatar" => $pathImage,
+//         "phone" => $user->phone,
+//         "born" => $user->born
+//     ]);
+// }
+// $user->update([
+//     "name" => $user->name,
+//     "avatar" => $pathImage,
+//     "phone" => $user->phone,
+//     "born" => $user->born
+// ]);

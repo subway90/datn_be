@@ -23,6 +23,8 @@ Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logou
 Route::middleware('auth:sanctum')->get('profile', [AuthController::class, 'profile']);
 
 Route::middleware('auth:sanctum')->put('updateProfile', [AuthController::class, 'updateProfile']);
+
+Route::middleware('auth:sanctum')->put('updateAvatar', [AuthController::class, 'updateAvatar']);
 #
 Route::get('phong/{id_toa_nha}', [PhongController::class, 'index']);
 #
@@ -47,3 +49,5 @@ Route::get('hop-dong/{id_user}', [HopDongController::class, 'getHopDong']);
 
 #
 Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
+
+Route::post('/users', [AuthController::class, 'store']);
