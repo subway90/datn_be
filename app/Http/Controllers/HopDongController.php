@@ -8,24 +8,20 @@ use Illuminate\Support\Facades\Auth;
 
 class HopDongController extends Controller
 {
-    public function getHopDong($id_user)
+    public function show()
     {
-        if (!Auth::check()) {
-            return response()->json([
-                'message' => 'Bạn cần đăng nhập để xem hợp đồng.'
-            ], 401);
+        // Lấy ID của người dùng đã đăng nhập
+        $userId = Auth::id();
+        
+        // Lấy tất cả hợp đồng của người dùng
+        $hopDongs = HopDong::where('tai_khoan_id', $userId)->get();
+
+        // Kiểm tra xem người dùng có hợp đồng hay không
+        if ($hopDongs->isEmpty()) {
+            return response()->json(['message' => 'Bạn chưa có hợp đồng nào '], 404);
         }
 
-        $hopDong = HopDong::with('user')
-            ->where('tai_khoan_id', $id_user)
-            ->get();
-
-        if ($hopDong->isEmpty()) {
-            return response()->json([
-                'message' => 'Không tìm thấy hợp đồng cho người dùng này.'
-            ], 404);
-        }
-
-        return response()->json($hopDong, 200);
+        // Trả về danh sách hợp đồng
+        return response()->json($hopDongs);
     }
 }
