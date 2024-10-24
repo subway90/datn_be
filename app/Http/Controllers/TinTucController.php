@@ -144,6 +144,15 @@ class TinTucController extends Controller
     
      public function updateComment(Request $request)
     {
+       // Xác định người dùng đã đăng nhập qua request
+       $user = $request->user();
+
+       // Nếu người dùng chưa đăng nhập, trả về lỗi
+       if (!$user) {
+           return response()->json([
+               'message' => 'Bạn cần đăng nhập để thực hiện bình luận.'
+           ], status: 400); // Trả về mã 400 nếu chưa đăng nhập
+       }
         // Xác định các quy tắc xác thực
         $validator = Validator::make($request->all(), [
             'id' => 'required|integer',  // kiểm tra ID bình luận có tồn tại
@@ -153,7 +162,7 @@ class TinTucController extends Controller
             'id.required' => 'ID bình luận là bắt buộc.',
             'id.integer' => 'ID bình luận phải là một số nguyên.',
             'status.required' => 'Trạng thái là bắt buộc.',
-            'status.boolean' => 'Trạng thái phải là 1',
+            'status.boolean' => 'Trạng thái phải là 0 hoặc 1',
             'message.required' => 'Nội dung bình luận là bắt buộc.',
             'message.string' => 'Nội dung bình luận phải là một chuỗi.',
         ]);
