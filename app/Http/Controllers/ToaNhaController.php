@@ -117,7 +117,7 @@ public function detail(Request $request)
                 'id' => $toaNha->id,
                 'slug' => $toaNha->slug,
                 'name' => $toaNha->ten,
-                'image' => Str::before('$toaNha->image', ';'),
+                'image' => Str::before($toaNha->image, ';'),
                 'gia_thue' => $toaNha->gia_thue,
                 'count_rooms' => $toaNha->so_luong_phong,
                 'name_area' => $toaNha->khuVuc->ten,
@@ -277,6 +277,7 @@ public function detail(Request $request)
             return [
                 'id' => $toaNha->id,
                 'slug' => $toaNha->slug,
+                'khu_vuc' => $toaNha->khuVuc->ten,
                 'name' => $toaNha->ten,
                 'image' => Str::before($toaNha->image, ';'),
                 'luot_xem' => $toaNha->luot_xem,
