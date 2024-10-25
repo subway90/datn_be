@@ -10,18 +10,27 @@ use App\Http\Controllers\HopDongController;
 use App\Http\Controllers\ThanhToanController;
 use App\Http\Controllers\TinTucController;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
-
 # Đăng kí
 Route::post('register', [AuthController::class, 'register']);
 # Đăng nhập
 Route::post('login', [AuthController::class, 'login']);
-# Đăng xuất
-Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
-# Profile
-Route::middleware('auth:sanctum')->get('profile', [AuthController::class, 'profile']);
+
+# Những API cần đăng nhập
+Route::middleware(['CusTom'])->group(function () {
+    # Đăng xuất
+    Route::post('logout', [AuthController::class, 'logout']);
+    # Lấy thông tin người dùng
+    Route::get('profile', [AuthController::class, 'profile']);
+    # Hiển thị thông tin hợp đồng của người dùng
+    Route::get('/hop-dong', [HopDongController::class, 'show']);
+    # Bình luận tin tức 
+    Route::post('blog/comment', [TinTucController::class, 'postComment']);
+    # Cập nhật bình luận
+    Route::put('blog/update_comment', [TinTucController::class, 'updateComment']);
+    #
+    Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
+
+});
 
 #
 Route::get('phong/{id_toa_nha}', [PhongController::class, 'index']);
@@ -47,17 +56,9 @@ Route::get('khu_vuc/all', [KhuVucController::class, 'all']);
 # Danh sách khu vực nổi bật (Section Area Hot để Filter)
 Route::get('khu_vuc/listHot', [KhuVucController::class, 'listHot']);
 
-# Hiển thị thông tin hợp đồng của người dùng
-Route::middleware('auth:sanctum')->get('/hop-dong', [HopDongController::class, 'show']);
-
-#
-Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan'])->middleware('auth:sanctum');
-
 # Danh sách tin tức
 Route::get('blog/all', [TinTucController::class, 'getAll']);
 # Chi tiết tin tức & bình luận
 Route::get('blog', [TinTucController::class, 'getOne']);
-# Bình luận tin tức 
-Route::middleware('auth:sanctum')->post('blog/comment', [TinTucController::class, 'postComment']);
-# Cập nhật bình luận
-Route::put('blog/update_comment', [TinTucController::class, 'updateComment']);
+
+
