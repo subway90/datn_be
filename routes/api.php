@@ -62,5 +62,7 @@ Route::get('khu_vuc/listHot', [KhuVucController::class, 'listHot']);
 Route::get('blog/all', [TinTucController::class, 'getAll']);
 # Chi tiết tin tức & bình luận
 Route::get('blog', [TinTucController::class, 'getOne']);
+# Danh sách tin tức mới nhất (Section Blog Newest)
+Route::get('blog/listNew', [TinTucController::class, 'getAllListNew']);
 
 
