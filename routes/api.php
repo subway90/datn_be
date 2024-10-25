@@ -45,7 +45,7 @@ Route::get('khu_vuc/all', [KhuVucController::class, 'all']);
 # Danh sách khu vực nổi bật (Section Area Hot để Filter)
 Route::get('khu_vuc/listHot', [KhuVucController::class, 'listHot']);
 
-#
+# Hiển thị thông tin hợp đồng của người dùng
 Route::middleware('auth:sanctum')->get('/hop-dong', [HopDongController::class, 'show']);
 
 #
