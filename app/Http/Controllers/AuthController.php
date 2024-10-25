@@ -87,7 +87,7 @@ class AuthController extends Controller
         }
     
         // Tạo token cho người dùng khi đăng nhập thành công
-        $token = $user->createToken('MyApp')->plainTextToken;
+        $token = $user->createToken('ID USER: '.$user->id)->plainTextToken;
     
         return response()->json(['token' => $token],200);
     }
