@@ -50,4 +50,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Quan hệ một-một với HopDong (không bắt buộc)
+    public function hopDong()
+    {
+        return $this->hasOne(HopDong::class, 'tai_khoan_id');
+    }
 }

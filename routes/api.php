@@ -48,11 +48,11 @@ Route::get('khu_vuc/all', [KhuVucController::class, 'all']);
 # Danh sách khu vực nổi bật (Section Area Hot để Filter)
 Route::get('khu_vuc/listHot', [KhuVucController::class, 'listHot']);
 
-#
-Route::get('hop-dong/{id_user}', [HopDongController::class, 'getHopDong']);
+# Hiển thị thông tin hợp đồng của người dùng
+Route::middleware('auth:sanctum')->get('/hop-dong', [HopDongController::class, 'show']);
 
 #
-Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
+Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan'])->middleware('auth:sanctum');
 
 # Danh sách tin tức
 Route::get('blog/all', [TinTucController::class, 'getAll']);
