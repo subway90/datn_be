@@ -185,7 +185,6 @@ class TinTucController extends Controller
         // Trả về phản hồi JSON thành công
         return response()->json([
             'message' => 'Bình luận đã được cập nhật thành công.',
-            'data' => $comment
         ], 200);
     }
 }
