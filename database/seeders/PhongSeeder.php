@@ -16,7 +16,7 @@ class PhongSeeder extends Seeder
         Phong::create([
             'toa_nha_id' => 1, // ID tòa nhà
             'ten_phong' => 'Phòng 101',
-            'hinh_anh' => 'http://localhost:8000/storage/room/img01.jpg;http://localhost:8000/storage/room/img02.jpg;http://localhost:8000/storage/room/img03.jpg;http://localhost:8000/storage/room/img04.jpg;http://localhost:8000/storage/room/img05.jpg',
+            'hinh_anh' => 'image-01.jpg;image-02.jpg;image-03.jpg;image-04.jpg;image-05.jpg',
             'dien_tich' => 30,
             'gac_lung' => true,
             'gia_thue' => 3000000,
@@ -32,7 +32,7 @@ class PhongSeeder extends Seeder
         Phong::create([
             'toa_nha_id' => 2, // ID tòa nhà
             'ten_phong' => 'Phòng 102',
-            'hinh_anh' => 'http://localhost:8000/storage/room/img01.jpg;http://localhost:8000/storage/room/img02.jpg;http://localhost:8000/storage/room/img03.jpg;http://localhost:8000/storage/room/img04.jpg;http://localhost:8000/storage/room/img05.jpg',
+            'hinh_anh' => 'image-01.jpg;image-02.jpg;image-03.jpg;image-04.jpg;image-05.jpg',
             'dien_tich' => 28,
             'gac_lung' => false,
             'gia_thue' => 2800000,
@@ -48,7 +48,7 @@ class PhongSeeder extends Seeder
         Phong::create([
             'toa_nha_id' => 2, // ID tòa nhà
             'ten_phong' => 'Phòng 103',
-            'hinh_anh' => 'http://localhost:8000/storage/room/img01.jpg;http://localhost:8000/storage/room/img02.jpg;http://localhost:8000/storage/room/img03.jpg;http://localhost:8000/storage/room/img04.jpg;http://localhost:8000/storage/room/img05.jpg',
+            'hinh_anh' => 'image-01.jpg;image-02.jpg;image-03.jpg;image-04.jpg;image-05.jpg',
             'dien_tich' => 32,
             'gac_lung' => true,
             'gia_thue' => 3200000,
