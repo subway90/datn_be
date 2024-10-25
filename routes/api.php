@@ -21,6 +21,8 @@ Route::middleware(['CusTom'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     # Lấy thông tin người dùng
     Route::get('profile', [AuthController::class, 'profile']);
+    # Chỉnh sửa thông tin người dùng
+    Route::put('updateProfile', [AuthController::class, 'updateProfile']);
     # Hiển thị thông tin hợp đồng của người dùng
     Route::get('/hop-dong', [HopDongController::class, 'show']);
     # Bình luận tin tức 

@@ -121,4 +121,55 @@ class AuthController extends Controller
     
         return response()->json([$user], 200);
     }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user(); // Lấy người dùng đã xác thực
+    
+        // Kiểm tra xem có dữ liệu nào được gửi lên không
+        if (!$request->hasAny(['name', 'phone', 'born'])) {
+            return response()->json([
+                'message' => 'Có lỗi xảy ra ! Có lẽ bạn chưa nhập dữ liệu cho key name|phone|born',
+            ], 400); // Trả về mã 400 nếu không có dữ liệu
+        }
+    
+        // Validate dữ liệu nếu có
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|size:10',
+            'born' => 'nullable|date',
+        ], [
+            'name.required' => 'Tên chưa được nhập',
+            'name.string' => 'Tên phải là chuỗi ký tự.',
+            'name.max' => 'Tên vượt quá ký tự.',
+            'phone.size' => 'SĐT phải có độ dài 10 ký tự.',
+            'born.date' => 'Ngày sinh phải có định dạng hợp lệ.',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()->all(),
+            ], 400);
+        }
+    
+        // Cập nhật các trường nếu có dữ liệu
+        if ($request->has('name')) {
+            $user->name = $request->input('name');
+        }
+    
+        if ($request->has('phone')) {
+            $user->phone = $request->input('phone');
+        }
+    
+        if ($request->has('born')) {
+            $user->born = $request->input('born');
+        }
+    
+        $user->save(); // Lưu các thay đổi vào cơ sở dữ liệu
+    
+        return response()->json([
+            'message' => 'Thông tin người dùng đã được cập nhật thành công',
+            'user' => $user,
+        ]);
+    }
 }
