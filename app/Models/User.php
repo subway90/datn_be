@@ -56,4 +56,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(HopDong::class, 'tai_khoan_id');
     }
+    public function lienHeDatPhongs()
+    {
+        return $this->hasMany(LienHeDatPhong::class, 'tai_khoan_id');
+    }   
 }

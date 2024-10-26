@@ -34,4 +34,8 @@ class Phong extends Model
     {
         return $this->belongsTo(ToaNha::class, 'toa_nha_id');
     }
+    public function lienHeDatPhongs()
+    {
+        return $this->hasMany(LienHeDatPhong::class, 'phong_id');
+    }
 }
