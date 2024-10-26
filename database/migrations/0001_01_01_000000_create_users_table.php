@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('phone',10)->nullable();
             $table->date('born')->nullable();
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
 
