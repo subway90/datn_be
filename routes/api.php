@@ -40,19 +40,27 @@ Route::middleware(['CusTom'])->group(function () {
 # Những API cần đăng nhập và là ADMIN
 Route::middleware(['Admin'])->group(function () {
     
-    # Lấy danh sách tất cả
-    Route::get('/cate_blog', [DanhMucTinTucController::class, 'all']);
-    # Lấy duy nhất 1
-    Route::get('/cate_blog/{id}', [DanhMucTinTucController::class, 'one']);
-    # Danh sách danh mục tin tức
-    Route::put('/cate_blog/edit/{id}', [DanhMucTinTucController::class, 'edit']);
-    # Danh sách danh mục tin tức
-    Route::post('/cate_blog/add', [DanhMucTinTucController::class, 'add']);
-    # Xóa danh mục tin tức
-    Route::delete('cate_blog/delete/{id}',[DanhMucTinTucController::class,'destroy']);
-    # Khôi phục danh mục tin tức
-    Route::get('/cate_blog/restore/{id}', [DanhMucTinTucController::class, 'restore']);
+    Route::prefix('cate_blog')->group(function () {
+        # Lấy danh sách tất cả
+        Route::get('/', [DanhMucTinTucController::class, 'all']);
+        
+        # Lấy duy nhất 1
+        Route::get('/{id}', [DanhMucTinTucController::class, 'one']);
+        
+        # Cập nhật danh mục tin tức
+        Route::put('/edit/{id}', [DanhMucTinTucController::class, 'edit']);
+        
+        # Thêm danh mục tin tức
+        Route::post('/add', [DanhMucTinTucController::class, 'add']);
+        
+        # Xóa danh mục tin tức
+        Route::delete('/delete/{id}', [DanhMucTinTucController::class, 'destroy']);
+        
+        # Khôi phục danh mục tin tức
+        Route::get('/restore/{id}', [DanhMucTinTucController::class, 'restore']);
+    });
 
+    //Tạo prefix trước nhé !
 
 });
 
