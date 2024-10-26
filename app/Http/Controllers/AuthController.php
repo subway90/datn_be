@@ -197,7 +197,7 @@ class AuthController extends Controller
 
         $path = $request->file('avatar')->store('avatar', 'public');
 
-        $user->avatar = Storage::url($path);
+        $user->avatar = $path;
         $user->save();
 
         return response()->json([
