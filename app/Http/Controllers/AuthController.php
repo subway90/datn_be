@@ -272,4 +272,14 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Khôi phục thành công!', 'user' => $user], 200);
     }
+    public function getDeletedUsers()
+    {
+        $deletedUsers = User::onlyTrashed()->get();
+
+        if ($deletedUsers->isEmpty()) {
+            return response()->json(['message' => 'Không có user nào đã bị xóa'], 404);
+        }
+
+        return response()->json(['deleted_users' => $deletedUsers], 200);
+    }
 }

@@ -65,6 +65,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::put('edit/{id}', [AuthController::class, 'editUser']);
         Route::delete('delete/{id}', [AuthController::class, 'deleteUser']);
         Route::post('restore/{id}', [AuthController::class, 'restoreUser']);
+        Route::get('getRestore', [AuthController::class, 'getDeletedUsers']);
     });
 });
 
