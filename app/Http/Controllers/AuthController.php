@@ -205,4 +205,44 @@ class AuthController extends Controller
             'avatar_url' => Storage::url($path)
         ], 200);
     }
+    public function editUser(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'Id user không tồn tại'], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'role' => 'required|integer|min:1',
+            'phone' => 'nullable|string|max:10',
+            'born' => 'nullable|date'
+        ], [
+            'name.required' => 'Tên là bắt buộc.',
+            'name.string' => 'Tên phải là chuỗi ký tự.',
+            'name.max' => 'Tên không được dài quá 255 ký tự.',
+
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Định dạng email không hợp lệ.',
+            'email.unique' => 'Email đã tồn tại, vui lòng chọn email khác.',
+
+            'role.required' => 'Vai trò là bắt buộc.',
+            'role.integer' => 'Vai trò phải là một số nguyên.',
+            'role.min' => 'Vai trò phải lớn hơn hoặc bằng 1.',
+
+            'phone.string' => 'Số điện thoại phải là chuỗi ký tự.',
+            'phone.max' => 'Số điện thoại không được dài quá 10 ký tự.',
+
+            'born.date' => 'Ngày sinh phải là định dạng ngày hợp lệ.'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        $user->update($request->only(['name', 'email', 'role', 'phone', 'born']));
+
+        return response()->json(['message' => 'Chỉnh sửa thông tin thành công!', 'user' => $user], 200);
+    }
 }

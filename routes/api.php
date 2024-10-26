@@ -39,29 +39,31 @@ Route::middleware(['CusTom'])->group(function () {
 
 # Những API cần đăng nhập và là ADMIN
 Route::middleware(['Admin'])->group(function () {
-    
+
     Route::prefix('cate_blog')->group(function () {
         # Lấy danh sách tất cả
         Route::get('/', [DanhMucTinTucController::class, 'all']);
-        
+
         # Lấy duy nhất 1
         Route::get('/{id}', [DanhMucTinTucController::class, 'one']);
-        
+
         # Cập nhật danh mục tin tức
         Route::put('/edit/{id}', [DanhMucTinTucController::class, 'edit']);
-        
+
         # Thêm danh mục tin tức
         Route::post('/add', [DanhMucTinTucController::class, 'add']);
-        
+
         # Xóa danh mục tin tức
         Route::delete('/delete/{id}', [DanhMucTinTucController::class, 'destroy']);
-        
+
         # Khôi phục danh mục tin tức
         Route::get('/restore/{id}', [DanhMucTinTucController::class, 'restore']);
     });
 
     //Tạo prefix trước nhé !
-
+    Route::prefix('user')->group(function () {
+        Route::put('edit/{id}', [AuthController::class, 'editUser']);
+    });
 });
 
 
@@ -97,4 +99,4 @@ Route::get('blog', [TinTucController::class, 'getOne']);
 Route::get('blog/listNew', [TinTucController::class, 'getAllListNew']);
 
 # Tạo liên hệ đặt phòng mới
-Route::post('contactRoom/add', [LienHeDatPhongController::class,'add']); 
+Route::post('contactRoom/add', [LienHeDatPhongController::class, 'add']);
