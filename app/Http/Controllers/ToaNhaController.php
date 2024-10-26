@@ -226,9 +226,11 @@ class ToaNhaController extends Controller
     
             return [
                 'id' => $toaNha->id,
-                'slug' => $toaNha->slug,
-                'khu_vuc' => $toaNha->khuVuc->ten,
+                'name_area' => $toaNha->khuVuc->ten,
+                'slug_area' => $toaNha->khuVuc->slug,
+                'size' => $toaNha->dien_tich,
                 'name' => $toaNha->ten,
+                'slug' => $toaNha->slug,
                 'image' => Str::before($toaNha->image, ';'),
                 'luot_xem' => $toaNha->luot_xem,
                 'gia_thue' => $toaNha->gia_thue,
@@ -236,8 +238,6 @@ class ToaNhaController extends Controller
                 'tien_ich' => $result_tien_ich,
                 'vi_tri' => $result_vi_tri,
                 'count_rooms' => $toaNha->so_luong_phong,
-                'name_area' => $toaNha->khuVuc->ten,
-                'slug_area' => $toaNha->khuVuc->slug,
             ];
         });
     
