@@ -3,10 +3,10 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class BinhLuanTinTuc extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     // Nếu tên bảng không theo quy tắc đặt tên mặc định, bạn có thể chỉ định tên bảng
     protected $table = 'binh_luan_tin_tuc';

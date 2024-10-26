@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreign('tai_khoan_id')->references('id')->on('users');
             $table->foreign('tin_tuc_id')->references('id')->on('tin_tuc');
+            $table->softDeletes();
         });
     }
 
