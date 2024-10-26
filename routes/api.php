@@ -9,6 +9,7 @@ use App\Http\Controllers\KhuVucController;
 use App\Http\Controllers\HopDongController;
 use App\Http\Controllers\ThanhToanController;
 use App\Http\Controllers\TinTucController;
+use App\Http\Controllers\LienHeDatPhongController;
 
 # Đăng kí
 Route::post('register', [AuthController::class, 'register']);
@@ -65,4 +66,6 @@ Route::get('blog', [TinTucController::class, 'getOne']);
 # Danh sách tin tức mới nhất (Section Blog Newest)
 Route::get('blog/listNew', [TinTucController::class, 'getAllListNew']);
 
+# Tạo liên hệ đặt phòng mới
+Route::post('contactRoom/add', [LienHeDatPhongController::class,'add']); 
 
