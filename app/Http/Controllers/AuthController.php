@@ -183,15 +183,21 @@ class AuthController extends Controller
             'avatar.max' => 'Ảnh đại diện không được vượt quá 2MB.',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()->all(),
+            ], 400);
+        }
+
         $user = $request->user();
 
         if ($user->avatar) {
             Storage::disk('public')->delete($user->avatar);
         }
 
-        $path = $request->file('avatar')->store('avatars', 'public');
+        $path = $request->file('avatar')->store('avatar', 'public');
 
-        $user->avatar = $path;
+        $user->avatar = Storage::url($path);
         $user->save();
 
         return response()->json([
