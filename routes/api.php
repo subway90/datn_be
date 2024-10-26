@@ -63,6 +63,8 @@ Route::middleware(['Admin'])->group(function () {
     //Tạo prefix trước nhé !
     Route::prefix('user')->group(function () {
         Route::put('edit/{id}', [AuthController::class, 'editUser']);
+        Route::delete('delete/{id}', [AuthController::class, 'deleteUser']);
+        Route::post('restore/{id}', [AuthController::class, 'restoreUser']);
     });
 });
 

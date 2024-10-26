@@ -245,4 +245,31 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Chỉnh sửa thông tin thành công!', 'user' => $user], 200);
     }
+    public function deleteUser($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'Id user không tồn tại'], 404);
+        }
+
+        if ($user->role == 0) {
+            return response()->json(['error' => 'Không được xóa tài khoản admin'], 403);
+        }
+
+        $user->delete();
+
+        return response()->json(['message' => 'Xóa thành công!'], 200);
+    }
+    public function restoreUser($id)
+    {
+        $user = User::onlyTrashed()->find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'Id user không tồn tại'], 404);
+        }
+
+        $user->restore();
+
+        return response()->json(['message' => 'Khôi phục thành công!', 'user' => $user], 200);
+    }
 }
