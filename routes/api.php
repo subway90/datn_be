@@ -9,6 +9,7 @@ use App\Http\Controllers\KhuVucController;
 use App\Http\Controllers\HopDongController;
 use App\Http\Controllers\ThanhToanController;
 use App\Http\Controllers\TinTucController;
+use App\Http\Controllers\DanhMucTinTucController;
 use App\Http\Controllers\LienHeDatPhongController;
 
 # Đăng kí
@@ -34,6 +35,26 @@ Route::middleware(['CusTom'])->group(function () {
     Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
 
 });
+
+# Những API cần đăng nhập và là ADMIN
+Route::middleware(['Admin'])->group(function () {
+    
+    # Lấy danh sách tất cả
+    Route::get('/cate_blog', [DanhMucTinTucController::class, 'all']);
+    # Lấy duy nhất 1
+    Route::get('/cate_blog/{id}', [DanhMucTinTucController::class, 'one']);
+    # Danh sách danh mục tin tức
+    Route::put('/cate_blog/edit/{id}', [DanhMucTinTucController::class, 'edit']);
+    # Danh sách danh mục tin tức
+    Route::post('/cate_blog/add', [DanhMucTinTucController::class, 'add']);
+    # Xóa danh mục tin tức
+    Route::delete('cate_blog/delete/{id}',[DanhMucTinTucController::class,'destroy']);
+    # Khôi phục danh mục tin tức
+    Route::get('/cate_blog/restore/{id}', [DanhMucTinTucController::class, 'restore']);
+
+
+});
+
 
 #
 Route::get('phong/{id_toa_nha}', [PhongController::class, 'index']);

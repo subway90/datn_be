@@ -15,9 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('ten_danh_muc');
             $table->string('slug');
-            $table->boolean('trang_thai')->default(1);
-            $table->integer('thu_tu')->nullable();
             $table->timestamps();
+            $table->softDeletes(); // Thêm dòng này để tạo trường deleted_at
             
         });
     }
