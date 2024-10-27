@@ -214,4 +214,31 @@ class TinTucController extends Controller
 
         return response()->json(['message' => 'Tin tức đã được khôi phục thành công.'], 200);
     }
+    public function duplicate($id){
+        $tinTuc = TinTuc::find($id);
+        if (!$tinTuc) {
+            return response()->json(['message' => 'Tin tức không tồn tại.'], 404);
+        }
+        // Tạo 1 tiêu đề mới bằng cách nối chuỗi
+        $newtieu_de = $tinTuc->tieu_de . '-copy';
+
+        // Tạo 1 slug mới bằng cách str tiêu đề mới
+        $newslug = Str::slug($newtieu_de);
+       
+        // Lưu vào database 
+        $newTinTuc = TinTuc::create([
+        'tai_khoan_id' => $tinTuc->tai_khoan_id,
+        'danh_muc_id' => $tinTuc->danh_muc_id,
+        'tieu_de' => $newtieu_de,
+        'slug' => $newslug,
+        'image' => $tinTuc->image,
+        'noi_dung' => $tinTuc->noi_dung,
+        'trang_thai' => $tinTuc->trang_thai,
+        ]);
+        
+        return response()->json([
+            'message' => 'Tin tức đã được sao chép và lưu thành công.',
+        ], 200);
+
+    }
 }

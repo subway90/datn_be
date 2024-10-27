@@ -90,8 +90,8 @@ Route::middleware(['Admin'])->group(function () {
         # Lấy duy nhất 1
         Route::get('/{id}', [TinTucController::class, 'getOneByID']);
         
-        # Cập nhật tin tức
-        Route::put('/edit/{id}', [TinTucController::class, 'edit']);
+        // # Cập nhật tin tức
+        // Route::put('/edit/{id}', [TinTucController::class, 'edit']);
         
         # Thêm tin tức mới
         Route::post('/add', [TinTucController::class, 'add']);
@@ -101,6 +101,9 @@ Route::middleware(['Admin'])->group(function () {
         
         # Khôi phục tin tức
         Route::get('/restore/{id}', [TinTucController::class, 'restore']);
+
+         # Khôi phục tin tức
+         Route::get('/duplicate/{id}', [TinTucController::class, 'duplicate']);
     });
 });
 
