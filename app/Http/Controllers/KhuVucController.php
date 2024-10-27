@@ -97,7 +97,11 @@ class KhuVucController extends Controller
             'image.max' => 'Ảnh phải dưới 2MB',
             'noi_bat.boolean' => 'Dữ liệu noi_bat sai. Nhập 0: không nổi bật, 1: nổi bật'
         ]
-    );
+    );  
+
+        //Kiểm tra tên tồn tại hay chưa
+        $checkName = KhuVuc::where('ten',$request->name)->exists();
+        if($checkName) return response()->json(['message' => 'Tên này đã tồn tại'],400);
 
         // Xử lý upload ảnh
         $imagePath = null;
