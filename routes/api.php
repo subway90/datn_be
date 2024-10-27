@@ -35,6 +35,11 @@ Route::middleware(['CusTom'])->group(function () {
     Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
     #
     Route::post('updateAvatar', [AuthController::class, 'updateAvatar']);
+
+    Route::prefix('khu-vuc')->group(function () {
+        # Thống kê tổng
+        Route::get('/',[KhuVucController::class,'all']);
+    });
 });
 
 # Những API cần đăng nhập và là ADMIN
@@ -97,7 +102,7 @@ Route::get('toa-nha/listCheap', [ToaNhaController::class, 'listCheap']);
 Route::get('/filter', [ToaNhaController::class, 'filter']);
 
 # Danh sách khu vực (option của Area để Filter)
-Route::get('khu_vuc/all', [KhuVucController::class, 'all']);
+Route::get('khu_vuc/option', [KhuVucController::class, 'option']);
 # Danh sách khu vực nổi bật (Section Area Hot để Filter)
 Route::get('khu_vuc/listHot', [KhuVucController::class, 'listHot']);
 
