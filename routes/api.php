@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BinhLuanTinTucController;
 use App\Http\Controllers\DashBoardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -28,9 +29,9 @@ Route::middleware(['CusTom'])->group(function () {
     # Hiển thị thông tin hợp đồng của người dùng
     Route::get('/hop-dong', [HopDongController::class, 'show']);
     # Bình luận tin tức
-    Route::post('blog/comment', [TinTucController::class, 'postComment']);
+    Route::post('blog/comment', [BinhLuanTinTucController::class, 'postComment']);
     # Cập nhật bình luận
-    Route::put('blog/update_comment', [TinTucController::class, 'updateComment']);
+    Route::put('blog/update_comment', [BinhLuanTinTucController::class, 'updateComment']);
     #
     Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
     #
@@ -79,6 +80,19 @@ Route::middleware(['Admin'])->group(function () {
     Route::prefix('dashboard')->group(function () {
         # Thống kê tổng
         Route::get('/total',[DashBoardController::class,'total']);
+    });
+    Route::prefix('blog')->group(function () {
+        # Cập nhật tin tức
+        Route::put('/edit/{id}', [TinTucController::class, 'edit']);
+        
+        # Thêm tin tức mới
+        Route::post('/add', [TinTucController::class, 'add']);
+        
+        # Xóa danh mục tin tức
+        Route::delete('/delete/{id}', [TinTucController::class, 'destroy']);
+        
+        # Khôi phục danh mục tin tức
+        Route::get('/restore/{id}', [TinTucController::class, 'restore']);
     });
 });
 
