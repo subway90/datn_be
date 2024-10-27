@@ -60,8 +60,15 @@ Route::middleware(['Admin'])->group(function () {
         Route::get('/restore/{id}', [DanhMucTinTucController::class, 'restore']);
     });
 
-    //Tạo prefix trước nhé !
-
+    Route::prefix('contact_room')->group(function () {
+        # Lấy danh sách
+        Route::get('/',[LienHeDatPhongController::class,'all']);
+        # Lấy một
+        Route::delete('/delete/{id}',[LienHeDatPhongController::class,'destroy']);
+        # Xóa
+        Route::get('/restore/{id}',[LienHeDatPhongController::class,'restore']);
+        # Khôi phục
+    })  ;
 });
 
 
