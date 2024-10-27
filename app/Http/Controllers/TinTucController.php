@@ -199,4 +199,19 @@ class TinTucController extends Controller
 
         return response()->json(['message' => 'Tin tức đã được xóa thành công.'], 200);
     }
+    public function restore($id)
+    {
+        // Tìm tin tức đã bị xóa
+        $tinTuc = TinTuc::withTrashed()->find($id);
+
+        // Kiểm tra xem tin tức có tồn tại không
+        if (!$tinTuc) {
+            return response()->json(['message' => 'Tin tức không tồn tại hoặc chưa bị xóa.'], 404);
+        }
+
+        // Khôi phục tin tức
+        $tinTuc->restore();
+
+        return response()->json(['message' => 'Tin tức đã được khôi phục thành công.'], 200);
+    }
 }
