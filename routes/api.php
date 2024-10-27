@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\DashBoardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PhongController;
@@ -68,7 +68,12 @@ Route::middleware(['Admin'])->group(function () {
         # Xóa
         Route::get('/restore/{id}',[LienHeDatPhongController::class,'restore']);
         # Khôi phục
-    })  ;
+    });
+    
+    Route::prefix('dashboard')->group(function () {
+        # Thống kê tổng
+        Route::get('/total',[DashBoardController::class,'total']);
+    });
 });
 
 
