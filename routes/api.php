@@ -12,7 +12,12 @@ use App\Http\Controllers\ThanhToanController;
 use App\Http\Controllers\TinTucController;
 use App\Http\Controllers\DanhMucTinTucController;
 use App\Http\Controllers\LienHeDatPhongController;
-
+# Danh sách tin tức
+Route::get('blog/all', [TinTucController::class, 'getAll']);
+# Chi tiết tin tức & bình luận
+Route::get('blog', [TinTucController::class, 'getOne']);
+# Danh sách tin tức mới nhất (Section Blog Newest)
+Route::get('blog/listNew', [TinTucController::class, 'getAllListNew']);
 # Đăng kí
 Route::post('register', [AuthController::class, 'register']);
 # Đăng nhập
@@ -82,16 +87,19 @@ Route::middleware(['Admin'])->group(function () {
         Route::get('/total',[DashBoardController::class,'total']);
     });
     Route::prefix('blog')->group(function () {
+        # Lấy duy nhất 1
+        Route::get('/{id}', [TinTucController::class, 'getOneByID']);
+        
         # Cập nhật tin tức
         Route::put('/edit/{id}', [TinTucController::class, 'edit']);
         
         # Thêm tin tức mới
         Route::post('/add', [TinTucController::class, 'add']);
         
-        # Xóa danh mục tin tức
+        # Xóa tin tức
         Route::delete('/delete/{id}', [TinTucController::class, 'destroy']);
         
-        # Khôi phục danh mục tin tức
+        # Khôi phục tin tức
         Route::get('/restore/{id}', [TinTucController::class, 'restore']);
     });
 });
@@ -120,13 +128,6 @@ Route::get('/filter', [ToaNhaController::class, 'filter']);
 Route::get('khu_vuc/option', [KhuVucController::class, 'option']);
 # Danh sách khu vực nổi bật (Section Area Hot để Filter)
 Route::get('khu_vuc/listHot', [KhuVucController::class, 'listHot']);
-
-# Danh sách tin tức
-Route::get('blog/all', [TinTucController::class, 'getAll']);
-# Chi tiết tin tức & bình luận
-Route::get('blog', [TinTucController::class, 'getOne']);
-# Danh sách tin tức mới nhất (Section Blog Newest)
-Route::get('blog/listNew', [TinTucController::class, 'getAllListNew']);
 
 # Tạo liên hệ đặt phòng mới
 Route::post('contactRoom/add', [LienHeDatPhongController::class,'add']); 
