@@ -139,25 +139,23 @@ class TinTucController extends Controller
     public function add(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'tieu_de' => 'required|string|max:255',
+            'title' => 'required|string|unique:tin_tuc,tieu_de',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'noi_dung' => 'required|string',
-            'trang_thai' => 'required|boolean',
-            'danh_muc_id' => 'required|integer|exists:danh_muc_tin_tuc,id', // Kiểm tra danh mục hợp lệ
+            'content' => 'required|string',
+            'trang_thai' => 'boolean',
+            'cate_id' => 'required|integer|exists:danh_muc_tin_tuc,id',
         ],
         [
-            'tieu_de.required' => 'Chưa nhập tên',
-            'tieu_de.max' => 'Tiêu đề phải dưới 255 ký tự',
+            'title.required' => 'Chưa nhập tên',
+            'title.unique' => 'Tiêu đề này đã tồn tại',
             'image.required' => 'Bạn chưa nhập ảnh',
             'image.mimes' => 'Chưa nhập đúng định dạng ảnh',
             'image.max' => 'Ảnh phải dưới 2MB',
-            'noi_dung.required' => 'Chưa nhập nội dung',
-            'trang_thai.required' => 'Chưa nhập trạng thái',
-            'trang_thai.boolean' => 'Trạng thái phải là 0 hoặc 1',
-            'danh_muc_id.required' => 'Chưa nhập danh mục',
-            'danh_muc_id.exists' => 'Danh mục không tồn tại',
+            'content.required' => 'Chưa nhập nội dung',
+            'status.boolean' => 'Trạng thái phải là 0 hoặc 1',
+            'cate_id.required' => 'Chưa nhập danh mục',
+            'cate_id.exists' => 'Danh mục không tồn tại',
         ]);
-    
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->all()], 400);
         }
@@ -167,16 +165,16 @@ class TinTucController extends Controller
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('blog', 'public');
         }
-    
+        $status = $request->input('trang_thai', 1);
         // Tạo mới bản ghi TinTuc với `id_tai_khoan` từ tài khoản đã đăng nhập
         TinTuc::create([
             'tai_khoan_id' => $request->user()->id, // ID tài khoản hiện tại
-            'danh_muc_id' => $request->danh_muc_id,
-            'tieu_de' => $request->tieu_de,
-            'slug' => Str::slug($request->tieu_de),
+            'danh_muc_id' => $request->cate_id,
+            'tieu_de' => $request->title,
+            'slug' => Str::slug($request->title),
             'image' => $imagePath,
-            'noi_dung' => $request->noi_dung,
-            'trang_thai' => $request->trang_thai,
+            'noi_dung' => $request->content,
+            'trang_thai' => $status,
         ]);
     
         return response()->json([
