@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Tester 01',
             'email' => 'test01@gmail.com',
             'password' => Hash::make('12345678'),
-            'gender' => true,
+            'gender' => 2,
             'address' => 'Tân Thới Nhất, Quận 12,TP Hồ Chí Minh',
             'born' => '2024-07-09',
             'phone' => '0332665391',
@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Tester 02',
             'email' => 'test02@gmail.com',
             'password' => Hash::make('12345678'),
+            'gender' => 3,
             'born' => '2024-05-31',
             'phone' => '0888442652',
         ]);
@@ -46,6 +47,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'test03@gmail.com',
             'password' => Hash::make('12345678'),
             'born' => '2024-01-17',
+            'gender' => 2,
             'phone' => '0969455222',
         ]);
     }

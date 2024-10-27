@@ -20,7 +20,7 @@ return new class extends Migration
             $table->tinyInteger('role')->default(1); //0: admin, 1:user
             $table->string('phone',10)->nullable();
             $table->date('born')->nullable();
-            $table->boolean('gender')->default(false); //false: nam, true: nữ
+            $table->tinyInteger('gender')->default(1); //1: nam, 2:nữ, 3:khác
             $table->text('address')->nullable();
             $table->rememberToken();
             $table->softDeletes();
