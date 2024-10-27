@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('khu_vuc', function (Blueprint $table) {
             $table->id();
             $table->string('ten', 255);
-            $table->string('image', 255);
+            $table->string('image', 255)->nullable();
             $table->string('slug', 255);
-            $table->integer('thu_tu');
             $table->boolean('noi_bat')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

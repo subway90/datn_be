@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class KhuVuc extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     // Đặt tên bảng nếu khác với quy tắc mặc định
     protected $table = 'khu_vuc';
@@ -17,7 +18,6 @@ class KhuVuc extends Model
         'ten',
         'slug',
         'image',
-        'thu_tu',
         'noi_bat',
     ];
 }
