@@ -312,4 +312,43 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Thành công!', 'user' => $newUser], 201);
     }
+    public function updateProfileNew(Request $request)
+    {
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'avatar' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'phone' => 'nullable|max:10',
+            'born' => 'nullable|date'
+        ], [
+            'name.required' => 'Bạn chưa nhập tên',
+            'name.string' => 'Tên phải là ký tự',
+            'name.max' => 'Tên vượt quá ký tự cho phép',
+            'avatar.image' => 'File ảnh không hợp lệ',
+            'avatar.mimes' => 'Ảnh đại diện chỉ chấp nhận các định dạng: jpeg, png, jpg.',
+            'avatar.max' => 'Ảnh không được vượt quá 2MB'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->all()], 422);
+        }
+
+        $user->name = $request->input('name');
+        $user->phone = $request->input('phone');
+        $user->born = $request->input('born');
+
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $path;
+        }
+
+        $user->save();
+
+        return response()->json(['message' => 'Cập nhật thông tin thành công!', 'user' => $user], 200);
+    }
 }

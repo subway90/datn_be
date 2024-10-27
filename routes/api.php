@@ -35,6 +35,8 @@ Route::middleware(['CusTom'])->group(function () {
     Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
     #
     Route::post('updateAvatar', [AuthController::class, 'updateAvatar']);
+    #
+    Route::post('updateProfileNew', [AuthController::class, 'updateProfileNew']);
 });
 
 # Những API cần đăng nhập và là ADMIN
