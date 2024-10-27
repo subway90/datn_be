@@ -21,7 +21,7 @@ class Admin
 
         if (!$token) {
             // Nếu không có token, trả về phản hồi lỗi
-            return response()->json(['message' => 'Yêu cầu nhập token'], 401);
+            return response()->json(['message' => 'Bạn chưa đăng nhập !'], 404);
         }
 
         // Sử dụng findToken để kiểm tra token hợp lệ
@@ -29,7 +29,7 @@ class Admin
 
         if (!$accessToken || !$accessToken->tokenable) {
             // Nếu token không hợp lệ hoặc không có user tương ứng, trả về lỗi
-            return response()->json(['message' => 'Token không hợp lệ hoặc đã hết hạn.'], 401);
+            return response()->json(['message' => 'Bạn chưa đăng nhập !'], 404);
         }
 
         // Xác thực người dùng
