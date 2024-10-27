@@ -139,12 +139,15 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'phone' => 'nullable|size:10',
             'born' => 'nullable|date',
+            'address' => 'nullable',
+            'gender' => 'boolean',
         ], [
             'name.required' => 'Tên chưa được nhập',
             'name.string' => 'Tên phải là chuỗi ký tự.',
             'name.max' => 'Tên vượt quá ký tự.',
             'phone.size' => 'SĐT phải có độ dài 10 ký tự.',
             'born.date' => 'Ngày sinh phải có định dạng hợp lệ.',
+            'gender.boolean' => 'Vui lòng nhập định dạng 0 hoặc 1 cho gender (0:nam, 1:nữ)',
         ]);
 
         if ($validator->fails()) {
@@ -166,12 +169,19 @@ class AuthController extends Controller
             $user->born = $request->input('born');
         }
 
+        if ($request->has('address')) {
+            $user->address = $request->input('address');
+        }
+
+        if ($request->has('gender')) {
+            $user->gender = $request->input('gender');
+        }
+
         $user->save(); // Lưu các thay đổi vào cơ sở dữ liệu
 
         return response()->json([
-            'message' => 'Thông tin người dùng đã được cập nhật thành công',
-            'user' => $user,
-        ]);
+            'message' => 'Cập nhật thành công !',
+        ],200);
     }
     public function updateAvatar(Request $request)
     {
