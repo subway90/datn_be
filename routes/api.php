@@ -39,6 +39,7 @@ Route::middleware(['CusTom'])->group(function () {
     Route::prefix('khu-vuc')->group(function () {
         # Thống kê tổng
         Route::get('/',[KhuVucController::class,'all']);
+        Route::post('/add', [KhuVucController::class, 'store']);
     });
 });
 
