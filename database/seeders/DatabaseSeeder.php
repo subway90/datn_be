@@ -29,6 +29,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Tester 01',
             'email' => 'test01@gmail.com',
             'password' => Hash::make('12345678'),
+            'gender' => true,
+            'address' => 'Tân Thới Nhất, Quận 12,TP Hồ Chí Minh',
             'born' => '2024-07-09',
             'phone' => '0332665391',
         ]);
