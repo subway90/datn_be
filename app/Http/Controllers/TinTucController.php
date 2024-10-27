@@ -183,4 +183,20 @@ class TinTucController extends Controller
             'message' => 'Tạo mới tin tức thành công',
         ], 201);
     }
+    public function destroy($id)
+    {
+        // Tìm tin tức theo ID
+        $tinTuc = TinTuc::find($id);
+
+        // Kiểm tra xem tin tức có tồn tại không
+        if (!$tinTuc) {
+            return response()->json(['message' => 'Tin tức không tồn tại.'], 404);
+        }
+        // Xóa mềm tất cả bình luận liên quan
+        $tinTuc->BinhLuanTinTuc()->delete(); 
+        // Xóa Tin Tức
+        $tinTuc->delete();
+
+        return response()->json(['message' => 'Tin tức đã được xóa thành công.'], 200);
+    }
 }

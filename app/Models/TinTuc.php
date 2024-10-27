@@ -23,6 +23,7 @@ class TinTuc extends Model
         'noi_dung',
         'trang_thai',
     ];
+    protected $dates = ['deleted_at']; 
 
     public function user()
     {
