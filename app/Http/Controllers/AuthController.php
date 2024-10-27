@@ -282,4 +282,34 @@ class AuthController extends Controller
 
         return response()->json(['deleted_users' => $deletedUsers], 200);
     }
+    private function checkMail($email)
+    {
+        $originalEmail = $email;
+        $count = 1;
+
+        while (User::where('email', $email)->exists()) {
+            $email = $originalEmail . "(Copy '$count')";
+            $count++;
+        }
+
+        return $email;
+    }
+    public function duplicateUser($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['error' => 'Id user không tồn tại'], 404);
+        }
+
+        if ($user->role == 0) {
+            return response()->json(['error' => 'Admin không được duplicate'], 403);
+        }
+
+        $newUser = $user->replicate();
+        $newUser->name = $newUser->name . ' (Copy)';
+        $newUser->email = $this->checkMail($newUser->email);
+        $newUser->save();
+
+        return response()->json(['message' => 'Thành công!', 'user' => $newUser], 201);
+    }
 }

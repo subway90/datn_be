@@ -66,6 +66,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::delete('delete/{id}', [AuthController::class, 'deleteUser']);
         Route::post('restore/{id}', [AuthController::class, 'restoreUser']);
         Route::get('getRestore', [AuthController::class, 'getDeletedUsers']);
+        Route::get('duplicate/{id}', [AuthController::class, 'duplicateUser']);
     });
 });
 
