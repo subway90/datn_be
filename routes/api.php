@@ -130,4 +130,4 @@ Route::get('khu_vuc/option', [KhuVucController::class, 'option']);
 Route::get('khu_vuc/listHot', [KhuVucController::class, 'listHot']);
 
 # Tạo liên hệ đặt phòng mới
-Route::post('contactRoom/add', [LienHeDatPhongController::class,'add']); 
+Route::post('contact_room/add', [LienHeDatPhongController::class,'add']); 
