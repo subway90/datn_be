@@ -20,6 +20,8 @@ return new class extends Migration
             $table->tinyInteger('role')->default(1); //0: admin, 1:user
             $table->string('phone',10)->nullable();
             $table->date('born')->nullable();
+            $table->date('gender')->nullable();
+            $table->date('address')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
