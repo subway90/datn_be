@@ -39,8 +39,7 @@ Route::middleware(['CusTom'])->group(function () {
     Route::get('profile', [AuthController::class, 'profile']);
 
     # Chỉnh sửa thông tin người dùng
-    Route::put('updateProfile', [AuthController::class, 'updateProfile'])
-    ;
+    Route::put('updateProfile', [AuthController::class, 'updateProfile']);
     # Hiển thị thông tin hợp đồng của người dùng
     Route::get('/hop-dong', [HopDongController::class, 'show']);
 
@@ -58,13 +57,14 @@ Route::middleware(['CusTom'])->group(function () {
     Route::prefix('khu-vuc')->group(function () {
 
         # Thống kê tổng
-        Route::get('/',[KhuVucController::class,'all']);
+        Route::get('/', [KhuVucController::class, 'all']);
 
         Route::post('/add', [KhuVucController::class, 'store']);
     });
 });
 
-
+# Quên mật khẩu
+Route::post('forgot_password', [AuthController::class, 'forgotPassword']);
 
 
 # Những API cần đăng nhập và là ADMIN
@@ -89,7 +89,6 @@ Route::middleware(['Admin'])->group(function () {
 
         # Khôi phục danh mục tin tức
         Route::get('/restore/{id}', [DanhMucTinTucController::class, 'restore']);
-
     });
 
 
@@ -97,23 +96,21 @@ Route::middleware(['Admin'])->group(function () {
     Route::prefix('contact_room')->group(function () {
 
         # Lấy danh sách
-        Route::get('/',[LienHeDatPhongController::class,'all']);
+        Route::get('/', [LienHeDatPhongController::class, 'all']);
 
         # Xóa
-        Route::delete('/delete/{id}',[LienHeDatPhongController::class,'destroy']);
+        Route::delete('/delete/{id}', [LienHeDatPhongController::class, 'destroy']);
 
         # Khôi phục
-        Route::get('/restore/{id}',[LienHeDatPhongController::class,'restore']);
-
+        Route::get('/restore/{id}', [LienHeDatPhongController::class, 'restore']);
     });
 
-        
-    
+
+
     Route::prefix('dashboard')->group(function () {
 
         # Thống kê tổng
-        Route::get('/total',[DashBoardController::class,'total']);
-
+        Route::get('/total', [DashBoardController::class, 'total']);
     });
 
 
@@ -125,18 +122,18 @@ Route::middleware(['Admin'])->group(function () {
 
         // # Cập nhật tin tức
         Route::put('/edit/{id}', [TinTucController::class, 'edit']);
-        
+
         # Thêm tin tức mới
         Route::post('/add', [TinTucController::class, 'add']);
-        
+
         # Xóa tin tức
         Route::delete('/delete/{id}', [TinTucController::class, 'destroy']);
-        
+
         # Khôi phục tin tức
         Route::get('/restore/{id}', [TinTucController::class, 'restore']);
 
-         # Khôi phục tin tức
-         Route::get('/duplicate/{id}', [TinTucController::class, 'duplicate']);
+        # Khôi phục tin tức
+        Route::get('/duplicate/{id}', [TinTucController::class, 'duplicate']);
     });
 
 
@@ -163,10 +160,7 @@ Route::middleware(['Admin'])->group(function () {
 
         # Nhân bản theo ID
         Route::get('duplicate/{id}', [AuthController::class, 'duplicateUser']);
-
     });
-
-    
 });
 
 
@@ -201,4 +195,4 @@ Route::get('khu_vuc/option', [KhuVucController::class, 'option']);
 Route::get('khu_vuc/listHot', [KhuVucController::class, 'listHot']);
 
 # Tạo liên hệ đặt phòng mới
-Route::post('contact_room/add', [LienHeDatPhongController::class,'add']); 
+Route::post('contact_room/add', [LienHeDatPhongController::class, 'add']);
