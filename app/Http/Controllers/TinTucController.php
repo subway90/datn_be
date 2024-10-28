@@ -278,30 +278,52 @@ class TinTucController extends Controller
 
         return response()->json(['message' => 'Tin tức đã được khôi phục thành công.'], 200);
     }
-    public function duplicate($id){
+    public function duplicate($id)
+    {
         $tinTuc = TinTuc::find($id);
         if (!$tinTuc) {
             return response()->json(['message' => 'Tin tức không tồn tại.'], 404);
         }
+    
         // Tạo 1 tiêu đề mới bằng cách nối chuỗi
-        $newtieu_de = $tinTuc->tieu_de . '-copy';
+        $baseTitle = $tinTuc->tieu_de . '-copy';
+        $newtieu_de = $baseTitle;
 
-        // Tạo 1 slug mới bằng cách str tiêu đề mới
+        // Kiểm tra xem tiêu đề đã tồn tại trong cơ sở dữ liệu chưa
+        $counter = 1;
+        while (TinTuc::where('tieu_de', $newtieu_de)->exists()) {
+            $newtieu_de = $baseTitle . '-' . $counter; // Tạo tên mới với bộ đếm
+            $counter++;
+        }
+        // Tạo 1 slug mới từ tiêu đề mới
         $newslug = Str::slug($newtieu_de);
-       
+    
+        // Tạo tên file mới cho ảnh
+        $oldImagePath = $tinTuc->image; // Đường dẫn ảnh cũ
+        $imageExtension = pathinfo($oldImagePath, PATHINFO_EXTENSION);
+        $newImageName = pathinfo($oldImagePath, PATHINFO_FILENAME) . '-' . uniqid() . '.' . $imageExtension;
+        $newImagePath = 'blog/' . $newImageName; // Đường dẫn ảnh mới trong thư mục blog
+    
+        // Sao chép file ảnh
+        if (Storage::disk('public')->exists($oldImagePath)) {
+            // Sao chép file từ đường dẫn cũ sang đường dẫn mới
+            Storage::disk('public')->copy($oldImagePath, $newImagePath);
+        } else {
+            return response()->json(['message' => 'File ảnh cũ không tồn tại.'], 404);
+        }
+    
         // Lưu vào database 
         $newTinTuc = TinTuc::create([
-        'tai_khoan_id' => $tinTuc->tai_khoan_id,
-        'danh_muc_id' => $tinTuc->danh_muc_id,
-        'tieu_de' => $newtieu_de,
-        'slug' => $newslug,
-        'image' => $tinTuc->image,
-        'noi_dung' => $tinTuc->noi_dung,
+            'tai_khoan_id' => $tinTuc->tai_khoan_id,
+            'danh_muc_id' => $tinTuc->danh_muc_id,
+            'tieu_de' => $newtieu_de,
+            'slug' => $newslug,
+            'image' => $newImagePath, // Cập nhật với đường dẫn ảnh mới
+            'noi_dung' => $tinTuc->noi_dung,
         ]);
-        
+    
         return response()->json([
             'message' => 'Tin tức đã được sao chép và lưu thành công.',
         ], 200);
-
     }
 }
