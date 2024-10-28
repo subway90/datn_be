@@ -13,6 +13,21 @@ use App\Http\Controllers\TinTucController;
 use App\Http\Controllers\DanhMucTinTucController;
 use App\Http\Controllers\LienHeDatPhongController;
 
+#
+Route::get('phong', [PhongController::class, 'getAll']);
+
+# Chi tiết 1 tòa nhà bởi slug (Trang chi tiết)
+Route::get('chi-tiet', [ToaNhaController::class, 'detail']);
+
+# Danh sách tòa nhà theo section (Section Hot)
+Route::get('toa-nha/listHot', [ToaNhaController::class, 'listHot']);
+
+# Danh sách tòa nhà theo lượt xem (Section View)
+Route::get('toa-nha/listView', [ToaNhaController::class, 'listView']);
+
+# Danh sách tòa nhà theo giá phòng thấp nhất (Section View)
+Route::get('toa-nha/listCheap', [ToaNhaController::class, 'listCheap']);
+
 # Danh sách tin tức
 Route::get('blog/all', [TinTucController::class, 'getAll']);
 
@@ -191,29 +206,36 @@ Route::middleware(['Admin'])->group(function () {
     });
 
     
+    Route::prefix('toa-nha')->group(function () {
+
+        # Thống kê tổng
+        Route::get('/',[ToaNhaController::class,'all']);
+
+        # Thống kê tổng
+        Route::get('/list_delete',[ToaNhaController::class,'list_delete']);
+
+        # Thống kê tổng
+        Route::get('/{id}',[ToaNhaController::class,'one']);
+
+        # Thêm mới
+        Route::post('/add', [ToaNhaController::class, 'store']);
+
+        # Thêm mới
+        Route::delete('/delete/{id}', [ToaNhaController::class, 'delete']);
+
+        # Khôi phục
+        Route::post('/restore/{id}', [ToaNhaController::class, 'restore']);
+
+        # Nhân bản theo ID
+        Route::get('/duplicate/{id}', [ToaNhaController::class, 'duplicate']);
+    });
+
+    
 });
 
 
 #
 Route::get('phong/{id_toa_nha}', [PhongController::class, 'index']);
-
-#
-Route::get('phong', [PhongController::class, 'getAll']);
-
-# Chi tiết 1 tòa nhà bởi slug (Trang chi tiết)
-Route::get('toa-nha', [ToaNhaController::class, 'detail']);
-
-# Danh sách tòa nhà (List cho option của filter)
-Route::get('toa-nha/all', [ToaNhaController::class, 'listName']);
-
-# Danh sách tòa nhà theo section (Section Hot)
-Route::get('toa-nha/listHot', [ToaNhaController::class, 'listHot']);
-
-# Danh sách tòa nhà theo lượt xem (Section View)
-Route::get('toa-nha/listView', [ToaNhaController::class, 'listView']);
-
-# Danh sách tòa nhà theo giá phòng thấp nhất (Section View)
-Route::get('toa-nha/listCheap', [ToaNhaController::class, 'listCheap']);
 
 # Chức năng lọc
 Route::get('/filter', [ToaNhaController::class, 'filter']);
