@@ -125,5 +125,25 @@ class LienHeDatPhongController extends Controller
         return response()->json(['message' => 'Khôi phục thành công.'], 200);
     }
 
+    public function contactList(Request $request)
+    {
+        // Xác thực token và lấy ID người dùng
+        $user = $request->user(); // giả sử bạn đã thiết lập middleware auth để xác thực token
+
+        if (!$user) {
+            return response()->json(['message' => 'Token không hợp lệ hoặc người dùng không tồn tại.'], 401);
+        }
+
+        // Truy vấn danh sách liên hệ của người dùng
+        $contacts = LienHeDatPhong::where('tai_khoan_id', $user->id)->get();
+
+        // Kiểm tra nếu không có liên hệ nào
+        if ($contacts->isEmpty()) {
+            return response()->json(['message' => 'Không có liên hệ nào.'], 404);
+        }
+
+        // Trả về danh sách liên hệ
+        return response()->json(['contacts' => $contacts], 200);
+    }
 
 }

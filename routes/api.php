@@ -31,10 +31,12 @@ Route::post('login', [AuthController::class, 'login']);
 
 # Những API cần đăng nhập
 Route::middleware(['CusTom'])->group(function () {
-
+    
+    # Danh sách liên hệ thông qua token của người đó
+    Route::get('contact_room/list', [LienHeDatPhongController::class,'contactList']);
     # Tạo liên hệ đặt phòng mới
     Route::post('contact_room/add', [LienHeDatPhongController::class,'add']); 
-    
+
     # Đăng xuất
     Route::post('logout', [AuthController::class, 'logout']);
 
