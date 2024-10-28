@@ -13,6 +13,11 @@ use function PHPUnit\Framework\isEmpty;
 
 class AuthController extends Controller
 {
+    public function one($id) {
+        $result = User::find($id);
+        if(!$result) return response()->json(['message' => 'ID này không tồn tại'],404);
+        return response()->json(['user' => $result],200);
+    }
     public function register(Request $request)
     {
         // Xác thực dữ liệu đầu vào
