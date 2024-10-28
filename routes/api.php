@@ -103,7 +103,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::delete('/delete/{id}',[LienHeDatPhongController::class,'destroy']);
 
         # Khôi phục
-        Route::get('/restore/{id}',[LienHeDatPhongController::class,'restore']);
+        Route::post('/restore/{id}',[LienHeDatPhongController::class,'restore']);
 
     });
 
