@@ -137,4 +137,53 @@ class KhuVucController extends Controller
             'khu_vuc' => $khuVuc,
         ], 201);
     }
+
+    public function delete($id)
+    {
+        $khuVuc = KhuVuc::find($id);
+        if (!$khuVuc) {
+            return response()->json(['message' => 'Khu vực không tồn tại'], 404);
+        }
+        // Xóa mềm khu vực
+        $khuVuc->delete();
+
+        return response()->json(['message' => 'Xóa thành công'], 200);
+    }
+
+    public function restore($id)
+    {
+        $khuVuc = KhuVuc::withTrashed()->find($id);
+
+        if (!$khuVuc) {
+            return response()->json(['message' => 'Khu vực không tồn tại'], 404);
+        }
+        $khuVuc->restore();
+        return response()->json(['message' => 'Khu vực đã được khôi phục'], 200);
+    }
+
+    public function list_delete()
+    {
+        // Lấy tất cả khu vực đã bị xóa mềm
+        $trashedKhuVuc = KhuVuc::onlyTrashed()->get();
+
+        // Kiểm tra nếu không có dữ liệu
+        if ($trashedKhuVuc->isEmpty()) {
+            return response()->json(['message' => 'Không có khu vực nào đã bị xóa'], 404);
+        }
+
+        // Chuyển đổi kết quả thành mảng
+        $result = $trashedKhuVuc->map(function ($khuVuc) {
+            return [
+                'id' => $khuVuc->id,
+                'slug' => $khuVuc->slug,
+                'name' => $khuVuc->ten,
+                'image' => $khuVuc->image,
+                'created_at' => $khuVuc->created_at,
+                'updated_at' => $khuVuc->updated_at,
+                'deleted_at' => $khuVuc->deleted_at, // Thời gian bị xóa
+            ];
+        });
+
+        return response()->json($result, 200);
+    }
 }

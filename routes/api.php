@@ -60,17 +60,6 @@ Route::middleware(['CusTom'])->group(function () {
     #
     Route::post('updateAvatar', [AuthController::class, 'updateAvatar']);
 
-    Route::prefix('khu-vuc')->group(function () {
-
-        # Thống kê tổng
-        Route::get('/',[KhuVucController::class,'all']);
-
-        # Thống kê tổng
-        Route::get('/{id}',[KhuVucController::class,'one']);
-
-        # Thêm mới
-        Route::post('/add', [KhuVucController::class, 'store']);
-    });
 });
 
 
@@ -173,6 +162,29 @@ Route::middleware(['Admin'])->group(function () {
         # Nhân bản theo ID
         Route::get('duplicate/{id}', [AuthController::class, 'duplicateUser']);
 
+    });
+
+
+    
+    Route::prefix('khu-vuc')->group(function () {
+
+        # Thống kê tổng
+        Route::get('/',[KhuVucController::class,'all']);
+
+        # Thống kê tổng
+        Route::get('/list_delete',[KhuVucController::class,'list_delete']);
+
+        # Thống kê tổng
+        Route::get('/{id}',[KhuVucController::class,'one']);
+
+        # Thêm mới
+        Route::post('/add', [KhuVucController::class, 'store']);
+
+        # Thêm mới
+        Route::delete('/delete/{id}', [KhuVucController::class, 'delete']);
+
+        # Khôi phục
+        Route::post('/restore/{id}', [KhuVucController::class, 'restore']);
     });
 
     

@@ -20,4 +20,9 @@ class KhuVuc extends Model
         'image',
         'noi_bat',
     ];
+
+    public function toaNha()
+    {
+        return $this->hasMany(ToaNha::class, 'khu_vuc_id'); // Chỉnh sửa 'khu_vuc_id' theo tên trường trong bảng ToaNha
+    }
 }
