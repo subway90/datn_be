@@ -18,6 +18,7 @@ class BinhLuanTinTuc extends Model
         'noi_dung',
         'trang_thai',
     ];
+    protected $dates = ['deleted_at'];
 
     // Định nghĩa quan hệ với model User
     public function user()
