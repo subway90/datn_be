@@ -20,7 +20,7 @@ class CusTom
 
         if (!$token) {
             // Nếu không có token, trả về phản hồi lỗi
-            return response()->json(['message' => 'Token không được cung cấp.'], 401);
+            return response()->json(['message' => 'Bạn chưa đăng nhập'], 401);
         }
 
         // Sử dụng findToken để kiểm tra token hợp lệ
@@ -28,7 +28,7 @@ class CusTom
 
         if (!$accessToken || !$accessToken->tokenable) {
             // Nếu token không hợp lệ hoặc không có user tương ứng, trả về lỗi
-            return response()->json(['message' => 'Token không hợp lệ hoặc đã hết hạn.'], 401);
+            return response()->json(['message' => 'Bạn chưa đăng nhập'], 401);
         }
 
         // Xác thực người dùng
