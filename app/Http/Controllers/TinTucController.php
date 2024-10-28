@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class TinTucController extends Controller
 {
@@ -180,6 +181,81 @@ class TinTucController extends Controller
         return response()->json([
             'message' => 'Tạo mới tin tức thành công',
         ], 201);
+    }
+    public function edit(Request $request, $id)
+    {
+        // Xác thực dữ liệu đầu vào
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|unique:tin_tuc,tieu_de,'.$id,
+            'image' => 'nullable|string',
+            'content' => 'required|string',
+            'status' => 'boolean',
+        ], [
+            'title.required' => 'Chưa nhập tiêu đề',
+            'title.unique' => 'Tiêu đề này đã tồn tại',
+            'content.required' => 'Chưa nhập nội dung',
+            'status.boolean' => 'Trạng thái phải là 0 hoặc 1',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->all()], 400);
+        }
+        //Kiểm trang trạng thái, để mặc định 1 nếu trống
+        $trang_thai = $request->input('status', 1);
+
+        // Tìm tin tức theo ID
+        $tinTuc = TinTuc::find($id);
+        if (!$tinTuc) {
+            return response()->json(['message' => 'Tin tức không tồn tại'], 404);
+        }
+
+        // Xử lý ảnh nếu có
+        if ($request->has('image')) {
+            // Xóa file ảnh cũ nếu có
+            if ($tinTuc->image) {
+                Storage::disk('public')->delete($tinTuc->image);
+            }
+
+            // Lấy dữ liệu base64 từ request
+            $base64Image = $request->input('image');
+
+            // Tách phần header của base64
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
+                $base64Image = substr($base64Image, strpos($base64Image, ',') + 1);
+                $type = strtolower($type[1]); // Lấy loại ảnh (jpeg, png, ...)
+
+                // Kiểm tra loại ảnh
+                if (!in_array($type, ['jpg', 'jpeg', 'png', 'gif'])) {
+                    return response()->json(['message' => 'Định dạng ảnh không hợp lệ'], 400);
+                }
+
+                // Giải mã base64
+                $image = base64_decode($base64Image);
+                if ($image === false) {
+                    return response()->json(['message' => 'Giải mã base64 không thành công'], 400);
+                }
+
+                // Tạo tên file ảnh duy nhất
+                $fileName = uniqid('img_', true) . '.' . $type;
+
+                // Lưu ảnh vào thư mục
+                $path = 'blog/' . $fileName;
+                Storage::disk('public')->put($path, $image);
+
+                // Cập nhật đường dẫn ảnh trong bản ghi
+                $tinTuc->image = $path;
+            }
+        }
+
+        // Cập nhật các trường khác
+        $tinTuc->tieu_de = $request->input('title');
+        $tinTuc->noi_dung = $request->input('content');
+        $tinTuc->trang_thai = $request->input('status', 1); // Mặc định là 1 nếu không có
+
+        // Lưu bản ghi
+        $tinTuc->save();
+
+        return response()->json(['message' => 'Cập nhật tin tức thành công'], 200);
     }
     public function destroy($id)
     {
