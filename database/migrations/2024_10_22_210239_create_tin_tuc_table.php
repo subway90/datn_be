@@ -19,7 +19,6 @@ return new class extends Migration
             $table->text('slug');
             $table->string('image');
             $table->text('noi_dung');
-            $table->boolean('trang_thai')->default(1);
             $table->timestamps();
             $table->foreign('tai_khoan_id')->references('id')->on('users');
             $table->foreign('danh_muc_id')->references('id')->on('danh_muc_tin_tuc');

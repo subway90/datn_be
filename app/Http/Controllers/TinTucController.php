@@ -15,8 +15,7 @@ class TinTucController extends Controller
     public function getAll()
     {
         // Lấy tất cả các tòa nhà cùng với số lượng phòng
-        $list = TinTuc::where('trang_thai',1)
-            ->orderBy('created_at','DESC')
+        $list = TinTuc::orderBy('created_at','DESC')
             ->get();
     
         // Kiểm tra xem có dữ liệu hay không
@@ -43,8 +42,7 @@ class TinTucController extends Controller
     public function getAllListNew()
     {
         // Lấy tất cả các tòa nhà cùng với số lượng phòng
-        $list = TinTuc::where('trang_thai',1)
-            ->with('danhMuc')
+        $list = TinTuc::with('danhMuc')
             ->orderBy('created_at','DESC')
             ->limit(4)
             ->get();
@@ -144,7 +142,6 @@ class TinTucController extends Controller
             'title' => 'required|string|unique:tin_tuc,tieu_de',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'content' => 'required|string',
-            'trang_thai' => 'boolean',
             'cate_id' => 'required|integer|exists:danh_muc_tin_tuc,id',
         ],
         [
@@ -154,7 +151,6 @@ class TinTucController extends Controller
             'image.mimes' => 'Chưa nhập đúng định dạng ảnh',
             'image.max' => 'Ảnh phải dưới 2MB',
             'content.required' => 'Chưa nhập nội dung',
-            'status.boolean' => 'Trạng thái phải là 0 hoặc 1',
             'cate_id.required' => 'Chưa nhập danh mục',
             'cate_id.exists' => 'Danh mục không tồn tại',
         ]);
@@ -167,7 +163,6 @@ class TinTucController extends Controller
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('blog', 'public');
         }
-        $status = $request->input('trang_thai', 1);
         // Tạo mới bản ghi TinTuc với `id_tai_khoan` từ tài khoản đã đăng nhập
         TinTuc::create([
             'tai_khoan_id' => $request->user()->id, // ID tài khoản hiện tại
@@ -176,7 +171,6 @@ class TinTucController extends Controller
             'slug' => Str::slug($request->title),
             'image' => $imagePath,
             'noi_dung' => $request->content,
-            'trang_thai' => $status,
         ]);
     
         return response()->json([
@@ -190,19 +184,15 @@ class TinTucController extends Controller
             'title' => 'required|string|unique:tin_tuc,tieu_de,'.$id,
             'image' => 'nullable|string',
             'content' => 'required|string',
-            'status' => 'boolean',
         ], [
             'title.required' => 'Chưa nhập tiêu đề',
             'title.unique' => 'Tiêu đề này đã tồn tại',
             'content.required' => 'Chưa nhập nội dung',
-            'status.boolean' => 'Trạng thái phải là 0 hoặc 1',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->all()], 400);
         }
-        //Kiểm trang trạng thái, để mặc định 1 nếu trống
-        $trang_thai = $request->input('status', 1);
 
         // Tìm tin tức theo ID
         $tinTuc = TinTuc::find($id);
@@ -251,7 +241,6 @@ class TinTucController extends Controller
         // Cập nhật các trường khác
         $tinTuc->tieu_de = $request->input('title');
         $tinTuc->noi_dung = $request->input('content');
-        $tinTuc->trang_thai = $request->input('status', 1); // Mặc định là 1 nếu không có
 
         // Lưu bản ghi
         $tinTuc->save();
@@ -308,7 +297,6 @@ class TinTucController extends Controller
         'slug' => $newslug,
         'image' => $tinTuc->image,
         'noi_dung' => $tinTuc->noi_dung,
-        'trang_thai' => $tinTuc->trang_thai,
         ]);
         
         return response()->json([
