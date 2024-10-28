@@ -158,7 +158,7 @@ class ToaNhaController extends Controller
         $query = ToaNha::query();
     
         // Lọc theo keyword
-        if ($request->has('keyword')) {
+        if ($request->has('keyword') && !empty($request->input(key: 'keyword'))) {
             $keyword = str_replace('+',' ',$request->input('keyword'));
             $query->where('mo_ta', 'LIKE', "%$keyword%")
                   ->orWhere('vi_tri', 'LIKE', "%$keyword%")
@@ -166,7 +166,7 @@ class ToaNhaController extends Controller
         }
     
         // Lọc theo area
-        if ($request->has('area')) {
+        if ($request->has('area') && !empty($request->input('area'))) {
             $slug = $request->input('area');
             $query->whereHas('khuVuc', function($q) use ($slug) {
                 $q->where('slug', $slug);
@@ -174,7 +174,7 @@ class ToaNhaController extends Controller
         }
     
         // Lọc theo price
-        if ($request->has('price')) {
+        if ($request->has('price') && !empty($request->input('price'))) {
             $priceInput = $request->input('price');
             
             // Kiểm tra định dạng {int}to{int}
@@ -188,7 +188,7 @@ class ToaNhaController extends Controller
         }
     
         // Lọc theo size
-        if ($request->has('size')) {
+        if ($request->has('size') && !empty($request->input(key: 'size'))) {
             $sizeInput = $request->input('size');
             // Kiểm tra định dạng {int}to{int}
             if (!preg_match('/^\d+to\d+$/', $sizeInput)) {
