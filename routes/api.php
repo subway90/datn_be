@@ -185,6 +185,9 @@ Route::middleware(['Admin'])->group(function () {
 
         # Khôi phục
         Route::post('/restore/{id}', [KhuVucController::class, 'restore']);
+
+        # Nhân bản theo ID
+        Route::get('/duplicate/{id}', [KhuVucController::class, 'duplicate']);
     });
 
     

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\KhuVuc;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 class KhuVucController extends Controller
 {
     public function listHot()
@@ -185,5 +186,51 @@ class KhuVucController extends Controller
         });
 
         return response()->json($result, 200);
+    }
+
+    public function duplicate($id)
+    {
+        $khuVuc = KhuVuc::find($id);
+        if (!$khuVuc) {
+            return response()->json(['message' => 'Khu vực không tồn tại.'], 404);
+        }
+    
+        // Tạo 1 tiêu đề mới bằng cách nối chuỗi
+        $baseTitle = $khuVuc->ten . '-copy';
+        $newName = $baseTitle;
+
+        // Kiểm tra xem tiêu đề đã tồn tại trong cơ sở dữ liệu chưa
+        $counter = 1;
+        while (khuVuc::where('ten', $newName)->exists()) {
+            $newName = $baseTitle . '-' . $counter; // Tạo tên mới với bộ đếm
+            $counter++;
+        }
+        // Tạo 1 slug mới từ tiêu đề mới
+        $newSlug = Str::slug($newName);
+    
+        // Tạo tên file mới cho ảnh
+        $oldImagePath = $khuVuc->image; // Đường dẫn ảnh cũ
+        $imageExtension = pathinfo($oldImagePath, PATHINFO_EXTENSION);
+        $newImageName = pathinfo($oldImagePath, PATHINFO_FILENAME) . '-' . uniqid() . '.' . $imageExtension;
+        $newImagePath = 'area/' . $newImageName; // Đường dẫn ảnh mới trong thư mục blog
+    
+        // Sao chép file ảnh
+        if (Storage::disk('public')->exists($oldImagePath)) {
+            // Sao chép file từ đường dẫn cũ sang đường dẫn mới
+            Storage::disk('public')->copy($oldImagePath, $newImagePath);
+        } else {
+            return response()->json(['message' => 'File ảnh cũ không tồn tại.'], 404);
+        }
+    
+        // Lưu vào database 
+        $newkhuVuc = khuVuc::create([
+            'ten' => $newName,
+            'slug' => $newSlug,
+            'image' => $newImagePath,
+        ]);
+    
+        return response()->json([
+            'message' => 'Nhân bản thành công khu vực với ID = '.$id,
+        ], 200);
     }
 }
