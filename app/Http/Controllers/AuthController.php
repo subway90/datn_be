@@ -13,6 +13,15 @@ use function PHPUnit\Framework\isEmpty;
 
 class AuthController extends Controller
 {
+    public function one($id) {
+        $result = User::find($id);
+        if(!$result) return response()->json(['message' => 'ID này không tồn tại'],404);
+        return response()->json(['user' => $result],200);
+    }
+    public function all() {
+        $result = User::get();
+        return response()->json(['list' => $result],200);
+    }
     public function register(Request $request)
     {
         // Xác thực dữ liệu đầu vào
@@ -214,5 +223,138 @@ class AuthController extends Controller
             'message' => 'Thay đổi ảnh đại diện thành công!',
             'avatar_url' => Storage::url($path)
         ], 200);
+    }
+    public function editUser(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'Id user không tồn tại'], 404);
+        }
+    
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'role' => 'nullable|integer|min:1', // Thay đổi thành nullable
+            'phone' => 'nullable|string|max:10',
+            'born' => 'nullable|date'
+        ], [
+            'name.required' => 'Tên là bắt buộc.',
+            'name.string' => 'Tên phải là chuỗi ký tự.',
+            'role.integer' => 'Vai trò phải là một số nguyên.',
+            'role.min' => 'Vai trò phải lớn hơn hoặc bằng 1.',
+            'phone.string' => 'Số điện thoại phải là chuỗi ký tự.',
+            'phone.max' => 'Số điện thoại không được dài quá 10 ký tự.',
+            'born.date' => 'Ngày sinh phải là định dạng ngày hợp lệ.'
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+    
+        // Chỉ cập nhật nếu có thay đổi
+        $updatedFields = [];
+        
+        if ($request->has('role') && !$request->has('role') && $request->role !== $user->role) {
+            $updatedFields['role'] = $request->role;
+        }
+    
+        if ($request->has('born') && !$request->has('born') && $request->born !== $user->born) {
+            $updatedFields['born'] = $request->born;
+        }
+    
+        if ($request->has('phone') && $request->phone !== $user->phone) {
+            $updatedFields['phone'] = $request->phone;
+        }
+    
+        // Cập nhật tên người dùng
+        $user->name = $request->name; // Cập nhật tên luôn
+    
+        // Nếu có trường nào được thay đổi thì cập nhật
+        if (!empty($updatedFields)) {
+            $user->update($updatedFields);
+        }
+    
+        // Lưu tên vào cơ sở dữ liệu
+        $user->save();
+    
+        return response()->json(['message' => 'Chỉnh sửa thông tin thành công!', 'user' => $user], 200);
+    }
+    public function deleteUser($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'Id user không tồn tại'], 404);
+        }
+
+        if ($user->role == 0) {
+            return response()->json(['error' => 'Không được xóa tài khoản admin'], 403);
+        }
+
+        $user->delete();
+
+        return response()->json(['message' => 'Xóa thành công!'], 200);
+    }
+    public function restoreUser($id)
+    {
+        $user = User::onlyTrashed()->find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'Id user không tồn tại'], 404);
+        }
+
+        $user->restore();
+
+        return response()->json(['message' => 'Khôi phục thành công!', 'user' => $user], 200);
+    }
+    public function getDeletedUsers()
+    {
+        $deletedUsers = User::onlyTrashed()->get();
+
+        if ($deletedUsers->isEmpty()) {
+            return response()->json(['message' => 'Không có user nào đã bị xóa'], 404);
+        }
+
+        return response()->json(['deleted_users' => $deletedUsers], 200);
+    }
+    private function checkMail($email)
+    {
+        $originalEmail = $email;
+        $count = 1;
+
+        while (User::where('email', $email)->exists()) {
+            $email = $originalEmail . "(Copy '$count')";
+            $count++;
+        }
+
+        return $email;
+    }
+    public function duplicateUser($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['error' => 'Id user không tồn tại'], 404);
+        }
+
+        if ($user->role == 0) {
+            return response()->json(['error' => 'Admin không được duplicate'], 403);
+        }
+
+        $newUser = $user->replicate();
+        $newUser->name = $newUser->name . ' (Copy)';
+
+        // Đổi tên email thành 'copy_' + tên email cũ
+        $baseEmail = 'copy_' . $user->email;
+        $newUser->email = $baseEmail;
+
+        // Kiểm tra tính duy nhất của email
+        $counter = 1;
+        while (User::where('email', $newUser->email)->exists()) {
+            // Thay đổi email thành 'counter_copy_email'
+            $newUser->email = $counter . '_' . $baseEmail;
+            $counter++;
+        }
+
+        $newUser->save();
+
+        return response()->json(['message' => 'Thành công!', 'user' => $newUser], 201);
     }
 }

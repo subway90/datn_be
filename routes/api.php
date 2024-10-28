@@ -69,23 +69,24 @@ Route::middleware(['CusTom'])->group(function () {
 
 # Những API cần đăng nhập và là ADMIN
 Route::middleware(['Admin'])->group(function () {
-    
+
+
     Route::prefix('cate_blog')->group(function () {
         # Lấy danh sách tất cả
         Route::get('/', [DanhMucTinTucController::class, 'all']);
-        
+
         # Lấy duy nhất 1
         Route::get('/{id}', [DanhMucTinTucController::class, 'one']);
-        
+
         # Cập nhật danh mục tin tức
         Route::put('/edit/{id}', [DanhMucTinTucController::class, 'edit']);
-        
+
         # Thêm danh mục tin tức
         Route::post('/add', [DanhMucTinTucController::class, 'add']);
-        
+
         # Xóa danh mục tin tức
         Route::delete('/delete/{id}', [DanhMucTinTucController::class, 'destroy']);
-        
+
         # Khôi phục danh mục tin tức
         Route::get('/restore/{id}', [DanhMucTinTucController::class, 'restore']);
 
@@ -108,13 +109,13 @@ Route::middleware(['Admin'])->group(function () {
 
         
     
-
     Route::prefix('dashboard')->group(function () {
 
         # Thống kê tổng
         Route::get('/total',[DashBoardController::class,'total']);
 
     });
+
 
 
     Route::prefix('blog')->group(function () {
@@ -137,6 +138,35 @@ Route::middleware(['Admin'])->group(function () {
          # Khôi phục tin tức
          Route::get('/duplicate/{id}', [TinTucController::class, 'duplicate']);
     });
+
+
+
+    Route::prefix('user')->group(function () {
+
+        # Lấy tất cả
+        Route::get('/', [AuthController::class, 'all']);
+
+        # Lấy tất cả id bị xóa
+        Route::get('/list_delete', [AuthController::class, 'getDeletedUsers']);
+
+        # Lấy 1 theo ID
+        Route::get('/{id}', [AuthController::class, 'one']);
+
+        # Chỉnh sửa theo ID
+        Route::put('edit/{id}', [AuthController::class, 'editUser']);
+
+        # Xóa theo ID
+        Route::delete('delete/{id}', [AuthController::class, 'deleteUser']);
+
+        #Khôi phục theo ID
+        Route::post('restore/{id}', [AuthController::class, 'restoreUser']);
+
+        # Nhân bản theo ID
+        Route::get('duplicate/{id}', [AuthController::class, 'duplicateUser']);
+
+    });
+
+    
 });
 
 
@@ -171,4 +201,8 @@ Route::get('khu_vuc/option', [KhuVucController::class, 'option']);
 Route::get('khu_vuc/listHot', [KhuVucController::class, 'listHot']);
 
 # Tạo liên hệ đặt phòng mới
+<<<<<<< HEAD
 Route::post('contact_room/add', [LienHeDatPhongController::class,'add']); 
+=======
+Route::post('contactRoom/add', [LienHeDatPhongController::class, 'add']);
+>>>>>>> ngoc_hieu_task_5
