@@ -330,7 +330,19 @@ class AuthController extends Controller
 
         $newUser = $user->replicate();
         $newUser->name = $newUser->name . ' (Copy)';
-        $newUser->email = $this->checkMail($newUser->email);
+
+        // Đổi tên email thành 'copy_' + tên email cũ
+        $baseEmail = 'copy_' . $user->email;
+        $newUser->email = $baseEmail;
+
+        // Kiểm tra tính duy nhất của email
+        $counter = 1;
+        while (User::where('email', $newUser->email)->exists()) {
+            // Thay đổi email thành 'counter_copy_email'
+            $newUser->email = $counter . '_' . $baseEmail;
+            $counter++;
+        }
+
         $newUser->save();
 
         return response()->json(['message' => 'Thành công!', 'user' => $newUser], 201);
