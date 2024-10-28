@@ -30,7 +30,7 @@ class TinTucController extends Controller
                 'image' => $rows->image,
                 'name_cate' => $rows->danhMuc->ten_danh_muc,
                 'title' => $rows->tieu_de,
-                'body' => $rows->noi_dung,
+                'content' => $rows->noi_dung,
                 'created_at' => $rows->created_at,
                 'updated_at' => $rows->updated_at,
             ];
@@ -61,7 +61,7 @@ class TinTucController extends Controller
                 'image' => $rows->image,
                 'name_cate' => $rows->danhMuc->ten_danh_muc,
                 'title' => $rows->tieu_de,
-                'body' => $rows->noi_dung,
+                'content' => $rows->noi_dung,
                 'date' => $rows->created_at->format('d').' Tháng '.$rows->created_at->format('m').' lúc '.$rows->created_at->format('H').':'.$rows->created_at->format('i'), // Định dạng ngà
             ];
         });
@@ -87,7 +87,7 @@ class TinTucController extends Controller
             'image' => $tintuc->image,
             'name_category' => $tintuc->danhMuc->ten_danh_muc,
             'title' => $tintuc->tieu_de,
-            'body' => $tintuc->noi_dung,
+            'content' => $tintuc->noi_dung,
             'created_at' => $tintuc->created_at,
             'updated_at' => $tintuc->updated_at,
     ]);
