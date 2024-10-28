@@ -369,6 +369,10 @@ class AuthController extends Controller
             'email.email' => 'Email không đúng định dạng.'
         ]);
 
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
