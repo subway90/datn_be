@@ -16,6 +16,7 @@ class TinTucController extends Controller
     {
         // Lấy tất cả các tòa nhà cùng với số lượng phòng
         $list = TinTuc::where('trang_thai',1)
+            ->orderBy('created_at','DESC')
             ->get();
     
         // Kiểm tra xem có dữ liệu hay không
