@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('luot_xem')->default(0);
             $table->timestamps();
             $table->foreign('khu_vuc_id')->references('id')->on('khu_vuc');
+            $table->softDeletes();
         });
     }
 
