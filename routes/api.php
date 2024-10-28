@@ -32,6 +32,9 @@ Route::post('login', [AuthController::class, 'login']);
 # Những API cần đăng nhập
 Route::middleware(['CusTom'])->group(function () {
 
+    # Tạo liên hệ đặt phòng mới
+    Route::post('contact_room/add', [LienHeDatPhongController::class,'add']); 
+    
     # Đăng xuất
     Route::post('logout', [AuthController::class, 'logout']);
 
@@ -200,5 +203,4 @@ Route::get('khu_vuc/option', [KhuVucController::class, 'option']);
 # Danh sách khu vực nổi bật (Section Area Hot để Filter)
 Route::get('khu_vuc/listHot', [KhuVucController::class, 'listHot']);
 
-# Tạo liên hệ đặt phòng mới
-Route::post('contact_room/add', [LienHeDatPhongController::class,'add']); 
+

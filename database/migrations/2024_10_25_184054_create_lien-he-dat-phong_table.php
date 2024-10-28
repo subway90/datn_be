@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('lien-he-dat-phong', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('phong_id');
-            $table->unsignedBigInteger('tai_khoan_id')->nullable();
+            $table->unsignedBigInteger('tai_khoan_id');
             $table->text('ho_ten');
             $table->string('so_dien_thoai');
             $table->text('noi_dung')->nullable();

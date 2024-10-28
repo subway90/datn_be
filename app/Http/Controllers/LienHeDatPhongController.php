@@ -10,34 +10,40 @@ class LienHeDatPhongController extends Controller
 {
     public function add(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
-            'id_room' => 'required',
-            'id_user' => 'nullable',
+            'id_room' => 'required|exists:phong,id', // Kiểm tra phòng tồn tại
+            'id_user' => 'required|exists:users,id', // Kiểm tra người dùng tồn tại
             'name' => 'required|string',
             'phone' => 'required|string|size:10',
             'content' => 'nullable|string',
         ], [
-            'room_id.required' => 'Chưa nhập ID phòng',
+            'id_room.required' => 'Chưa nhập ID phòng',
+            'id_room.exists' => 'Phòng không tồn tại',
+            'id_user.required' => 'Chưa nhập ID người dùng',
+            'id_user.exists' => 'Người dùng không tồn tại',
             'name.required' => 'Vui lòng nhập họ và tên',
             'phone.required' => 'Vui lòng nhập SĐT',
             'phone.size' => 'Độ dài SĐT không hợp lệ (độ dài = 10 kí tự)',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json([
                 'message' => $validator->errors()->all(),
             ], 400); 
         }
-
-        $checkRoom = Phong::find($request->id_room);
-
-        if (!$checkRoom) {
+    
+        // Kiểm tra xem đã có LienHeHopDong nào cho id_user và id_room chưa
+        $existingLienHe = LienHeDatPhong::where('phong_id', $request->id_room)
+            ->where('tai_khoan_id', $request->id_user)
+            ->exists();
+    
+        if ($existingLienHe) {
             return response()->json([
-                'message' => 'Phòng không tồn tại hoặc không hoạt động',
-            ], 404);
+                'message' => 'Bạn đã tạo liên hệ trước đó rồi.',
+            ], 400);
         }
-
+    
+        // Tạo mới liên hệ đặt phòng
         LienHeDatPhong::create([
             'phong_id' => $request->id_room,
             'tai_khoan_id' => $request->id_user,
@@ -45,8 +51,7 @@ class LienHeDatPhongController extends Controller
             'so_dien_thoai' => $request->phone,
             'noi_dung' => $request->content,
         ]);
-
-
+    
         // Trả về phản hồi JSON thành công
         return response()->json([
             'message' => 'Tạo liên hệ thành công'
