@@ -65,6 +65,10 @@ Route::middleware(['CusTom'])->group(function () {
         # Thống kê tổng
         Route::get('/',[KhuVucController::class,'all']);
 
+        # Thống kê tổng
+        Route::get('/{id}',[KhuVucController::class,'one']);
+
+        # Thêm mới
         Route::post('/add', [KhuVucController::class, 'store']);
     });
 });

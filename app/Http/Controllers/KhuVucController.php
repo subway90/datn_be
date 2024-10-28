@@ -84,6 +84,21 @@ class KhuVucController extends Controller
         return response()->json($result, 200);
     }
 
+    public function one($id)
+    {
+        $one = KhuVuc::find($id);
+        if (!$one) return response()->json(['message' => 'Khu vực không tồn tại'], 404);
+        $result = [
+                'id' => $one->id,
+                'slug' => $one->slug,
+                'name' => $one->ten,
+                'image' => $one->image,
+                'created_at' => $one->created_at,
+                'updated_at' => $one->updated_at,
+            ];
+        return response()->json($result, 200);
+    }
+
     public function store(Request $request)
     {
         // Xác thực dữ liệu
