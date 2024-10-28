@@ -64,13 +64,28 @@ Route::middleware(['Admin'])->group(function () {
 
     //Tạo prefix trước nhé !
     Route::prefix('user')->group(function () {
+
+        # Lấy tất cả
         Route::get('/', [AuthController::class, 'all']);
+
+        # Lấy tất cả id bị xóa
+        Route::get('/list_delete', [AuthController::class, 'getDeletedUsers']);
+
+        # Lấy 1 theo ID
         Route::get('/{id}', [AuthController::class, 'one']);
+
+        # Chỉnh sửa theo ID
         Route::put('edit/{id}', [AuthController::class, 'editUser']);
+
+        # Xóa theo ID
         Route::delete('delete/{id}', [AuthController::class, 'deleteUser']);
+
+        #Khôi phục theo ID
         Route::post('restore/{id}', [AuthController::class, 'restoreUser']);
-        Route::get('getRestore', [AuthController::class, 'getDeletedUsers']);
+
+        # Nhân bản theo ID
         Route::get('duplicate/{id}', [AuthController::class, 'duplicateUser']);
+        
     });
 });
 
