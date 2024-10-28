@@ -19,7 +19,7 @@ class TinTucSeeder extends Seeder
             'danh_muc_id' => 1, // ID danh mục 1
             'tieu_de' => 'Người thuê trọ điêu đứng vì chủ bán nhà trong cơn sốt giá',
             'slug' => 'nguoi-thue-tro-dieu-dung-vi-chu-ban-hang-trong-con-sot-gia',
-            'image' => 'image1.jpg',
+            'image' => 'blog/image1.jpg',
             'noi_dung' => 'Thuê ngôi nhà ba phòng ngủ được hai tháng, vừa rủ được đủ người ở cùng Minh Tùng nhận thông báo chủ nhà lấy lại để bán vì đang được giá.
             Nhận tin tôi xây xẩm mặt mày. Vừa bực vừa áy náy với những người đang thuê cùng mình, Minh Tùng, 25 tuổi, nói.
             
@@ -44,7 +44,7 @@ class TinTucSeeder extends Seeder
             'danh_muc_id' => 2, // ID danh mục 2
             'tieu_de' => 'Tin Công Nghệ 1',
             'slug' => 'tin-cong-nghe-1',
-            'image' => 'image2.jpg',
+            'image' => 'blog/image2.jpg',
             'noi_dung' => 'Nội dung cho tin công nghệ 1.',
         ]);
 
@@ -53,7 +53,7 @@ class TinTucSeeder extends Seeder
             'danh_muc_id' => 3, // ID danh mục 3
             'tieu_de' => 'Tin Giải Trí 1',
             'slug' => 'tin-giai-tri-1',
-            'image' => 'image3.jpg',
+            'image' => 'blog/image3.jpg',
             'noi_dung' => 'Nội dung cho tin giải trí 1.',
         ]);
 
@@ -62,7 +62,7 @@ class TinTucSeeder extends Seeder
             'danh_muc_id' => 4, // ID danh mục 4
             'tieu_de' => 'Tin Xã Hội 1',
             'slug' => 'tin-xa-hoi-1',
-            'image' => 'image4.jpg',
+            'image' => 'blog/image4.jpg',
             'noi_dung' => 'Nội dung cho tin xã hội 1.',
         ]);
 
@@ -71,7 +71,7 @@ class TinTucSeeder extends Seeder
             'danh_muc_id' => 5, // ID danh mục 5
             'tieu_de' => 'Tin Giáo Dục 1',
             'slug' => 'tin-giao-duc-1',
-            'image' => 'image5.jpg',
+            'image' => 'blog/image5.jpg',
             'noi_dung' => 'Nội dung cho tin giáo dục 1.',
         ]);
     }
