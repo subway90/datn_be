@@ -18,6 +18,10 @@ class AuthController extends Controller
         if(!$result) return response()->json(['message' => 'ID này không tồn tại'],404);
         return response()->json(['user' => $result],200);
     }
+    public function all() {
+        $result = User::get();
+        return response()->json(['list' => $result],200);
+    }
     public function register(Request $request)
     {
         // Xác thực dữ liệu đầu vào

@@ -64,6 +64,7 @@ Route::middleware(['Admin'])->group(function () {
 
     //Tạo prefix trước nhé !
     Route::prefix('user')->group(function () {
+        Route::get('/', [AuthController::class, 'all']);
         Route::get('/{id}', [AuthController::class, 'one']);
         Route::put('edit/{id}', [AuthController::class, 'editUser']);
         Route::delete('delete/{id}', [AuthController::class, 'deleteUser']);
