@@ -16,7 +16,7 @@ class PhongSeeder extends Seeder
         Phong::create([
             'toa_nha_id' => 1, // ID tòa nhà
             'ten_phong' => 'Phòng 101',
-            'hinh_anh' => 'image-01.jpg;image-02.jpg;image-03.jpg;image-04.jpg;image-05.jpg',
+            'hinh_anh' => 'room/img01.jpg;room/img02.jpg;room/img03.jpg;room/img04.jpg;room/img05.jpg',
             'dien_tich' => 30,
             'gac_lung' => true,
             'gia_thue' => 3000000,
@@ -30,9 +30,9 @@ class PhongSeeder extends Seeder
         ]);
 
         Phong::create([
-            'toa_nha_id' => 2, // ID tòa nhà
+            'toa_nha_id' => 1, // ID tòa nhà
             'ten_phong' => 'Phòng 102',
-            'hinh_anh' => 'image-01.jpg;image-02.jpg;image-03.jpg;image-04.jpg;image-05.jpg',
+              'hinh_anh' => 'room/img02.jpg;room/img01.jpg;room/img03.jpg;room/img04.jpg;room/img05.jpg',
             'dien_tich' => 28,
             'gac_lung' => false,
             'gia_thue' => 2800000,
@@ -48,7 +48,82 @@ class PhongSeeder extends Seeder
         Phong::create([
             'toa_nha_id' => 2, // ID tòa nhà
             'ten_phong' => 'Phòng 103',
-            'hinh_anh' => 'image-01.jpg;image-02.jpg;image-03.jpg;image-04.jpg;image-05.jpg',
+              'hinh_anh' => 'room/img03.jpg;room/img02.jpg;room/img01.jpg;room/img04.jpg;room/img05.jpg',
+            'dien_tich' => 32,
+            'gac_lung' => true,
+            'gia_thue' => 3200000,
+            'don_gia_dien' => 3000,
+            'don_gia_nuoc' => 2000,
+            'tien_xe_may' => 100000,
+            'phi_dich_vu' => 50000,
+            'tien_ich' => 'Máy lạnh, Wifi',
+            'noi_that' => 'Giường, Tủ, Bàn',
+            'trang_thai' => 1,
+        ]);
+        Phong::create([
+            'toa_nha_id' => 2, // ID tòa nhà
+            'ten_phong' => 'Phòng 103',
+              'hinh_anh' => 'room/img05.jpg;room/img02.jpg;room/img01.jpg;room/img01.jpg;room/img05.jpg',
+            'dien_tich' => 32,
+            'gac_lung' => true,
+            'gia_thue' => 3200000,
+            'don_gia_dien' => 3000,
+            'don_gia_nuoc' => 2000,
+            'tien_xe_may' => 100000,
+            'phi_dich_vu' => 50000,
+            'tien_ich' => 'Máy lạnh, Wifi',
+            'noi_that' => 'Giường, Tủ, Bàn',
+            'trang_thai' => 1,
+        ]);
+        Phong::create([
+            'toa_nha_id' => 3, // ID tòa nhà
+            'ten_phong' => 'Phòng 103',
+              'hinh_anh' => 'room/img04.jpg;room/img02.jpg;room/img01.jpg;room/img01.jpg;room/img05.jpg',
+            'dien_tich' => 32,
+            'gac_lung' => true,
+            'gia_thue' => 3200000,
+            'don_gia_dien' => 3000,
+            'don_gia_nuoc' => 2000,
+            'tien_xe_may' => 100000,
+            'phi_dich_vu' => 50000,
+            'tien_ich' => 'Máy lạnh, Wifi',
+            'noi_that' => 'Giường, Tủ, Bàn',
+            'trang_thai' => 1,
+        ]);
+        Phong::create([
+            'toa_nha_id' => 4, // ID tòa nhà
+            'ten_phong' => 'Phòng 103',
+              'hinh_anh' => 'room/img05.jpg;room/img02.jpg;room/img01.jpg;room/img01.jpg;room/img01.jpg',
+            'dien_tich' => 32,
+            'gac_lung' => true,
+            'gia_thue' => 3200000,
+            'don_gia_dien' => 3000,
+            'don_gia_nuoc' => 2000,
+            'tien_xe_may' => 100000,
+            'phi_dich_vu' => 50000,
+            'tien_ich' => 'Máy lạnh, Wifi',
+            'noi_that' => 'Giường, Tủ, Bàn',
+            'trang_thai' => 1,
+        ]);
+        Phong::create([
+            'toa_nha_id' => 4, // ID tòa nhà
+            'ten_phong' => 'Phòng 103',
+              'hinh_anh' => 'room/img01.jpg;room/img02.jpg;room/img01.jpg;room/img01.jpg;room/img05.jpg',
+            'dien_tich' => 32,
+            'gac_lung' => true,
+            'gia_thue' => 3200000,
+            'don_gia_dien' => 3000,
+            'don_gia_nuoc' => 2000,
+            'tien_xe_may' => 100000,
+            'phi_dich_vu' => 50000,
+            'tien_ich' => 'Máy lạnh, Wifi',
+            'noi_that' => 'Giường, Tủ, Bàn',
+            'trang_thai' => 1,
+        ]);
+        Phong::create([
+            'toa_nha_id' => 4, // ID tòa nhà
+            'ten_phong' => 'Phòng 103',
+              'hinh_anh' => 'room/img03.jpg;room/img02.jpg;room/img01.jpg;room/img04.jpg;room/img05.jpg',
             'dien_tich' => 32,
             'gac_lung' => true,
             'gia_thue' => 3200000,
