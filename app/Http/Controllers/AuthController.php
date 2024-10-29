@@ -8,19 +8,22 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Constraint\IsEmpty;
 use function PHPUnit\Framework\isEmpty;
 
 class AuthController extends Controller
 {
-    public function one($id) {
+    public function one($id)
+    {
         $result = User::find($id);
-        if(!$result) return response()->json(['message' => 'ID này không tồn tại'],404);
-        return response()->json(['user' => $result],200);
+        if (!$result) return response()->json(['message' => 'ID này không tồn tại'], 404);
+        return response()->json(['user' => $result], 200);
     }
-    public function all() {
+    public function all()
+    {
         $result = User::get();
-        return response()->json(['list' => $result],200);
+        return response()->json(['list' => $result], 200);
     }
     public function register(Request $request)
     {
@@ -190,7 +193,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Cập nhật thành công !',
-        ],200);
+        ], 200);
     }
     public function updateAvatar(Request $request)
     {
@@ -230,7 +233,7 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['message' => 'Id user không tồn tại'], 404);
         }
-    
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'role' => 'nullable|integer|min:1', // Thay đổi thành nullable
@@ -245,37 +248,37 @@ class AuthController extends Controller
             'phone.max' => 'Số điện thoại không được dài quá 10 ký tự.',
             'born.date' => 'Ngày sinh phải là định dạng ngày hợp lệ.'
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
-    
+
         // Chỉ cập nhật nếu có thay đổi
         $updatedFields = [];
-        
+
         if ($request->has('role') && !$request->has('role') && $request->role !== $user->role) {
             $updatedFields['role'] = $request->role;
         }
-    
+
         if ($request->has('born') && !$request->has('born') && $request->born !== $user->born) {
             $updatedFields['born'] = $request->born;
         }
-    
+
         if ($request->has('phone') && $request->phone !== $user->phone) {
             $updatedFields['phone'] = $request->phone;
         }
-    
+
         // Cập nhật tên người dùng
         $user->name = $request->name; // Cập nhật tên luôn
-    
+
         // Nếu có trường nào được thay đổi thì cập nhật
         if (!empty($updatedFields)) {
             $user->update($updatedFields);
         }
-    
+
         // Lưu tên vào cơ sở dữ liệu
         $user->save();
-    
+
         return response()->json(['message' => 'Chỉnh sửa thông tin thành công!', 'user' => $user], 200);
     }
     public function deleteUser($id)
@@ -356,5 +359,39 @@ class AuthController extends Controller
         $newUser->save();
 
         return response()->json(['message' => 'Thành công!', 'user' => $newUser], 201);
+    }
+    public function forgotPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ], [
+            'email.required' => 'Chưa nhập Email.',
+            'email.email' => 'Email không đúng định dạng.'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Email không tồn tại.'
+            ], 404);
+        }
+
+        $newPassword = Str::random(6);
+        $user->password = Hash::make($newPassword);
+        $user->save();
+
+        Mail::raw("Mật khẩu mới của bạn là: $newPassword", function ($message) use ($user) {
+            $message->to($user->email)
+                ->subject('Mật khẩu mới của bạn');
+        });
+
+        return response()->json([
+            'message' => 'Mật khẩu đã được thay đổi thành công. Vui lòng kiểm tra email của bạn.'
+        ], 200);
     }
 }
