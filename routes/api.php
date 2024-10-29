@@ -12,6 +12,7 @@ use App\Http\Controllers\ThanhToanController;
 use App\Http\Controllers\TinTucController;
 use App\Http\Controllers\DanhMucTinTucController;
 use App\Http\Controllers\LienHeDatPhongController;
+use App\Http\Controllers\ResetPasswordController;
 
 # Danh sách tin tức
 Route::get('blog/all', [TinTucController::class, 'getAll']);
@@ -29,7 +30,8 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 # Quên mật khẩu
-Route::post('forgot_password', [AuthController::class, 'forgotPassword']);
+Route::post('forgot/check', [ResetPasswordController::class, 'check']);
+Route::post('forgot/reset', [ResetPasswordController::class, 'reset']);
 
 # Những API cần đăng nhập
 Route::middleware(['CusTom'])->group(function () {

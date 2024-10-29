@@ -360,38 +360,4 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Thành công!', 'user' => $newUser], 201);
     }
-    public function forgotPassword(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-        ], [
-            'email.required' => 'Chưa nhập Email.',
-            'email.email' => 'Email không đúng định dạng.'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
-        }
-
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user) {
-            return response()->json([
-                'message' => 'Email không tồn tại.'
-            ], 404);
-        }
-
-        $newPassword = Str::random(6);
-        $user->password = Hash::make($newPassword);
-        $user->save();
-
-        Mail::raw("Mật khẩu mới của bạn là: $newPassword", function ($message) use ($user) {
-            $message->to($user->email)
-                ->subject('Mật khẩu mới của bạn');
-        });
-
-        return response()->json([
-            'message' => 'Mật khẩu đã được thay đổi thành công. Vui lòng kiểm tra email của bạn.'
-        ], 200);
-    }
 }
