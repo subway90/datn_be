@@ -360,4 +360,31 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Thành công!', 'user' => $newUser], 201);
     }
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed',
+        ], [
+            'password.required' => 'Chưa nhập mật khẩu hiện tại',
+            'new_password.required' => 'Chưa nhập mật khẩu mới',
+            'new_password.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự',
+            'new_password.confirmed' => 'Xác nhận mật khẩu mới không khớp',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        $user = $request->user();
+
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(['error' => 'Mật khẩu hiện tại không chính xác!'], 403);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return response()->json(['message' => 'Thay đổi mật khẩu thành công!'], 200);
+    }
 }

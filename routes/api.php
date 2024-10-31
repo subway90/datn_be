@@ -51,11 +51,11 @@ Route::post('forgot/reset', [ResetPasswordController::class, 'reset']);
 
 # Những API cần đăng nhập
 Route::middleware(['CusTom'])->group(function () {
-    
+
     # Danh sách liên hệ thông qua token của người đó
-    Route::get('contact_room/list', [LienHeDatPhongController::class,'contactList']);
+    Route::get('contact_room/list', [LienHeDatPhongController::class, 'contactList']);
     # Tạo liên hệ đặt phòng mới
-    Route::post('contact_room/add', [LienHeDatPhongController::class,'add']); 
+    Route::post('contact_room/add', [LienHeDatPhongController::class, 'add']);
 
     # Đăng xuất
     Route::post('logout', [AuthController::class, 'logout']);
@@ -79,10 +79,9 @@ Route::middleware(['CusTom'])->group(function () {
     #
     Route::post('updateAvatar', [AuthController::class, 'updateAvatar']);
 
+    #
+    Route::post('change_password', [AuthController::class, 'changePassword']);
 });
-
-
-
 
 # Những API cần đăng nhập và là ADMIN
 Route::middleware(['Admin'])->group(function () {
@@ -119,8 +118,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::delete('/delete/{id}', [LienHeDatPhongController::class, 'destroy']);
 
         # Khôi phục
-        Route::post('/restore/{id}',[LienHeDatPhongController::class,'restore']);
-
+        Route::post('/restore/{id}', [LienHeDatPhongController::class, 'restore']);
     });
 
 
@@ -181,17 +179,17 @@ Route::middleware(['Admin'])->group(function () {
     });
 
 
-    
+
     Route::prefix('khu-vuc')->group(function () {
 
         # Thống kê tổng
-        Route::get('/',[KhuVucController::class,'all']);
+        Route::get('/', [KhuVucController::class, 'all']);
 
         # Thống kê tổng
-        Route::get('/list_delete',[KhuVucController::class,'list_delete']);
+        Route::get('/list_delete', [KhuVucController::class, 'list_delete']);
 
         # Thống kê tổng
-        Route::get('/{id}',[KhuVucController::class,'one']);
+        Route::get('/{id}', [KhuVucController::class, 'one']);
 
         # Thêm mới
         Route::post('/add', [KhuVucController::class, 'store']);
@@ -206,17 +204,17 @@ Route::middleware(['Admin'])->group(function () {
         Route::get('/duplicate/{id}', [KhuVucController::class, 'duplicate']);
     });
 
-    
+
     Route::prefix('toa-nha')->group(function () {
 
         # Thống kê tổng
-        Route::get('/',[ToaNhaController::class,'all']);
+        Route::get('/', [ToaNhaController::class, 'all']);
 
         # Thống kê tổng
-        Route::get('/list_delete',[ToaNhaController::class,'list_delete']);
+        Route::get('/list_delete', [ToaNhaController::class, 'list_delete']);
 
         # Thống kê tổng
-        Route::get('/{id}',[ToaNhaController::class,'one']);
+        Route::get('/{id}', [ToaNhaController::class, 'one']);
 
         # Thêm mới
         Route::post('/add', [ToaNhaController::class, 'store']);
@@ -230,8 +228,6 @@ Route::middleware(['Admin'])->group(function () {
         # Nhân bản theo ID
         Route::get('/duplicate/{id}', [ToaNhaController::class, 'duplicate']);
     });
-
-    
 });
 
 
