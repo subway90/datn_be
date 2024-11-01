@@ -79,7 +79,7 @@ Route::middleware(['CusTom'])->group(function () {
     #
     Route::post('updateAvatar', [AuthController::class, 'updateAvatar']);
 
-    #
+    # Thay đổi mật khẩu
     Route::post('change_password', [AuthController::class, 'changePassword']);
 });
 
