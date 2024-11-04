@@ -325,6 +325,7 @@ class TinTucController extends Controller
             'slug' => $newslug,
             'image' => $newImagePath, // Cập nhật với đường dẫn ảnh mới
             'noi_dung' => $tinTuc->noi_dung,
+            'mo_ta' => $tinTuc->mo_ta,
         ]);
     
         return response()->json([
