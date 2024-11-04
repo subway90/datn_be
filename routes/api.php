@@ -13,6 +13,8 @@ use App\Http\Controllers\TinTucController;
 use App\Http\Controllers\DanhMucTinTucController;
 use App\Http\Controllers\LienHeDatPhongController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\YeuThichController;
+use App\Models\YeuThich;
 
 #
 Route::get('phong', [PhongController::class, 'getAll']);
@@ -81,6 +83,12 @@ Route::middleware(['CusTom'])->group(function () {
 
     # Thay đổi mật khẩu
     Route::post('change_password', [AuthController::class, 'changePassword']);
+
+    #
+    Route::prefix('yeu-thich')->group(function () {
+        Route::get('getYeuThich', [YeuThichController::class, 'index']);
+        Route::post('addYeuThich', [YeuThichController::class, 'create']);
+    });
 });
 
 # Những API cần đăng nhập và là ADMIN
