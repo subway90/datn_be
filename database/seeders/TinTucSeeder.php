@@ -18,6 +18,7 @@ class TinTucSeeder extends Seeder
             'tai_khoan_id' => 1,
             'danh_muc_id' => 1, // ID danh mục 1
             'tieu_de' => 'Người thuê trọ điêu đứng vì chủ bán nhà trong cơn sốt giá',
+            'mo_ta' => 'Cơn sốt bất động sản tăng lên vì giá khiến tiền thuê trọ cũng tăng theo, tuy nhiên chất lượng vẫn như cũ khiến nhiều người khó khăn việc tìm giá trọ đúng với số tiền bỏ ra.',
             'slug' => 'nguoi-thue-tro-dieu-dung-vi-chu-ban-hang-trong-con-sot-gia',
             'image' => 'blog/image1.jpg',
             'noi_dung' => 'Thuê ngôi nhà ba phòng ngủ được hai tháng, vừa rủ được đủ người ở cùng Minh Tùng nhận thông báo chủ nhà lấy lại để bán vì đang được giá.
@@ -43,6 +44,7 @@ class TinTucSeeder extends Seeder
             'tai_khoan_id' => 1,
             'danh_muc_id' => 2, // ID danh mục 2
             'tieu_de' => 'Tin Công Nghệ 1',
+            'mo_ta' => 'Mô tả tin tức công nghệ 01, đây là tin tức hay',
             'slug' => 'tin-cong-nghe-1',
             'image' => 'blog/image2.jpg',
             'noi_dung' => 'Nội dung cho tin công nghệ 1.',
@@ -52,6 +54,7 @@ class TinTucSeeder extends Seeder
             'tai_khoan_id' => 1,
             'danh_muc_id' => 3, // ID danh mục 3
             'tieu_de' => 'Tin Giải Trí 1',
+            'mo_ta' => 'Mô tả tin tức giải trí 01, đây là tin tức hay',
             'slug' => 'tin-giai-tri-1',
             'image' => 'blog/image3.jpg',
             'noi_dung' => 'Nội dung cho tin giải trí 1.',
@@ -61,6 +64,7 @@ class TinTucSeeder extends Seeder
             'tai_khoan_id' => 1,
             'danh_muc_id' => 4, // ID danh mục 4
             'tieu_de' => 'Tin Xã Hội 1',
+            'mo_ta' => 'Tin tức xã hội luôn xoay quanh đời sống chúng ta, hãy cùng tôi cập nhật những gì nóng hổi hôm nay!',
             'slug' => 'tin-xa-hoi-1',
             'image' => 'blog/image4.jpg',
             'noi_dung' => 'Nội dung cho tin xã hội 1.',
@@ -70,6 +74,7 @@ class TinTucSeeder extends Seeder
             'tai_khoan_id' => 1,
             'danh_muc_id' => 5, // ID danh mục 5
             'tieu_de' => 'Tin Giáo Dục 1',
+            'mo_ta' => 'Giáo dục chất lượng cao thì đời sống chất lượng cao, cùng tìm hiểu nào',
             'slug' => 'tin-giao-duc-1',
             'image' => 'blog/image5.jpg',
             'noi_dung' => 'Nội dung cho tin giáo dục 1.',

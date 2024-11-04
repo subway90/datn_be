@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tai_khoan_id');
             $table->unsignedBigInteger('danh_muc_id');
             $table->text('tieu_de');
+            $table->text('mo_ta');
             $table->text('slug');
             $table->string('image');
             $table->text('noi_dung');

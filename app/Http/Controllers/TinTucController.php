@@ -30,9 +30,9 @@ class TinTucController extends Controller
                 'image' => $rows->image,
                 'name_cate' => $rows->danhMuc->ten_danh_muc,
                 'title' => $rows->tieu_de,
+                'description' => $rows->mo_ta,
                 'content' => $rows->noi_dung,
-                'created_at' => $rows->created_at,
-                'updated_at' => $rows->updated_at,
+                'date' => $rows->created_at->format('d').' Tháng '.$rows->created_at->format('m').' lúc '.$rows->created_at->format('H').':'.$rows->created_at->format('i'),
             ];
         });
     
@@ -60,6 +60,7 @@ class TinTucController extends Controller
                 'image' => $rows->image,
                 'name_cate' => $rows->danhMuc->ten_danh_muc,
                 'title' => $rows->tieu_de,
+                'description' => $rows->mo_ta,
                 'content' => $rows->noi_dung,
                 'date' => $rows->created_at->format('d').' Tháng '.$rows->created_at->format('m').' lúc '.$rows->created_at->format('H').':'.$rows->created_at->format('i'),
             ];
@@ -86,6 +87,7 @@ class TinTucController extends Controller
             'image' => $tintuc->image,
             'name_category' => $tintuc->danhMuc->ten_danh_muc,
             'title' => $tintuc->tieu_de,
+            'description' => $tintuc->mo_ta,
             'content' => $tintuc->noi_dung,
             'created_at' => $tintuc->created_at,
             'updated_at' => $tintuc->updated_at,
@@ -130,9 +132,9 @@ class TinTucController extends Controller
             'image' => $tintuc->image,
             'name_category' => $tintuc->danhMuc->ten_danh_muc,
             'title' => $tintuc->tieu_de,
+            'description' => $tintuc->mo_ta,
             'body' => $tintuc->noi_dung,
-            'created_at' => $tintuc->created_at,
-            'updated_at' => $tintuc->updated_at,
+            'date' => $tintuc->created_at->format('d').' Tháng '.$tintuc->created_at->format('m').' lúc '.$tintuc->created_at->format('H').':'.$tintuc->created_at->format('i'),
             'list_cmt' => $result_list_cmt,
     ]);
     }
