@@ -65,49 +65,32 @@ class BinhLuanTinTucController extends Controller
             'message' => 'Bình luận đã được đăng thành công.'], 201);
     }
     
-     public function updateComment(Request $request)
+    public function updateComment(Request $request)
     {
-        // Xác định các quy tắc xác thực
         $validator = Validator::make($request->all(), [
-            'id' => 'required|integer',  // kiểm tra ID bình luận có tồn tại
-            'status' => 'required|boolean',
+            'id_cmt' => 'required|integer|exists:binh_luan_tin_tuc,id',
             'message' => 'required|string',
+            'slug' => 'required|string|exists:tin_tuc,slug',
         ], [
-            'id.required' => 'ID bình luận là bắt buộc.',
-            'id.integer' => 'ID bình luận phải là một số nguyên.',
-            'status.required' => 'Trạng thái là bắt buộc.',
-            'status.boolean' => 'Trạng thái phải là 1',
-            'message.required' => 'Nội dung bình luận là bắt buộc.',
-            'message.string' => 'Nội dung bình luận phải là một chuỗi.',
+            'id_cmt.required' => 'Chưa nhập ID bình luận',
+            'id_cmt.integer' => 'ID bình luận phải là một số nguyên',
+            'message.required' => 'Chưa nhập nội dung bình luận',
+            'message.string' => 'Nội dung bình luận phải là một chuỗi',
+            'slug.required' => 'Chưa nhập slug tin tức',
+            'slug.exists' => 'Slug bài viết này không tồn tại',
+            'id_cmt.exists' => 'ID bình luận này không tồn tại',
         ]);
-
-        // Kiểm tra nếu có lỗi xác thực
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()->all(),
-            ], 400);
-        }
-
-        // Tìm bình luận theo ID
-        $comment = BinhLuanTinTuc::find($validator->validated()['id']);
-
-        if (!$comment) {
-            return response()->json([
-                'message' => 'Bình luận không tồn tại.'
-            ], 404);
-        }
-
-        // Cập nhật các trường cho phép
-        $comment->noi_dung = $validator->validated()['message'];
-        $comment->trang_thai = $validator->validated()['status'];
-        $comment->updated_at = now();  // sử dụng thời gian hiện tại
-
-        // Lưu bình luận đã chỉnh sửa
+        // Bắt validate
+        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all(),], 400);
+        // Kiểm tra id_user của cmt này có phải của user đang sửa hay không
+        $user_id = $request->user()->id;
+        $comment = BinhLuanTinTuc::find($request->id_cmt);
+        if ($comment->tai_khoan_id !== $user_id) return response()->json(['message' => 'ID bình luận không phải của bạn.'], 401);
+        // Cập nhật nội dung của bình luận
+        $comment->noi_dung = $request->message;
+        $comment->updated_at = now();
         $comment->save();
-
-        // Trả về phản hồi JSON thành công
-        return response()->json([
-            'message' => 'Bình luận đã được cập nhật thành công.',
-        ], 200);
+        return response()->json(['message' => 'Bình luận đã được cập nhật thành công.',], 200);
     }
+
 }
