@@ -61,7 +61,7 @@ class TinTucController extends Controller
                 'name_cate' => $rows->danhMuc->ten_danh_muc,
                 'title' => $rows->tieu_de,
                 'content' => $rows->noi_dung,
-                'date' => $rows->created_at->format('d').' Tháng '.$rows->created_at->format('m').' lúc '.$rows->created_at->format('H').':'.$rows->created_at->format('i'), // Định dạng ngà
+                'date' => $rows->created_at->format('d').' Tháng '.$rows->created_at->format('m').' lúc '.$rows->created_at->format('H').':'.$rows->created_at->format('i'),
             ];
         });
     
@@ -114,7 +114,7 @@ class TinTucController extends Controller
                 'name' => $cmt->user->name,
                 'avatar' => $cmt->user->avatar,
                 'content' => $cmt->noi_dung,
-                'created_at' => $cmt->created_at,
+                'date' => $cmt->created_at->format('d').' Thg '.$cmt->created_at->format('m').' lúc '.$cmt->created_at->format('H').':'.$cmt->created_at->format('i'),
             ];
         });
 
