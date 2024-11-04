@@ -62,9 +62,7 @@ class BinhLuanTinTucController extends Controller
 
         // Trả về phản hồi JSON thành công
         return response()->json([
-            'message' => 'Bình luận đã được đăng thành công.',
-            'data' => $comment
-        ], 201);
+            'message' => 'Bình luận đã được đăng thành công.'], 201);
     }
     
      public function updateComment(Request $request)
