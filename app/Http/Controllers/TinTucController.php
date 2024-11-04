@@ -145,6 +145,7 @@ class TinTucController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'content' => 'required|string',
             'cate_id' => 'required|integer|exists:danh_muc_tin_tuc,id',
+            'description' => 'required',
         ],
         [
             'title.required' => 'Chưa nhập tên',
@@ -154,6 +155,7 @@ class TinTucController extends Controller
             'image.max' => 'Ảnh phải dưới 2MB',
             'content.required' => 'Chưa nhập nội dung',
             'cate_id.required' => 'Chưa nhập danh mục',
+            'description.required' => 'Chưa nhập mô tả',
             'cate_id.exists' => 'Danh mục không tồn tại',
         ]);
         if ($validator->fails()) {
@@ -170,6 +172,7 @@ class TinTucController extends Controller
             'tai_khoan_id' => $request->user()->id, // ID tài khoản hiện tại
             'danh_muc_id' => $request->cate_id,
             'tieu_de' => $request->title,
+            'mo_ta' => $request->description,
             'slug' => Str::slug($request->title),
             'image' => $imagePath,
             'noi_dung' => $request->content,

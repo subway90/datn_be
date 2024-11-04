@@ -21,6 +21,7 @@ class TinTuc extends Model
         'slug',
         'image',
         'noi_dung',
+        'mo_ta',
     ];
     protected $dates = ['deleted_at']; 
 
