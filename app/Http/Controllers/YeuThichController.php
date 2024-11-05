@@ -13,6 +13,7 @@ class YeuThichController extends Controller
      */
     public function index()
     {
+        $hello = "";
         if (!Auth::check()) {
             return response()->json(['message' => 'Bạn cần đăng nhập để xem danh sách yêu thích.'], 401);
         }
