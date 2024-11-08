@@ -137,6 +137,9 @@ Route::middleware(['Admin'])->group(function () {
 
 
     Route::prefix('blog')->group(function () {
+        
+        # Danh sách tin tức đã xóa
+        Route::get('/list_delete', [TinTucController::class, 'listDelete']);
 
         # Lấy duy nhất 1
         Route::get('/{id}', [TinTucController::class, 'getOneByID']);

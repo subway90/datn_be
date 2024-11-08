@@ -39,6 +39,32 @@ class TinTucController extends Controller
         return response()->json($result);
     }
 
+    public function listDelete()
+    {
+        // Lấy tất cả các tòa nhà cùng với số lượng phòng
+        $list = TinTuc::onlyTrashed()
+            ->get();
+    
+        // Kiểm tra xem có dữ liệu hay không
+        if ($list->isEmpty()) {
+            return response()->json(['message' => 'Không có dữ liệu'], 404);
+        }
+    
+        $result = $list->map(function (TinTuc $rows) {
+            return [
+                'id' => $rows->id,
+                'slug' => $rows->slug,
+                'image' => $rows->image,
+                'name_cate' => $rows->danhMuc->ten_danh_muc,
+                'title' => $rows->tieu_de,
+                'description' => $rows->mo_ta,
+                'date' => $rows->created_at->format('d').' Tháng '.$rows->created_at->format('m').' lúc '.$rows->created_at->format('H').':'.$rows->created_at->format('i'),
+            ];
+        });
+    
+        return response()->json($result);
+    }
+
     public function getAllListNew()
     {
         // Lấy tất cả các tòa nhà cùng với số lượng phòng
