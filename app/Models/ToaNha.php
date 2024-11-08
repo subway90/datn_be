@@ -37,4 +37,8 @@ class ToaNha extends Model
     {
         return $this->hasMany(Phong::class,'toa_nha_id');
     }
+    public function binhLuanToaNha()
+    {
+        return $this->hasMany(BinhLuanToaNha::class, 'toa_nha_id');
+    }
 }

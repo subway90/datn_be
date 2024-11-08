@@ -10,3 +10,4 @@ php artisan db:seed --class=DanhMucTinTucSeeder
 php artisan db:seed --class=TinTucSeeder
 php artisan db:seed --class=BinhLuanTinTucSeeder
 php artisan db:seed --class=LienHeDatPhongSeeder
+php artisan db:seed --class=BinhLuanToaNhaSeeder

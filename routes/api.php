@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BinhLuanToaNhaController;
 use App\Http\Controllers\BinhLuanTinTucController;
 use App\Http\Controllers\DashBoardController;
 use Illuminate\Support\Facades\Route;
@@ -54,8 +55,12 @@ Route::middleware(['CusTom'])->group(function () {
 
     # Danh sách liên hệ thông qua token của người đó
     Route::get('contact_room/list', [LienHeDatPhongController::class, 'contactList']);
+
     # Tạo liên hệ đặt phòng mới
     Route::post('contact_room/add', [LienHeDatPhongController::class, 'add']);
+
+    # Đăng bình luận tòa nhà mới
+    Route::post('building_cmt/add', [BinhLuanToaNhaController::class, 'add']);
 
     # Đăng xuất
     Route::post('logout', [AuthController::class, 'logout']);
