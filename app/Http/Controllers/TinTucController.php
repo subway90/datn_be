@@ -99,7 +99,7 @@ class TinTucController extends Controller
     {
         // Lấy slug từ query parameter
         // Thông tin tin tức
-        $tintuc = TinTuc::find($id)->first();
+        $tintuc = TinTuc::find($id);
 
         // Kiểm tra nếu không tìm thấy tin tức
         if (!$tintuc) {
