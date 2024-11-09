@@ -16,9 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('khu_vuc_id');
             $table->string('slug', length: 255);
             $table->string('ten', 255);
-            $table->integer('dien_tich');
             $table->text('image');
-            $table->text('mo_ta');
+            $table->text('mo_ta');  
             $table->string('tien_ich',255);
             $table->text('vi_tri');
             $table->integer('gia_thue');

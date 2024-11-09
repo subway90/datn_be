@@ -227,6 +227,9 @@ Route::middleware(['Admin'])->group(function () {
         # Thêm mới
         Route::post('/add', [ToaNhaController::class, 'store']);
 
+        // # Cập nhật
+        Route::put('/edit/{id}', [TinTucController::class, 'edit']);        
+
         # Thêm mới
         Route::delete('/delete/{id}', [ToaNhaController::class, 'delete']);
 
