@@ -50,5 +50,13 @@ class DatabaseSeeder extends Seeder
             'gender' => 2,
             'phone' => '0969455222',
         ]);
+        User::create([
+            'name' => 'Võ Hữu Đạt',
+            'email' => 'vohuudat282224@gmail.com',
+            'password' => Hash::make('123456789'),
+            'born' => '2024-02-28',
+            'gender' => 2,
+            'phone' => '0123456789',
+        ]);
     }
 }
