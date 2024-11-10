@@ -19,8 +19,6 @@ class ToaNha extends Model
         'slug',
         'ten',
         'image',
-        'gia_thue',
-        'dien_tich',
         'mo_ta',
         'vi_tri',
         'tien_ich',

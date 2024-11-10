@@ -17,12 +17,10 @@ return new class extends Migration
             $table->string('slug', length: 255);
             $table->string('ten', 255);
             $table->text('image');
-            $table->text('mo_ta');  
+            $table->text('mo_ta'); 
             $table->string('tien_ich',255);
             $table->text('vi_tri');
-            $table->integer('gia_thue');
             $table->boolean('noi_bat')->default(0);
-            $table->integer('luot_xem')->default(0);
             $table->timestamps();
             $table->foreign('khu_vuc_id')->references('id')->on('khu_vuc');
             $table->softDeletes();
