@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('mo_ta'); 
             $table->string('tien_ich',255);
             $table->text('vi_tri');
+            $table->integer('luot_xem')->default(0);
             $table->boolean('noi_bat')->default(0);
             $table->timestamps();
             $table->foreign('khu_vuc_id')->references('id')->on('khu_vuc');
