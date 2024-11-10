@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\ToaNha;
-use App\Models\Phong;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -12,13 +11,29 @@ class ToaNhaController extends Controller
 {
     public function detail(Request $request)
     {
-        $result = ToaNha::with('phongTro')->where('slug', $request->slug)->first();
+        $detail = ToaNha::with('phongTro')
+        ->with('khuVuc')
+        ->where('slug', $request->slug)->get();
 
-        if (!$result) {
+        if (!$detail) {
             return response()->json(['message' => 'Tòa nhà không tồn tại'], 404);
         }
-
-        return response()->json($result);
+        $result = $detail->map(function ($rows) {
+            return [
+                'id' => $rows->id,
+                'khu_vuc_id' => $rows->khu_vuc_id,
+                'ten_khu_vuc' => $rows->khuVuc->ten,
+                'ten' => $rows->ten,
+                'image' => $rows->image,
+                'mo_ta' => $rows->mo_ta,
+                'tien_ich' => $rows->tien_ich,
+                'vi_tri' => $rows->vi_tri,
+                'luot_xem' => $rows->luot_xem,
+                'noi_bat' => $rows->noi_bat,
+                'phong_tro' => $rows->phongTro,
+            ];
+        });
+        return response()->json($result->first(),200);
     }
 
     public function listName()
