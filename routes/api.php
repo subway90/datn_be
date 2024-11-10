@@ -245,8 +245,11 @@ Route::middleware(['Admin'])->group(function () {
 #
 Route::get('phong/{id_toa_nha}', [PhongController::class, 'index']);
 
-# Chức năng lọc
+# Chức năng lọc theo tòa nhà
 Route::get('/filter', [ToaNhaController::class, 'filter']);
+
+# Chức năng lọc theo phòng
+Route::get('/filter-room', [PhongController::class, 'filter']);
 
 # Danh sách khu vực (option của Area để Filter)
 Route::get('khu_vuc/option', [KhuVucController::class, 'option']);
