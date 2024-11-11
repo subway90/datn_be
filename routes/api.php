@@ -14,7 +14,6 @@ use App\Http\Controllers\DanhMucTinTucController;
 use App\Http\Controllers\LienHeDatPhongController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\YeuThichController;
-use App\Models\YeuThich;
 
 #
 Route::get('phong', [PhongController::class, 'getAll']);
@@ -67,8 +66,11 @@ Route::middleware(['CusTom'])->group(function () {
 
     # Chỉnh sửa thông tin người dùng
     Route::put('updateProfile', [AuthController::class, 'updateProfile']);
-    # Hiển thị thông tin hợp đồng của người dùng
-    Route::get('/hop-dong', [HopDongController::class, 'show']);
+
+    Route::prefix('hop-dong')->group(function () {
+        # Hiển thị thông tin hợp đồng của người dùng
+        Route::get('/', [HopDongController::class, 'show']);
+    });
 
     # Bình luận tin tức
     Route::post('blog/comment', [BinhLuanTinTucController::class, 'postComment']);
@@ -115,6 +117,18 @@ Route::middleware(['Admin'])->group(function () {
         Route::get('/restore/{id}', [DanhMucTinTucController::class, 'restore']);
     });
 
+    Route::prefix('hop-dong')->group(function () {
+        # Lấy toàn bộ danh sách hợp đồng
+        Route::get('/all', [HopDongController::class, 'index']);
+        # Thêm hợp đồng
+        Route::post('/add', [HopDongController::class, 'create']);
+        # Sửa hợp đồng
+        Route::put('/edit/{id}', [HopDongController::class, 'edit']);
+        # Xóa hợp đồng
+        Route::delete('/delete/{id}', [HopDongController::class, 'delete']);
+        # Khôi phục hợp đồng
+        Route::post('/restore/{id}', [HopDongController::class, 'restore']);
+    });
 
 
     Route::prefix('contact_room')->group(function () {
@@ -124,6 +138,7 @@ Route::middleware(['Admin'])->group(function () {
 
         # Xóa
         Route::delete('/delete/{id}', [LienHeDatPhongController::class, 'destroy']);
+
 
         # Khôi phục
         Route::post('/restore/{id}', [LienHeDatPhongController::class, 'restore']);
