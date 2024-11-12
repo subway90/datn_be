@@ -20,7 +20,7 @@ class HopDongController extends Controller
                 'id_user' => $row->tai_khoan_id,
                 'date_start' => $row->ngay_bat_dau,
                 'date_end' => $row->ngay_ket_thuc,
-                'status' => $row->status,
+                'status' => $row->ngay_ket_thuc < now() ? 'Hết hạn' : 'Đang sử dụng',
                 'price' => $row->gia_thue,
             ];
         });
