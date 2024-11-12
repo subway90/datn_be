@@ -12,8 +12,19 @@ class HopDongController extends Controller
 {
     public function index()
     {
-        $hopdong = HopDong::all();
-        return response()->json($hopdong, 200);
+        $list = HopDong::all();
+        $result = $list->map(function ($row) {
+            return [
+                'id' => $row->id,
+                'id_room' => $row->phong_id,
+                'id_user' => $row->tai_khoan_id,
+                'date_start' => $row->ngay_bat_dau,
+                'date_end' => $row->ngay_ket_thuc,
+                'status' => $row->status,
+                'price' => $row->gia_thue,
+            ];
+        });
+        return response()->json($result, 200);
     }
     public function create(Request $request)
     {
@@ -116,7 +127,7 @@ class HopDongController extends Controller
         // Tạo mảng dữ liệu để trả về
         $data = [
             'id' => $hopDong->id,
-            'phong_id' => $hopDong->phong_id,
+            'room_id' => $hopDong->phong_id,
             'date_start' => $hopDong->ngay_bat_dau,
             'date_end' => $hopDong->ngay_ket_thuc,
             'price' => $hopDong->gia_thue,
