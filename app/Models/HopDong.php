@@ -15,7 +15,6 @@ class HopDong extends Model
         'tai_khoan_id',
         'ngay_bat_dau',
         'ngay_ket_thuc',
-        'trang_thai',
         'gia_thue',
     ];
     public function user()

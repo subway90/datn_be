@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('tai_khoan_id')->index();
             $table->dateTime('ngay_bat_dau');
             $table->dateTime('ngay_ket_thuc');
-            $table->boolean('trang_thai')->default(1);
             $table->integer('gia_thue');
             $table->timestamps();
             $table->foreign('phong_id')->references('id')->on('phong');
