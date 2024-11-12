@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\HopDong;
 use App\Models\Phong;
-
+use Carbon\Carbon;
 class HopDongController extends Controller
 {
     public function index()
@@ -20,7 +20,7 @@ class HopDongController extends Controller
                 'id_user' => $row->tai_khoan_id,
                 'date_start' => $row->ngay_bat_dau,
                 'date_end' => $row->ngay_ket_thuc,
-                'status' => $row->ngay_ket_thuc < now() ? 'Hết hạn' : 'Đang sử dụng',
+                'status' => $row->ngay_ket_thuc < $this->date_now ? 'Hết hạn' : 'Đang sử dụng',
                 'price' => $row->gia_thue,
             ];
         });
