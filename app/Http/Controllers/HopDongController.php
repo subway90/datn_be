@@ -30,37 +30,50 @@ class HopDongController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'phong_id' => 'required|exists:phong,id',
-            'tai_khoan_id' => 'required|exists:users,id',
-            'ngay_bat_dau' => 'required|date',
-            'ngay_ket_thuc' => 'required|date|after:ngay_bat_dau',
+            'id_room' => 'required|exists:phong,id',
+            'id_user' => 'required|exists:users,id',
+            'date_start' => 'required|date',
+            'date_end' => 'required|date|after:date_start',
         ], [
-            'ngay_ket_thuc.after' => 'Ngày kết thúc phải sau ngày bắt đầu.'
+            'id_room.required' => 'Chưa nhập ID Phòng',
+            'id_room.exists' => 'ID Phòng không tồn tại',
+            'id_user.required' => 'Chưa nhập ID User',
+            'id_user.exists' => 'ID User không tồn tại',
+            'date_start.required' => 'Chưa nhập ngày bắt đầu.',
+            'date_end.required' => 'Chưa nhập ngày kết thúc.',
+            'date_end.after' => 'Ngày kết thúc phải sau ngày bắt đầu.',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
+        
+        # Lấy thông tin của phòng đó
+        $list_hop_dong = HopDong::where('phong_id',$request->id_room)->get();
+
+        # Kiểm tra xem hợp đồng có còn sử dụng hay không
+        if($list_hop_dong) {
+            foreach ($list_hop_dong as $key => $hop_dong) {
+                if($hop_dong->ngay_ket_thuc > $this->date_now) {
+                    return response()->json(['message'=> 'Phòng này đang có hợp đồng sử dụng'], 400);
+                }
+            };
         }
 
-        $validatedData = $validator->validated();
-
-        $phong = Phong::findOrFail($validatedData['phong_id']);
-
+        $phong = Phong::find($request->id_room);
         $hopDong = new HopDong();
-        $hopDong->phong_id = $validatedData['phong_id'];
-        $hopDong->tai_khoan_id = $validatedData['tai_khoan_id'];
-        $hopDong->ngay_bat_dau = $validatedData['ngay_bat_dau'];
-        $hopDong->ngay_ket_thuc = $validatedData['ngay_ket_thuc'];
+
+        $hopDong->phong_id = $request->id_room;
+        $hopDong->tai_khoan_id = $request->id_user;
+        $hopDong->ngay_bat_dau = $request->date_start;
+        $hopDong->ngay_ket_thuc = $request->date_end;
         $hopDong->gia_thue = $phong->gia_thue;
-        $hopDong->trang_thai = 1;
 
         $hopDong->save();
 
         return response()->json([
             'message' => 'Hợp đồng đã được tạo thành công!',
-            'hop_dong' => $hopDong
         ], 201);
     }
+    
     public function edit(Request $request, $id)
     {
         // Kiểm tra và xác thực dữ liệu đầu vào

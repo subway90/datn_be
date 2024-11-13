@@ -27,4 +27,9 @@ class HopDong extends Model
     {
         return $this->hasMany(ThanhToan::class, 'hop_dong_id');
     }
+
+    public function phong()
+    {
+        return $this->belongsTo(Phong::class, 'phong_id');
+    }
 }
