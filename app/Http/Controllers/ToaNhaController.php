@@ -263,7 +263,7 @@ class ToaNhaController extends Controller
     public function all()
     {
         // Lấy tất cả khu vực
-        $list = ToaNha::get();
+        $list = ToaNha::orderBy('id','DESC')->get();
     
         // Kiểm tra nếu không có dữ liệu
         if ($list->isEmpty()) {
@@ -305,54 +305,61 @@ class ToaNhaController extends Controller
 
     public function store(Request $request)
     {
-    //     $request->validate([
-    //         'id_area' => 'unique:khu_vuc,id',
-    //         'name' => 'required|max:255',
-    //         'image' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
-    //         'price' => 'required',
-    //         'size' => 'required',
-    //         'description' => 'required',
-    //         'utilities' => 'required',
-    //         'location' => 'required',
-    //     ],[
-    //         'id_area.unique' => 'ID không tồn tại',
-    //         'name.required' => 'Vui lòng nhập tên',
-    //         'image.mimes' => 'Chưa nhập đúng định dạng ảnh',
-    //         'image.max' => 'Ảnh phải dưới 2MB',
-    //         'price.required' => 'Vui lòng nhập giá thuê từ...',
-    //         'size.required' => 'Vui lòng nhập diện tích',
-    //         'description.required' => 'Vui lòng nhập mô tả',
-    //         'utilites.required' => 'Vui lòng nhập tiện ích',
-    //         'location.required' => 'Vui lòng nhập các vị trí',
-    //     ]
-    // );  
-
-        //Kiểm tra tên tồn tại hay chưa
-        $checkName = ToaNha::where('ten',$request->name)->exists();
-        if($checkName) return response()->json(['message' => 'Tên này đã tồn tại'],400);
+        # Kiểm tra validate
+        $validator = Validator::make($request->all(),[
+            'id_area' => 'required|exists:khu_vuc,id',
+            'name' => 'required|unique:toa_nha,ten',
+            'image' => 'nullable|array',
+            'image.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
+            'description' => 'required',
+            'utilities' => 'required',
+            'location' => 'required',
+        ],[
+            'id_area.required' => 'Chưa nhập khu vực',
+            'id_area.exists' => 'Khu vực không tồn tại',
+            'name.required' => 'Vui lòng nhập tên',
+            'name.unique' => 'Tên tòa nhà đã tồn tại',
+            'image.array' => 'Ảnh phải là một mảng ( image[] )',
+            'image.*.mimes' => 'Chưa nhập đúng định dạng ảnh',
+            'image.*.max' => 'Ảnh phải dưới 2MB',
+            'description.required' => 'Vui lòng nhập mô tả',
+            'utilities.required' => 'Vui lòng nhập tiện ích',
+            'location.required' => 'Vui lòng nhập các vị trí',
+        ]); 
+        # Trả về message validate 
+        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
 
         // Xử lý upload ảnh
-        $imagePath = null;
+        $imagePaths = [];
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('area', 'public');
+            foreach ($request->file('image') as $image) {
+                // Mã hóa tên ảnh
+                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('building', $filename, 'public');
+                $imagePaths[] = $imagePath; // Lưu đường dẫn ảnh vào mảng
+            }
         }
+
+        // Chuyển đổi mảng đường dẫn thành chuỗi và ngăn cách bằng dấu ';'
+        $imagesString = implode(';', $imagePaths);
 
         // Tạo mới khu vực
         $khuVuc = ToaNha::create([
             'khu_vuc_id' => $request->id_area,
             'ten' => $request->name,
             'slug' => Str::slug($request->name),
-            'image' => $imagePath,
+            'image' => $imagesString,
             'gia_thue' => $request->price,
             'dien_tich' => $request->size,
             'mo_ta' => $request->description,
-            'tien_ich' => $request->ultilites,
+            'tien_ich' => $request->utilities,
             'vi_tri' => $request->location,
             'noi_bat' => $request->noi_bat ?? 0,
         ]);
 
         return response()->json([
             'message' => 'Khu vực đã được thêm thành công',
+            'result' => $khuVuc,
         ], 201);
     }
 
