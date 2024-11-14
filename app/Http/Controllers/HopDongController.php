@@ -78,39 +78,35 @@ class HopDongController extends Controller
     {
         // Kiểm tra và xác thực dữ liệu đầu vào
         $validator = Validator::make($request->all(), [
-            'phong_id' => 'required|exists:phong,id',
-            'tai_khoan_id' => 'required|exists:users,id',
-            'ngay_bat_dau' => 'required|date',
-            'ngay_ket_thuc' => 'required|date|after:ngay_bat_dau',
+            'id_room' => 'required|exists:phong,id',
+            'id_user' => 'required|exists:users,id',
+            'date_start' => 'required|date',
+            'date_end' => 'required|date|after:date_start',
         ], [
-            'phong_id.required' => 'Phòng là trường bắt buộc.',
-            'phong_id.exists' => 'Phòng không tồn tại.',
-            'tai_khoan_id.required' => 'Tài khoản là trường bắt buộc.',
-            'tai_khoan_id.exists' => 'Tài khoản không tồn tại.',
-            'ngay_bat_dau.required' => 'Ngày bắt đầu là trường bắt buộc.',
-            'ngay_bat_dau.date' => 'Ngày bắt đầu phải là định dạng ngày hợp lệ.',
-            'ngay_ket_thuc.required' => 'Ngày kết thúc là trường bắt buộc.',
-            'ngay_ket_thuc.date' => 'Ngày kết thúc phải là định dạng ngày hợp lệ.',
-            'ngay_ket_thuc.after' => 'Ngày kết thúc phải sau ngày bắt đầu.'
+            'id_room.required' => 'Chưa nhập ID Phòng',
+            'id_room.exists' => 'ID Phòng không tồn tại',
+            'id_user.required' => 'Chưa nhập ID User',
+            'id_user.exists' => 'ID User không tồn tại',
+            'date_start.required' => 'Chưa nhập ngày bắt đầu.',
+            'date_start.date' => 'Chưa nhập đúng định dạng YYYY-MM-DD',
+            'date_end.required' => 'Chưa nhập ngày kết thúc.',
+            'date_end.date' => 'Chưa nhập đúng định dạng YYYY-MM-DD',
+            'date_end.after' => 'Ngày kết thúc phải sau ngày bắt đầu.',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $validatedData = $validator->validated();
+        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
 
         // Tìm hợp đồng cần cập nhật
         $hopDong = HopDong::findOrFail($id);
 
         // Cập nhật các thông tin của hợp đồng
-        $hopDong->phong_id = $validatedData['phong_id'];
-        $hopDong->tai_khoan_id = $validatedData['tai_khoan_id'];
-        $hopDong->ngay_bat_dau = $validatedData['ngay_bat_dau'];
-        $hopDong->ngay_ket_thuc = $validatedData['ngay_ket_thuc'];
+        $hopDong->phong_id = $request->id_room;
+        $hopDong->tai_khoan_id = $request->id_user;
+        $hopDong->ngay_bat_dau = $request->date_start;
+        $hopDong->ngay_ket_thuc = $request->date_end;
 
         // Lấy giá thuê từ phòng nếu cần
-        $phong = Phong::findOrFail($validatedData['phong_id']);
+        $phong = Phong::findOrFail( $request->id_room);
         $hopDong->gia_thue = $phong->gia_thue;
 
         // Lưu lại các thay đổi
