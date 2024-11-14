@@ -38,4 +38,9 @@ class Phong extends Model
     {
         return $this->hasMany(LienHeDatPhong::class, 'phong_id');
     }
+
+    public function hopDong()
+    {
+        return $this->hasMany(HopDong::class, 'phong_id');
+    }
 }

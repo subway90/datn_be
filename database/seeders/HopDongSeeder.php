@@ -11,11 +11,16 @@ class HopDongSeeder extends Seeder
     {
         HopDong::create([
             'phong_id' => 1,
+            'tai_khoan_id' => 3,
+            'ngay_bat_dau' => '2023-01-01',
+            'ngay_ket_thuc' => '2024-06-01',
+        ]);
+
+        HopDong::create([
+            'phong_id' => 1,
             'tai_khoan_id' => 2,
             'ngay_bat_dau' => '2024-01-01',
             'ngay_ket_thuc' => '2024-12-31',
-            'trang_thai' => 1,
-            'gia_thue' => 3450000,
         ]);
 
         HopDong::create([
@@ -23,17 +28,20 @@ class HopDongSeeder extends Seeder
             'tai_khoan_id' => 3,
             'ngay_bat_dau' => '2024-02-01',
             'ngay_ket_thuc' => '2025-01-31',
-            'trang_thai' => 1,
-            'gia_thue' => 1950000,
         ]);
 
         HopDong::create([
             'phong_id' => 3,
             'tai_khoan_id' => 4,
             'ngay_bat_dau' => '2024-03-01',
-            'ngay_ket_thuc' => '2025-02-28',
-            'trang_thai' => 2,
-            'gia_thue' => 2450000,
+            'ngay_ket_thuc' => '2024-09-02',
+        ]);
+
+        HopDong::create([
+            'phong_id' => 4,
+            'tai_khoan_id' => 4,
+            'ngay_bat_dau' => '2024-10-12',
+            'ngay_ket_thuc' => '2025-10-12',
         ]);
     }
 }

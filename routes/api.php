@@ -14,6 +14,7 @@ use App\Http\Controllers\TinTucController;
 use App\Http\Controllers\DanhMucTinTucController;
 use App\Http\Controllers\LienHeDatPhongController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\YeuThichController;
 
 #
 Route::get('phong', [PhongController::class, 'getAll']);
@@ -70,8 +71,11 @@ Route::middleware(['CusTom'])->group(function () {
 
     # Chỉnh sửa thông tin người dùng
     Route::put('updateProfile', [AuthController::class, 'updateProfile']);
-    # Hiển thị thông tin hợp đồng của người dùng
-    Route::get('/hop-dong', [HopDongController::class, 'show']);
+
+    Route::prefix('hop-dong')->group(function () {
+        # Hiển thị thông tin hợp đồng của người dùng
+        Route::get('/', [HopDongController::class, 'show']);
+    });
 
     # Bình luận tin tức
     Route::post('blog/comment', [BinhLuanTinTucController::class, 'postComment']);
@@ -86,6 +90,12 @@ Route::middleware(['CusTom'])->group(function () {
 
     # Thay đổi mật khẩu
     Route::post('change_password', [AuthController::class, 'changePassword']);
+
+    #
+    Route::prefix('yeu-thich')->group(function () {
+        Route::get('getYeuThich', [YeuThichController::class, 'index']);
+        Route::post('addYeuThich', [YeuThichController::class, 'create']);
+    });
 });
 
 # Những API cần đăng nhập và là ADMIN
@@ -115,6 +125,27 @@ Route::middleware(['Admin'])->group(function () {
         Route::patch('/restore/{id}', [DanhMucTinTucController::class, 'restore']);
     });
 
+    Route::prefix('hop-dong')->group(function () {
+
+        # Lấy danh sách
+        Route::get('/all', [HopDongController::class, 'index']);
+
+        # Lấy danh sách đã xóa
+        Route::get('/list_delete', [HopDongController::class, 'list_delete']);
+
+        # Thêm hợp đồng
+        Route::post('/add', [HopDongController::class, 'create']);
+
+        # Sửa hợp đồng
+        Route::put('/edit/{id}', [HopDongController::class, 'edit']);
+
+        # Xóa hợp đồng
+        Route::delete('/delete/{id}', [HopDongController::class, 'delete']);
+
+        # Khôi phục hợp đồng
+        Route::patch('/restore/{id}', [HopDongController::class, 'restore']);
+
+    });
 
 
     Route::prefix('contact_room')->group(function () {
@@ -124,6 +155,7 @@ Route::middleware(['Admin'])->group(function () {
 
         # Xóa
         Route::delete('/delete/{id}', [LienHeDatPhongController::class, 'destroy']);
+
 
         # Khôi phục
         Route::post('/restore/{id}', [LienHeDatPhongController::class, 'restore']);

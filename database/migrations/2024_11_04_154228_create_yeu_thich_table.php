@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hop_dong', function (Blueprint $table) {
+        Schema::create('yeu_thich', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('phong_id')->index();
             $table->unsignedBigInteger('tai_khoan_id')->index();
-            $table->date('ngay_bat_dau');
-            $table->date('ngay_ket_thuc');
-            $table->timestamps();
-            $table->foreign('phong_id')->references('id')->on('phong');
+            $table->unsignedBigInteger('toa_nha_id')->index();
             $table->foreign('tai_khoan_id')->references('id')->on('users');
+            $table->foreign('toa_nha_id')->references('id')->on('toa_nha');
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hop_dong');
+        Schema::dropIfExists('yeu_thich');
     }
 };
