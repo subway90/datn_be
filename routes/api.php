@@ -135,7 +135,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::delete('/delete/{id}', [HopDongController::class, 'delete']);
 
         # Khôi phục hợp đồng
-        Route::post('/restore/{id}', [HopDongController::class, 'restore']);
+        Route::patch('/restore/{id}', [HopDongController::class, 'restore']);
 
     });
 

@@ -183,7 +183,8 @@ class HopDongController extends Controller
     }
     public function restore($id)
     {
-        $hopDong = HopDong::withTrashed()->findOrFail($id);
+        $hopDong = HopDong::onlyTrashed()->find($id);
+        if(!$hopDong) return response()->json(['message' => 'Hợp đồng này không tồn tại'], 404);
         $hopDong->restore();
 
         return response()->json(['message' => 'Khôi phục hợp đồng thành công'], 200);
