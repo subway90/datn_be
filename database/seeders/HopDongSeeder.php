@@ -13,7 +13,7 @@ class HopDongSeeder extends Seeder
             'phong_id' => 1,
             'tai_khoan_id' => 3,
             'ngay_bat_dau' => '2023-01-01',
-            'ngay_ket_thuc' => '2024-06-31',
+            'ngay_ket_thuc' => '2024-06-01',
             'gia_thue' => 3250000,
         ]);
 
