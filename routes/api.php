@@ -118,16 +118,25 @@ Route::middleware(['Admin'])->group(function () {
     });
 
     Route::prefix('hop-dong')->group(function () {
-        # Lấy toàn bộ danh sách hợp đồng
+
+        # Lấy danh sách
         Route::get('/all', [HopDongController::class, 'index']);
+
+        # Lấy danh sách đã xóa
+        Route::get('/list_delete', [HopDongController::class, 'list_delete']);
+
         # Thêm hợp đồng
         Route::post('/add', [HopDongController::class, 'create']);
+
         # Sửa hợp đồng
         Route::put('/edit/{id}', [HopDongController::class, 'edit']);
+
         # Xóa hợp đồng
         Route::delete('/delete/{id}', [HopDongController::class, 'delete']);
+
         # Khôi phục hợp đồng
         Route::post('/restore/{id}', [HopDongController::class, 'restore']);
+
     });
 
 

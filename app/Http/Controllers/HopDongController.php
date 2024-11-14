@@ -25,6 +25,24 @@ class HopDongController extends Controller
         });
         return response()->json($result, 200);
     }
+
+    public function list_delete()
+    {
+        $list = HopDong::onlyTrashed()->orderBy('deleted_at','DESC')->get();
+        if($list->isEmpty()) return response()->json(['message' => 'Danh sách trống'], 404);
+
+        $result = $list->map(function ($row) {
+            return [
+                'id' => $row->id,
+                'id_room' => $row->phong_id,
+                'id_user' => $row->tai_khoan_id,
+                'date_start' => $row->ngay_bat_dau,
+                'date_end' => $row->ngay_ket_thuc,
+                'status' => $row->ngay_ket_thuc < $this->date_now ? 'Hết hạn' : 'Đang sử dụng',
+            ];
+        });
+        return response()->json($result, 200);
+    }
     public function create(Request $request)
     {
 
