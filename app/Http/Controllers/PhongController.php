@@ -47,7 +47,10 @@ class PhongController extends Controller
         if ($request->has('keyword') && !empty($request->input(key: 'keyword'))) {
             $keyword = str_replace('+',' ',$request->input('keyword'));
             $query->where('tien_ich', 'LIKE', "%$keyword%")
-                  ->orWhere('noi_that', 'LIKE', "%$keyword%");
+                  ->orWhere('noi_that', 'LIKE', "%$keyword%")
+                  ->orWhereHas('toaNha', function($subQuery) use ($keyword) {
+                    $subQuery->where('ten', 'LIKE', "%$keyword%")->orWhere('mo_ta', 'LIKE', "%$keyword%")->orWhere('vi_tri', 'LIKE', "%$keyword%");
+                  });
         }    
 
         // Lọc theo area
