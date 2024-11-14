@@ -21,7 +21,6 @@ class HopDongController extends Controller
                 'date_start' => $row->ngay_bat_dau,
                 'date_end' => $row->ngay_ket_thuc,
                 'status' => $row->ngay_ket_thuc < $this->date_now ? 'Hết hạn' : 'Đang sử dụng',
-                'price' => $row->gia_thue,
             ];
         });
         return response()->json($result, 200);
@@ -45,7 +44,6 @@ class HopDongController extends Controller
         ]);
 
         if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
-        
         # Lấy thông tin của phòng đó
         $list_hop_dong = HopDong::where('phong_id',$request->id_room)->get();
 
@@ -58,14 +56,12 @@ class HopDongController extends Controller
             };
         }
 
-        $phong = Phong::find($request->id_room);
         $hopDong = new HopDong();
 
         $hopDong->phong_id = $request->id_room;
         $hopDong->tai_khoan_id = $request->id_user;
         $hopDong->ngay_bat_dau = $request->date_start;
         $hopDong->ngay_ket_thuc = $request->date_end;
-        $hopDong->gia_thue = $phong->gia_thue;
 
         $hopDong->save();
 
@@ -104,10 +100,6 @@ class HopDongController extends Controller
         $hopDong->tai_khoan_id = $request->id_user;
         $hopDong->ngay_bat_dau = $request->date_start;
         $hopDong->ngay_ket_thuc = $request->date_end;
-
-        // Lấy giá thuê từ phòng nếu cần
-        $phong = Phong::findOrFail( $request->id_room);
-        $hopDong->gia_thue = $phong->gia_thue;
 
         // Lưu lại các thay đổi
         $hopDong->save();
