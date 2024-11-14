@@ -109,7 +109,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::delete('/delete/{id}', [DanhMucTinTucController::class, 'destroy']);
 
         # Khôi phục danh mục tin tức
-        Route::get('/restore/{id}', [DanhMucTinTucController::class, 'restore']);
+        Route::patch('/restore/{id}', [DanhMucTinTucController::class, 'restore']);
     });
 
 
