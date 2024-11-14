@@ -12,7 +12,7 @@ class HopDongController extends Controller
 {
     public function index()
     {
-        $list = HopDong::all();
+        $list = HopDong::orderBy('id','DESC')->get();
         $result = $list->map(function ($row) {
             return [
                 'id' => $row->id,
