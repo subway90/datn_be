@@ -95,6 +95,9 @@ Route::middleware(['Admin'])->group(function () {
     Route::prefix('cate_blog')->group(function () {
         # Lấy danh sách tất cả
         Route::get('/', [DanhMucTinTucController::class, 'all']);
+        
+        # Lấy danh sách đã xóa
+        Route::get('/list_delete', [DanhMucTinTucController::class, 'list_delete']);
 
         # Lấy duy nhất 1
         Route::get('/{id}', [DanhMucTinTucController::class, 'one']);

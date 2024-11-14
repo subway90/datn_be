@@ -35,6 +35,31 @@ class DanhMucTinTucController extends Controller
             'list_cate_blog' => $data,
         ], 200);
     }
+
+    public function list_delete()
+    {
+        // Tìm danh mục theo ID
+        $list = DanhMucTinTuc::onlyTrashed()->get();
+
+        // Kiểm tra xem danh mục có tồn tại không
+        if ($list->isEmpty()) return response()->json(['message' => 'Danh sách trống'], 404);
+        // Tùy chỉnh tên các key
+        $data = $list->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->ten_danh_muc,
+                'slug' => $item->slug,
+                'status' => $item->trang_thai,
+                'order' => $item->thu_tu,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->updated_at,
+                'deleted_at' => $item->deleted_at,
+            ];
+        });
+        return response()->json([
+            'list_cate_blog' => $data,
+        ], 200);
+    }
     public function one($id)
     {
         // Tìm danh mục theo ID
