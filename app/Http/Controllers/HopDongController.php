@@ -170,18 +170,22 @@ class HopDongController extends Controller
     }
     public function delete($id)
     {
-        $hopDong = HopDong::findOrFail($id);
+        # Tìm hợp đồng
+        $hopDong = HopDong::find($id);
+        if(!$hopDong) return response()->json(['message' => 'Hợp đồng này không tồn tại'], 404);
+
+        # Xóa danh sách thanh toán của hợp đồng đó
         $hopDong->thanhToan()->delete();
         $hopDong->delete();
 
-
-        return response()->json(['message' => 'Xóa hợp đồng thành công!'], 200);
+        # Trả kết quả res
+        return response()->json(['message' => 'Xóa hợp đồng thành công'], 200);
     }
     public function restore($id)
     {
         $hopDong = HopDong::withTrashed()->findOrFail($id);
         $hopDong->restore();
 
-        return response()->json(['message' => 'Khôi phục hợp đồng thành công!'], 200);
+        return response()->json(['message' => 'Khôi phục hợp đồng thành công'], 200);
     }
 }
