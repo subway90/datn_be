@@ -286,7 +286,7 @@ class ToaNhaController extends Controller
         $validator = Validator::make($request->all(),[
             'id_area' => 'required|exists:khu_vuc,id',
             'name' => 'required|unique:toa_nha,ten',
-            'image' => 'nullable|array',
+            'image' => 'required|array',
             'image.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'required',
             'utilities' => 'required',
@@ -296,6 +296,7 @@ class ToaNhaController extends Controller
             'id_area.exists' => 'Khu vực không tồn tại',
             'name.required' => 'Vui lòng nhập tên',
             'name.unique' => 'Tên tòa nhà đã tồn tại',
+            'image.required' => 'Bạn chưa tải ảnh lên',
             'image.array' => 'Ảnh phải là một mảng ( image[] )',
             'image.*.mimes' => 'Chưa nhập đúng định dạng ảnh',
             'image.*.max' => 'Ảnh phải dưới 2MB',
