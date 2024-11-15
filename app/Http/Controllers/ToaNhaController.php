@@ -284,7 +284,7 @@ class ToaNhaController extends Controller
     {
         # Kiểm tra validate
         $validator = Validator::make($request->all(),[
-            'id_area' => 'required|exists:khu_vuc,id',
+            'khu_vuc_id' => 'required|exists:khu_vuc,id',
             'name' => 'required|unique:toa_nha,ten',
             'image' => 'nullable|array',
             'image.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
@@ -336,7 +336,6 @@ class ToaNhaController extends Controller
 
         return response()->json([
             'message' => 'Khu vực đã được thêm thành công',
-            'result' => $khuVuc,
         ], 201);
     }
 
