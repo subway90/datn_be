@@ -340,13 +340,17 @@ class ToaNhaController extends Controller
         ], 201);
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request)
     {
+        // Tìm tòa nhà theo ID
+        $toa_nha = ToaNha::find($request->id);
+        if(!$toa_nha) return response()->json(['message' => 'ID tòa nhà không tồn tại'], 400);
+
         // Kiểm tra validate
         $validator = Validator::make($request->all(), [
             'id' => 'required|exists:toa_nha,id',
             'id_area' => 'required|exists:khu_vuc,id',
-            'name' => 'required|unique:toa_nha,ten,' . $id,
+            'name' => 'required|unique:toa_nha,ten,'.$request->id,
             'image' => 'nullable|array',
             'image.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'required',
@@ -376,9 +380,6 @@ class ToaNhaController extends Controller
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->all()], 400);
         }
-    
-        // Tìm tòa nhà theo ID
-        $toa_nha = ToaNha::find($id);
     
         // Xử lý upload ảnh mới
         $imagePaths = [];
