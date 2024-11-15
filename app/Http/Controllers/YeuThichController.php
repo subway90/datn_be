@@ -13,15 +13,10 @@ class YeuThichController extends Controller
      */
     public function index()
     {
-        $hello = "";
-        if (!Auth::check()) {
-            return response()->json(['message' => 'Bạn cần đăng nhập để xem danh sách yêu thích.'], 401);
-        }
-
         $userId = Auth::id();
 
         $favorites = YeuThich::where('tai_khoan_id', $userId)
-            ->with('toa_nha')
+            ->with('phong')
             ->get();
 
         return response()->json($favorites);
@@ -32,15 +27,11 @@ class YeuThichController extends Controller
      */
     public function create(Request $request)
     {
-        if (!Auth::check()) {
-            return response()->json(['message' => 'Bạn cần đăng nhập để yêu thích.'], 401);
-        }
-
         $userId = Auth::id();
-        $buildingId = $request->input('building_id');
+        $roomId = $request->input('phong_id');
 
         $favorite = YeuThich::where('tai_khoan_id', $userId)
-            ->where('toa_nha_id', $buildingId)
+            ->where('phong_id', $roomId)
             ->first();
 
         if ($favorite) {
@@ -49,7 +40,7 @@ class YeuThichController extends Controller
         } else {
             YeuThich::create([
                 'tai_khoan_id' => $userId,
-                'toa_nha_id' => $buildingId,
+                'phong_id' => $roomId,
             ]);
             return response()->json(['message' => 'Đã thêm vào danh sách yêu thích.'], 201);
         }
