@@ -188,34 +188,7 @@ class ToaNhaController extends Controller
                 $q->where('slug', $slug);
             });
         }
-    
-        // Lọc theo price
-        if ($request->has('price') && !empty($request->input('price'))) {
-            $priceInput = $request->input('price');
-            
-            // Kiểm tra định dạng {int}to{int}
-            if (!preg_match('/^\d+to\d+$/', $priceInput)) {
-                return response()->json(['message' => 'Định dạng giá không hợp lệ. Vui lòng sử dụng {int}to{int}.'], 400);
-            }
-    
-            $array_price = explode('to', $priceInput);
-            $query->where('gia_thue', '>=', (int)$array_price[0])
-                  ->where('gia_thue', '<=', (int)$array_price[1]);
-        }
-    
-        // Lọc theo size
-        if ($request->has('size') && !empty($request->input(key: 'size'))) {
-            $sizeInput = $request->input('size');
-            // Kiểm tra định dạng {int}to{int}
-            if (!preg_match('/^\d+to\d+$/', $sizeInput)) {
-                return response()->json(['message' => 'Định dạng diện tích không hợp lệ. Vui lòng sử dụng {int}to{int}.'], 400);
-            }
-
-            $array_size = explode('to', $request->input('size'));
-            $query->where('dien_tich', '>=', $array_size[0])
-                  ->where('dien_tich', '<=', $array_size[1]);
-        }
-    
+        
         // Lấy kết quả
         $toaNhas = $query->withCount('phongTro as so_luong_phong')->with('khuVuc')->get();
     
@@ -295,9 +268,13 @@ class ToaNhaController extends Controller
                 'id' => $one->id,
                 'slug' => $one->slug,
                 'name' => $one->ten,
-                'image' => Str::before($one->image, ';'),
+                'image' =>$one->image,
+                'description' => $one->mo_ta,
+                'location' => $one->vi_tri,
+                'utilities' => $one->tien_ich,
                 'view' => $one->luot_xem,
-                'price' => $one->gia_thue,
+                'hot' => $one->noi_bat ? 'Có' : 'Không',
+                'id_area' => $one->khu_vuc_id,
                 'name_area' =>$one->khuVuc->ten,
             ];
         return response()->json($result, 200);
@@ -365,78 +342,92 @@ class ToaNhaController extends Controller
 
     public function edit(Request $request, $id)
     {
-        // Xác thực dữ liệu đầu vào
+        // Kiểm tra validate
         $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:toa_nha,id',
             'id_area' => 'required|exists:khu_vuc,id',
-            'name' => 'required|exists:toa_nha,ten',
-            'size' => 'required',
-            'location' => 'required',
+            'name' => 'required|unique:toa_nha,ten,' . $id,
+            'image' => 'nullable|array',
+            'image.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'required',
-            'ultilities' => 'required',
-            'price' => 'required',
-            'title' => 'required|string|unique:tin_tuc,tieu_de,'.$id,
-            'image' => 'nullable|string',
-            'content' => 'required|string',
+            'utilities' => 'required',
+            'location' => 'required',
+            'hot' => 'required|boolean',
+            'image_old' => 'nullable|array', // Thêm trường image_old
         ], [
-            'title.required' => 'Chưa nhập tiêu đề',
-            'title.unique' => 'Tiêu đề này đã tồn tại',
-            'content.required' => 'Chưa nhập nội dung',
+            'id.required' => 'Chưa nhập ID tòa nhà',
+            'id.exists' => 'Tòa nhà không tồn tại',
+            'id_area.required' => 'Chưa nhập khu vực',
+            'id_area.exists' => 'Khu vực không tồn tại',
+            'name.required' => 'Vui lòng nhập tên',
+            'name.unique' => 'Tên tòa nhà đã tồn tại',
+            'image.array' => 'Ảnh phải là một mảng (image[]).',
+            'image.*.mimes' => 'Chưa nhập đúng định dạng ảnh',
+            'image.*.max' => 'Ảnh phải dưới 2MB',
+            'description.required' => 'Vui lòng nhập mô tả',
+            'utilities.required' => 'Vui lòng nhập tiện ích',
+            'location.required' => 'Vui lòng nhập các vị trí',
+            'hot.required' => 'Chưa nhập giá trị hot (boolean) | 0: không nổi bật, 1: nổi bật',
+            'hot.boolean' => 'hot là giá trị boolean | 0: không nổi bật, 1: nổi bật',
+            'image_old.array' => 'Ảnh cũ phải là một mảng (image_old).',
         ]);
-
+    
+        // Trả về message validate
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->all()], 400);
         }
-
-        // Tìm tin tức theo ID
-        $tinTuc = ToaNha::first($id);
-
-        // Xử lý ảnh nếu có
-        if ($request->has('image')) {
-            // Xóa file ảnh cũ nếu có
-            if ($tinTuc->image) {
-                Storage::disk('public')->delete($tinTuc->image);
-            }
-
-            // Lấy dữ liệu base64 từ request
-            $base64Image = $request->input('image');
-
-            // Tách phần header của base64
-            if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
-                $base64Image = substr($base64Image, strpos($base64Image, ',') + 1);
-                $type = strtolower($type[1]); // Lấy loại ảnh (jpeg, png, ...)
-
-                // Kiểm tra loại ảnh
-                if (!in_array($type, ['jpg', 'jpeg', 'png', 'gif'])) {
-                    return response()->json(['message' => 'Định dạng ảnh không hợp lệ'], 400);
-                }
-
-                // Giải mã base64
-                $image = base64_decode($base64Image);
-                if ($image === false) {
-                    return response()->json(['message' => 'Giải mã base64 không thành công'], 400);
-                }
-
-                // Tạo tên file ảnh duy nhất
-                $fileName = uniqid('img_', true) . '.' . $type;
-
-                // Lưu ảnh vào thư mục
-                $path = 'blog/' . $fileName;
-                Storage::disk('public')->put($path, $image);
-
-                // Cập nhật đường dẫn ảnh trong bản ghi
-                $tinTuc->image = $path;
+    
+        // Tìm tòa nhà theo ID
+        $toa_nha = ToaNha::find($id);
+    
+        // Xử lý upload ảnh mới
+        $imagePaths = [];
+        if ($request->hasFile('image')) {
+            // Tải lên ảnh mới
+            foreach ($request->file('image') as $image) {
+                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('building', $filename, 'public');
+                $imagePaths[] = $imagePath; // Lưu đường dẫn ảnh vào mảng
             }
         }
-
-        // Cập nhật các trường khác
-        $tinTuc->tieu_de = $request->input('title');
-        $tinTuc->noi_dung = $request->input('content');
-
-        // Lưu bản ghi
-        $tinTuc->save();
-
-        return response()->json(['message' => 'Cập nhật tin tức thành công'], 200);
-    }    
+    
+        // Danh sách đường dẫn ảnh cũ
+        $oldImages = $request->input('image_old', []);
+        $finalImagePaths = [];
+    
+        // Giữ lại ảnh cũ nếu có trong danh sách ảnh cũ
+        foreach ($oldImages as $oldImage) {
+            if (in_array($oldImage, $imagePaths)) {
+                $finalImagePaths[] = $oldImage; // Giữ lại ảnh cũ
+            } else {
+                // Xóa ảnh không còn sử dụng
+                Storage::disk('public')->delete($oldImage);
+            }
+        }
+    
+        // Thêm ảnh mới vào danh sách
+        $finalImagePaths = array_merge($finalImagePaths, $imagePaths);
+    
+        // Chuyển đổi mảng đường dẫn thành chuỗi và ngăn cách bằng dấu ';'
+        $imagesString = implode(';', $finalImagePaths);
+    
+        // Cập nhật thông tin tòa nhà
+        $toa_nha->update([
+            'khu_vuc_id' => $request->id_area,
+            'ten' => $request->name,
+            'slug' => Str::slug($request->name),
+            'image' => $imagesString,
+            'mo_ta' => $request->description,
+            'tien_ich' => $request->utilities,
+            'vi_tri' => $request->location,
+            'noi_bat' => $request->noi_bat ?? $toa_nha->noi_bat,
+        ]);
+    
+        return response()->json([
+            'message' => 'Tòa nhà đã được cập nhật thành công',
+            'result' => $toa_nha,
+        ], 200);
+    } 
 
     public function delete($id)
     {
