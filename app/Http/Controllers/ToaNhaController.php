@@ -344,20 +344,20 @@ class ToaNhaController extends Controller
     {
         // Tìm tòa nhà theo ID
         $toa_nha = ToaNha::find($request->id);
-        if(!$toa_nha) return response()->json(['message' => 'ID tòa nhà không tồn tại'], 400);
-
+        if (!$toa_nha) return response()->json(['message' => 'ID tòa nhà không tồn tại'], 400);
+    
         // Kiểm tra validate
         $validator = Validator::make($request->all(), [
             'id' => 'required|exists:toa_nha,id',
             'id_area' => 'required|exists:khu_vuc,id',
-            'name' => 'required|unique:toa_nha,ten,'.$request->id,
+            'name' => 'required|unique:toa_nha,ten,' . $request->id,
             'image' => 'nullable|array',
             'image.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'required',
             'utilities' => 'required',
             'location' => 'required',
             'hot' => 'required|boolean',
-            'image_old' => 'nullable|array', // Thêm trường image_old
+            'image_old' => 'nullable|string', // Đảm bảo image_old là chuỗi
         ], [
             'id.required' => 'Chưa nhập ID tòa nhà',
             'id.exists' => 'Tòa nhà không tồn tại',
@@ -373,7 +373,6 @@ class ToaNhaController extends Controller
             'location.required' => 'Vui lòng nhập các vị trí',
             'hot.required' => 'Chưa nhập giá trị hot (boolean) | 0: không nổi bật, 1: nổi bật',
             'hot.boolean' => 'hot là giá trị boolean | 0: không nổi bật, 1: nổi bật',
-            'image_old.array' => 'Ảnh cũ phải là một mảng (image_old).',
         ]);
     
         // Trả về message validate
@@ -381,33 +380,40 @@ class ToaNhaController extends Controller
             return response()->json(['message' => $validator->errors()->all()], 400);
         }
     
+        // Lưu giá trị ảnh hiện tại vào mảng
+        $currentImages = explode(';', $toa_nha->image);
+    
         // Xử lý upload ảnh mới
-        $imagePaths = [];
+        $newImagePaths = [];
         if ($request->hasFile('image')) {
-            // Tải lên ảnh mới
             foreach ($request->file('image') as $image) {
-                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
-                $imagePath = $image->storeAs('building', $filename, 'public');
-                $imagePaths[] = $imagePath; // Lưu đường dẫn ảnh vào mảng
+                if ($image) { // Kiểm tra nếu $image không null
+                    $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+                    $imagePath = $image->storeAs('building', $filename, 'public');
+                    $newImagePaths[] = $imagePath; // Lưu đường dẫn ảnh mới vào mảng
+                }
             }
         }
     
-        // Danh sách đường dẫn ảnh cũ
-        $oldImages = $request->input('image_old', []);
+        // Chuyển đổi chuỗi image_old thành mảng
+        $oldImages = explode(';', $request->input('image_old'));
         $finalImagePaths = [];
+        $delete_image = [];
     
         // Giữ lại ảnh cũ nếu có trong danh sách ảnh cũ
-        foreach ($oldImages as $oldImage) {
-            if (in_array($oldImage, $imagePaths)) {
-                $finalImagePaths[] = $oldImage; // Giữ lại ảnh cũ
+        foreach ($currentImages as $image) {
+            // Kiểm tra nếu ảnh cũ tồn tại trong ảnh hiện tại
+            if (in_array($image, $oldImages)) {
+                $finalImagePaths[] = $image; // Giữ lại ảnh cũ
             } else {
                 // Xóa ảnh không còn sử dụng
-                Storage::disk('public')->delete($oldImage);
+                $delete_image[] = $image;
+                Storage::disk('public')->delete($image);
             }
         }
     
         // Thêm ảnh mới vào danh sách
-        $finalImagePaths = array_merge($finalImagePaths, $imagePaths);
+        $finalImagePaths = array_merge($finalImagePaths, $newImagePaths);
     
         // Chuyển đổi mảng đường dẫn thành chuỗi và ngăn cách bằng dấu ';'
         $imagesString = implode(';', $finalImagePaths);
@@ -421,14 +427,14 @@ class ToaNhaController extends Controller
             'mo_ta' => $request->description,
             'tien_ich' => $request->utilities,
             'vi_tri' => $request->location,
-            'noi_bat' => $request->noi_bat ?? $toa_nha->noi_bat,
+            'noi_bat' => $request->hot, // Chỉnh sửa cho đúng
         ]);
     
         return response()->json([
             'message' => 'Tòa nhà đã được cập nhật thành công',
             'result' => $toa_nha,
         ], 200);
-    } 
+    }
 
     public function delete($id)
     {
