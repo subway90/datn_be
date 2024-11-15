@@ -438,10 +438,10 @@ class ToaNhaController extends Controller
 
     public function restore($id)
     {
-        $khuVuc = ToaNha::withTrashed()->find($id);
+        $khuVuc = ToaNha::onlyTrashed()->find($id);
 
         if (!$khuVuc) {
-            return response()->json(['message' => 'Tòa nhà không tồn tại'], 404);
+            return response()->json(['message' => 'Tòa nhà không tồn tại trong danh sách xóa'], 404);
         }
         $khuVuc->restore();
         return response()->json(['message' => 'Tòa nhà đã được khôi phục'], 200);
