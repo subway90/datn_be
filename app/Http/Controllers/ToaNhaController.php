@@ -449,7 +449,7 @@ class ToaNhaController extends Controller
 
     public function list_delete()
     {
-        $trash_toaNha = ToaNha::onlyTrashed()->get();
+        $trash_toaNha = ToaNha::onlyTrashed()->orderBy('deleted_at','DESC')->get();
         if ($trash_toaNha->isEmpty()) {
             return response()->json(['message' => 'Không có tòa nhà nào đã bị xóa'], 404);
         }
