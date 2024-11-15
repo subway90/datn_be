@@ -286,8 +286,8 @@ class ToaNhaController extends Controller
         $validator = Validator::make($request->all(),[
             'id_area' => 'required|exists:khu_vuc,id',
             'name' => 'required|unique:toa_nha,ten',
-            'image' => 'required|array',
-            'image.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
+            'images' => 'required|array',
+            'images.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'required',
             'utilities' => 'required',
             'location' => 'required',
@@ -296,10 +296,10 @@ class ToaNhaController extends Controller
             'id_area.exists' => 'Khu vực không tồn tại',
             'name.required' => 'Vui lòng nhập tên',
             'name.unique' => 'Tên tòa nhà đã tồn tại',
-            'image.required' => 'Bạn chưa tải ảnh lên',
-            'image.array' => 'Ảnh phải là một mảng ( image[] )',
-            'image.*.mimes' => 'Chưa nhập đúng định dạng ảnh',
-            'image.*.max' => 'Ảnh phải dưới 2MB',
+            'images.required' => 'Bạn chưa tải ảnh lên',
+            'images.array' => 'Ảnh phải là một mảng ( images[] )',
+            'images.*.mimes' => 'Chưa nhập đúng định dạng ảnh',
+            'images.*.max' => 'Ảnh phải dưới 2MB',
             'description.required' => 'Vui lòng nhập mô tả',
             'utilities.required' => 'Vui lòng nhập tiện ích',
             'location.required' => 'Vui lòng nhập các vị trí',
@@ -309,8 +309,8 @@ class ToaNhaController extends Controller
 
         // Xử lý upload ảnh
         $imagePaths = [];
-        if ($request->hasFile('image')) {
-            foreach ($request->file('image') as $image) {
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
                 // Mã hóa tên ảnh
                 $filename = uniqid() . '.' . $image->getClientOriginalExtension();
                 $imagePath = $image->storeAs('building', $filename, 'public');
