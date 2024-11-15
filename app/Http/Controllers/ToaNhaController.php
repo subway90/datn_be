@@ -376,64 +376,53 @@ class ToaNhaController extends Controller
         ]);
     
         // Trả về message validate
-        if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->all()], 400);
-        }
+        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
     
-        // Lưu giá trị ảnh hiện tại vào mảng
+        // tạo mảng ảnh hiện tại
         $currentImages = explode(';', $toa_nha->image);
     
         // Xử lý upload ảnh mới
         $newImagePaths = [];
-        if ($request->hasFile('image')) {
-            foreach ($request->file('image') as $image) {
-                if ($image) { // Kiểm tra nếu $image không null
-                    $filename = uniqid() . '.' . $image->getClientOriginalExtension();
-                    $imagePath = $image->storeAs('building', $filename, 'public');
-                    $newImagePaths[] = $imagePath; // Lưu đường dẫn ảnh mới vào mảng
-                }
-            }
+        $newImage = $request->image;
+        foreach ($newImage as $image) {
+            // đổi tên file ảnh, hàm getClientOriginalExtesion là lấy tên đuôi file (image/png thì lấy png)
+            $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+            // lưu vào storage/building
+            $imagePath = $image->storeAs('building', $filename, 'public');
+            // lưu đường dẫn file
+            $newImagePaths[] = $imagePath;
         }
     
-        // Chuyển đổi chuỗi image_old thành mảng
+        // tạo mảng cho ảnh cần giữ lại
         $oldImages = explode(';', $request->input('image_old'));
-        $finalImagePaths = [];
-        $delete_image = [];
     
         // Giữ lại ảnh cũ nếu có trong danh sách ảnh cũ
         foreach ($currentImages as $image) {
             // Kiểm tra nếu ảnh cũ tồn tại trong ảnh hiện tại
             if (in_array($image, $oldImages)) {
-                $finalImagePaths[] = $image; // Giữ lại ảnh cũ
+                $keepImagePaths[] = $image; // Giữ lại ảnh cũ
             } else {
                 // Xóa ảnh không còn sử dụng
-                $delete_image[] = $image;
                 Storage::disk('public')->delete($image);
             }
         }
     
-        // Thêm ảnh mới vào danh sách
-        $finalImagePaths = array_merge($finalImagePaths, $newImagePaths);
-    
-        // Chuyển đổi mảng đường dẫn thành chuỗi và ngăn cách bằng dấu ';'
-        $imagesString = implode(';', $finalImagePaths);
+        // tạo mảng lưu path ảnh để update (lưu path ảnh mới + ảnh cũ giữ lại) và đổi thành chuỗi
+        $imagePath = implode(';', array_merge($keepImagePaths, $newImagePaths));
     
         // Cập nhật thông tin tòa nhà
         $toa_nha->update([
             'khu_vuc_id' => $request->id_area,
             'ten' => $request->name,
             'slug' => Str::slug($request->name),
-            'image' => $imagesString,
+            'image' => $imagePath,
             'mo_ta' => $request->description,
             'tien_ich' => $request->utilities,
             'vi_tri' => $request->location,
-            'noi_bat' => $request->hot, // Chỉnh sửa cho đúng
+            'noi_bat' => $request->hot,
         ]);
     
-        return response()->json([
-            'message' => 'Tòa nhà đã được cập nhật thành công',
-            'result' => $toa_nha,
-        ], 200);
+        return response()->json(['message' => 'Tòa nhà đã được cập nhật thành công'], 200);
     }
 
     public function delete($id)
