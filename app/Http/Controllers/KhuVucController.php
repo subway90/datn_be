@@ -50,8 +50,6 @@ class KhuVucController extends Controller
                 'id' => $rows->id,
                 'slug' => $rows->slug,
                 'name' => $rows->ten,
-                'created_at' => $rows->created_at,
-                'updated_at' => $rows->updated_at,
             ];
         });
     
