@@ -14,15 +14,20 @@ class YeuThichController extends Controller
      */
     public function index()
     {
+        // Lấy ID User
         $userId = Auth::id();
 
-        $favorites = YeuThich::where('tai_khoan_id', $userId)
-            ->with('phong')
-            ->get();
+        // Lấy danh sách ID phòng yêu thích
+        $list_room = YeuThich::where('tai_khoan_id', $userId)->pluck('phong_id');
 
-        if($favorites->isEmpty()) return response()->json(['message' => 'Chưa có yêu thích phòng nào'],404);
-
-        return response()->json($favorites);
+        // Validate
+        if ($list_room->isEmpty()) return response()->json(['message' => 'Chưa có yêu thích phòng nào'], 404);
+        
+        // Chuyển đổi danh sách ID thành chuỗ
+        $resultString = $list_room->implode(';');
+        
+        //
+        return response()->json(['list_id' => $resultString], 200);
     }
 
     /**
