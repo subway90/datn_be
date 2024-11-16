@@ -19,6 +19,8 @@ class YeuThichController extends Controller
             ->with('phong')
             ->get();
 
+        if($favorites->isEmpty()) return response()->json(['message' => 'Chưa có yêu thích phòng nào'],404);
+
         return response()->json($favorites);
     }
 

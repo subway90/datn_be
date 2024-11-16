@@ -93,7 +93,7 @@ Route::middleware(['CusTom'])->group(function () {
 
     #
     Route::prefix('yeu-thich')->group(function () {
-        Route::get('getYeuThich', [YeuThichController::class, 'index']);
+        Route::get('get', [YeuThichController::class, 'index']);
         Route::post('addYeuThich', [YeuThichController::class, 'create']);
     });
 });
