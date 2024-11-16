@@ -251,8 +251,8 @@ class ToaNhaController extends Controller
                 'name' => $rows->ten,
                 'image' => Str::before($rows->image, ';'),
                 'view' => $rows->luot_xem,
-                'price' => $rows->gia_thue,
                 'name_area' =>$rows->khuVuc->ten,
+                'hot' => $rows->hot ? 'Có' : 'Không',
             ];
         });
     
