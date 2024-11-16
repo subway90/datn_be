@@ -470,47 +470,48 @@ class ToaNhaController extends Controller
 
     public function duplicate($id)
     {
-        $toaNha = ToaNha::find($id);
-        if (!$toaNha) {
-            return response()->json(['message' => 'Tòa nhà không tồn tại.'], 404);
-        }
-    
-        // Tạo 1 tiêu đề mới bằng cách nối chuỗi
-        $baseTitle = $toaNha->ten . '-copy';
-        $newName = $baseTitle;
+        // Tìm bản ghi theo ID
+        $toa_nha = ToaNha::find($id);
 
-        // Kiểm tra xem tiêu đề đã tồn tại trong cơ sở dữ liệu chưa
-        $counter = 1;
-        while (ToaNha::where('  ', $newName)->exists()) {
-            $newName = $baseTitle . '-' . $counter; // Tạo tên mới với bộ đếm
-            $counter++;
+        // Kiểm tra xem bản ghi có tồn tại không
+        if (!$toa_nha) return response()->json(['message' => 'Tòa nhà này không tồn tại'], 404);
+
+        // Thêm hậu tố copy
+        $new_name = $toa_nha->ten . ' copy';
+
+        // Kiểm tra tòa nhà có tồn tại hay chưa
+        $check_name = ToaNha::where('ten',$new_name)->exists();
+        if($check_name) return response()->json(['message' => 'Tòa nhà này đã được copy rồi !'], 400);
+
+        // Xử lý sao chép ảnh
+        $list_image = explode(';', $toa_nha->image);
+        $newImagePaths = [];
+        foreach ($list_image as $image) {
+            // Lấy tên file gốc
+            $filename = basename($image);
+            // Mã hóa tên file mới
+            $newFilename = uniqid() . '.' . pathinfo($filename, PATHINFO_EXTENSION);
+            // Sao chép ảnh vào thư mục mới
+            Storage::disk('public')->copy($image, 'building/' . $newFilename);
+            // Lưu đường dẫn mới vào mảng
+            $newImagePaths[] = 'building/' . $newFilename;
         }
-        // Tạo 1 slug mới từ tiêu đề mới
-        $newSlug = Str::slug($newName);
     
-        // Tạo tên file mới cho ảnh
-        $oldImagePath = $toaNha->image; // Đường dẫn ảnh cũ
-        $imageExtension = pathinfo($oldImagePath, PATHINFO_EXTENSION);
-        $newImageName = pathinfo($oldImagePath, PATHINFO_FILENAME) . '-' . uniqid() . '.' . $imageExtension;
-        $newImagePath = 'building/' . $newImageName; // Đường dẫn ảnh mới trong thư mục blog
+        // Tạo chuỗi path từ mảng
+        $imagesString = implode(';', $newImagePaths);
     
-        // Sao chép file ảnh
-        if (Storage::disk('public')->exists($oldImagePath)) {
-            // Sao chép file từ đường dẫn cũ sang đường dẫn mới
-            Storage::disk('public')->copy($oldImagePath, $newImagePath);
-        } else {
-            return response()->json(['message' => 'File ảnh cũ không tồn tại.'], 404);
-        }
-    
-        // Lưu vào database 
-        $newtoaNha = ToaNha::create([
-            'ten' => $newName,
-            'slug' => $newSlug,
-            'image' => $newImagePath,
+        // Tạo bản sao mới
+        $duplicate = ToaNha::create([
+            'khu_vuc_id' => $toa_nha->khu_vuc_id,
+            'ten' => $new_name,
+            'slug' => Str::slug($new_name),
+            'image' => $imagesString,
+            'mo_ta' => $toa_nha->mo_ta,
+            'tien_ich' => $toa_nha->tien_ich,
+            'vi_tri' => $toa_nha->vi_tri,
+            'noi_bat' => $toa_nha->noi_bat ?? 0,
         ]);
     
-        return response()->json([
-            'message' => 'Nhân bản thành công khu vực với ID = '.$id,
-        ], 200);
+        return response()->json(['message' => 'Nhân bản thành công tòa nhà'], 201);
     }
 }
