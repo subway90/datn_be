@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('yeu_thich', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tai_khoan_id')->index();
-            $table->unsignedBigInteger('toa_nha_id')->index();
+            $table->unsignedBigInteger('phong_id')->index();
             $table->foreign('tai_khoan_id')->references('id')->on('users');
-            $table->foreign('toa_nha_id')->references('id')->on('toa_nha');
-            $table->softDeletes();
+            $table->foreign('phong_id')->references('id')->on('phong');
             $table->timestamps();
         });
     }

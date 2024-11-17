@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\YeuThich;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Validator;
 
 class YeuThichController extends Controller
 {
@@ -13,18 +14,20 @@ class YeuThichController extends Controller
      */
     public function index()
     {
-        $hello = "";
-        if (!Auth::check()) {
-            return response()->json(['message' => 'Bạn cần đăng nhập để xem danh sách yêu thích.'], 401);
-        }
-
+        // Lấy ID User
         $userId = Auth::id();
 
-        $favorites = YeuThich::where('tai_khoan_id', $userId)
-            ->with('toa_nha')
-            ->get();
+        // Lấy danh sách ID phòng yêu thích
+        $list_room = YeuThich::where('tai_khoan_id', $userId)->pluck('phong_id');
 
-        return response()->json($favorites);
+        // Validate
+        if ($list_room->isEmpty()) return response()->json(['message' => 'Chưa có yêu thích phòng nào'], 404);
+        
+        // Chuyển đổi danh sách ID thành chuỗ
+        $resultString = $list_room->implode(';');
+        
+        //
+        return response()->json(['list_id' => $resultString], 200);
     }
 
     /**
@@ -32,15 +35,19 @@ class YeuThichController extends Controller
      */
     public function create(Request $request)
     {
-        if (!Auth::check()) {
-            return response()->json(['message' => 'Bạn cần đăng nhập để yêu thích.'], 401);
-        }
+        $validate = Validator::make($request->all(),[
+            'id_room' => 'required|exists:phong,id',
+        ],[
+            'id_room.required' => 'Chưa nhập ID phòng',
+            'id_room.exists' => 'ID Phòng không tồn tại',
+        ]);
 
-        $userId = Auth::id();
-        $buildingId = $request->input('building_id');
+        if($validate->fails()) return response()->json(['message' => $validate->errors()->all()],400);
 
-        $favorite = YeuThich::where('tai_khoan_id', $userId)
-            ->where('toa_nha_id', $buildingId)
+        $id_user = Auth::id();
+
+        $favorite = YeuThich::where('tai_khoan_id', $id_user)
+            ->where('phong_id', $request->id_room)
             ->first();
 
         if ($favorite) {
@@ -48,50 +55,10 @@ class YeuThichController extends Controller
             return response()->json(['message' => 'Đã xóa khỏi danh sách yêu thích.'], 200);
         } else {
             YeuThich::create([
-                'tai_khoan_id' => $userId,
-                'toa_nha_id' => $buildingId,
+                'tai_khoan_id' => $id_user,
+                'phong_id' => $request->id_room,
             ]);
             return response()->json(['message' => 'Đã thêm vào danh sách yêu thích.'], 201);
         }
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

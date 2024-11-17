@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class YeuThich extends Model
 {
     protected $table = 'yeu_thich';
-    protected $fillable = ['tai_khoan_id', 'toa_nha_id'];
+    protected $fillable = ['tai_khoan_id', 'phong_id'];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'tai_khoan_id');
     }
-    public function toa_nha()
+    public function phong()
     {
-        return $this->belongsTo(ToaNha::class, 'toa_nha_id');
+        return $this->belongsTo(Phong::class, 'phong_id');
     }
 }
