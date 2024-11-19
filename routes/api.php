@@ -12,6 +12,7 @@ use App\Http\Controllers\HopDongController;
 use App\Http\Controllers\ThanhToanController;
 use App\Http\Controllers\TinTucController;
 use App\Http\Controllers\DanhMucTinTucController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\LienHeDatPhongController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\YeuThichController;
@@ -50,7 +51,10 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('forgot/check', [ResetPasswordController::class, 'check']);
 # Quên mật khẩu : reset
 Route::post('forgot/reset', [ResetPasswordController::class, 'reset']);
-
+Route::prefix('auth')->group(function () {
+    Route::get('google', [GoogleController::class, 'redirectToGoogle']);
+    Route::get('google/callback', [GoogleController::class, 'handleGoogleCallback']);
+});
 # Những API cần đăng nhập
 Route::middleware(['CusTom'])->group(function () {
 
@@ -105,7 +109,7 @@ Route::middleware(['Admin'])->group(function () {
     Route::prefix('cate_blog')->group(function () {
         # Lấy danh sách tất cả
         Route::get('/', [DanhMucTinTucController::class, 'all']);
-        
+
         # Lấy danh sách đã xóa
         Route::get('/list_delete', [DanhMucTinTucController::class, 'list_delete']);
 
@@ -144,7 +148,6 @@ Route::middleware(['Admin'])->group(function () {
 
         # Khôi phục hợp đồng
         Route::patch('/restore/{id}', [HopDongController::class, 'restore']);
-
     });
 
 
@@ -172,7 +175,7 @@ Route::middleware(['Admin'])->group(function () {
 
 
     Route::prefix('blog')->group(function () {
-        
+
         # Danh sách tin tức đã xóa
         Route::get('/list_delete', [TinTucController::class, 'listDelete']);
 
@@ -263,13 +266,13 @@ Route::middleware(['Admin'])->group(function () {
         Route::post('/add', [ToaNhaController::class, 'store']);
 
         // # Cập nhật
-        Route::post('/edit', [ToaNhaController::class, 'edit']);        
+        Route::post('/edit', [ToaNhaController::class, 'edit']);
 
         # Thêm mới
         Route::delete('/delete/{id}', [ToaNhaController::class, 'delete']);
 
         # Khôi phục
-        Route::patch('/restore/{id}', [ToaNhaController::class, 'restore']);
+        Route::post('/restore/{id}', [ToaNhaController::class, 'restore']);
 
         # Nhân bản theo ID
         Route::get('/duplicate/{id}', [ToaNhaController::class, 'duplicate']);
