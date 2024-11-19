@@ -36,19 +36,25 @@ class TienIchToaNhaController extends Controller
     }
 
     public function update(Request $request, $id) {
-        $tienIch = TienIchToaNha::find($id);
-        if (!$tienIch) {
+        $get = TienIchToaNha::find($id);
+        if (!$get) {
             return response()->json(['message' => 'Tiện ích không tồn tại.'], 404);
         }
-
-        $request->validate([
-            'name' => 'required|string|max:255|unique:tien_ich_toa_nha,name,' . $id,
+        $validate = Validator::make($request->all(),[
+            'name' => 'required|string|max:255|unique:tien_ich_toa_nha,name,'.$id,
+            ],
+            [
+            'name.required' => 'Chưa nhập tên tiện ích',
+            'name.string' => 'Tên nhập là chuỗi',
+            'name.max' => 'Tên max 255 kí tự',
+            'name.unique' => 'Tên tiện ích này đã tồn tại',
         ]);
+        if($validate->fails()) return response()->json(['message'=>$validate->errors()->all()],400);
 
-        $tienIch->name = $request->name;
-        $tienIch->save();
+        $get->name = $request->name;
+        $get->save();
 
-        return response()->json(['message' => 'Tiện ích đã được cập nhật thành công.', 'data' => $tienIch], 200);
+        return response()->json(['message' => 'Tiện ích đã được cập nhật thành công.'], 200);
     }
 
     public function destroy($id) {

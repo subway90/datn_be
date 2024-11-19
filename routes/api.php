@@ -284,6 +284,9 @@ Route::middleware(['Admin'])->group(function () {
         # Thêm mới
         Route::post('/add', [TienIchToaNhaController::class, 'store']);
 
+        # Chỉnh sửa
+        Route::put('/edit/{id}', [TienIchToaNhaController::class, 'update']);
+
     });
 });
 
