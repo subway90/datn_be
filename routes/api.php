@@ -280,6 +280,9 @@ Route::middleware(['Admin'])->group(function () {
 
         # Lấy tất cả
         Route::get('/all', [TienIchToaNhaController::class, 'all']);
+
+        # Lấy tất cả
+        Route::get('/list_delete', [TienIchToaNhaController::class, 'all_delete']);
         
         # Thêm mới
         Route::post('/add', [TienIchToaNhaController::class, 'store']);

@@ -16,6 +16,17 @@ class TienIchToaNhaController extends Controller
         return response()->json(['list'=>$result],200);
     }
 
+    public function all_delete() {
+        $list = TienIchToaNha::onlyTrashed()->orderBy('deleted_at','DESC')->get();
+        $result = $list->map(function($rows) {
+            return [
+                'id' => $rows->id,
+                'name' => $rows->name,
+            ];
+        });
+        return response()->json(['list'=>$result],200);
+    }
+
     public function store(Request $request) {
         $validate = Validator::make($request->all(),[
             'name' => 'required|string|max:255|unique:tien_ich_toa_nha,name',
