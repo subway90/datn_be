@@ -14,7 +14,6 @@
             Schema::create('hoa_don', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedBigInteger('hop_dong_id')->index();
-                $table->boolean('hinh_thuc')->nullable(); //0: tiền mặt 1: ví điện tử
                 $table->integer('tien_thue');
                 $table->integer('tien_dien');
                 $table->integer('tien_nuoc');

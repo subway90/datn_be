@@ -14,7 +14,6 @@ class HoaDonSeeder extends Seeder
     {
         HoaDon::create([
             'hop_dong_id' => 2,
-            'hinh_thuc' => 1, // chuyển khoản
             'tien_thue' => 4500000,
             'tien_dien' => 3500*15,
             'tien_nuoc' => 0*0,

@@ -16,7 +16,6 @@ class HoaDon extends Model
     // Khai báo các trường có thể gán hàng loạt
     protected $fillable = [
         'hop_dong_id',
-        'hinh_thuc',
         'tien_thue',
         'tien_dien',
         'tien_nuoc',
