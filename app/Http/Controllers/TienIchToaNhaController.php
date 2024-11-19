@@ -11,7 +11,10 @@ class TienIchToaNhaController extends Controller
     public function all() {
         $list = TienIchToaNha::orderBy('created_at','DESC')->get();
         $result = $list->map(function($rows) {
-            return ['name' => $rows->name];
+            return [
+                'id' => $rows->id,
+                'name' => $rows->name
+            ];
         });
         return response()->json(['list'=>$result],200);
     }
