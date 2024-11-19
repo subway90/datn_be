@@ -287,6 +287,9 @@ Route::middleware(['Admin'])->group(function () {
         # Chỉnh sửa
         Route::put('/edit/{id}', [TienIchToaNhaController::class, 'update']);
 
+        # Xóa
+        Route::delete('/delete/{id}', [TienIchToaNhaController::class, 'destroy']);
+
     });
 });
 
