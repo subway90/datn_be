@@ -10,9 +10,9 @@ class TienIchToaNha extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'tien_ich_phong_tro';
+    protected $table = 'tien_ich_toa_nha';
 
     protected $fillable = [
-        'name',
+        'name'
     ];
 }
