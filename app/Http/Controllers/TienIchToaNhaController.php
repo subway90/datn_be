@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 class TienIchToaNhaController extends Controller
 {
     public function all() {
-        $list = TienIchToaNha::all();
+        $list = TienIchToaNha::orderBy('created_at','DESC')->get();
         $result = $list->map(function($rows) {
             return ['name' => $rows->name];
         });
@@ -27,7 +27,7 @@ class TienIchToaNhaController extends Controller
             'name.unique' => 'Tên tiện ích đã tồn tại',
     ]);
     if($validate->fails()) return response()->json(['message'=>$validate->errors()->all()],400);
-    
+
     TienIchToaNha::create([
         'name' => $request->name
     ]);
