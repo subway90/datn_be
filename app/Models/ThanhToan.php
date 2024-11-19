@@ -16,19 +16,19 @@ class ThanhToan extends Model
 
     // Khai báo các trường có thể gán hàng loạt
     protected $fillable = [
-        'hop_dong_id',
+        'hoa_don_id',
+        'hinh_thuc',
         'code_uu_dai',
         'ma_giao_dich',
+        'ngay_giao_dich', 
         'so_tien',
         'noi_dung',
         'trang_thai',
-        'hinh_thuc',
-        'ngay_giao_dich',
     ];
     // Khai báo quan hệ với model HopDong
-    public function hopDong()
+    public function hoaDon()
     {
-        return $this->belongsTo(HopDong::class, 'hop_dong_id');
+        return $this->belongsTo(HoaDon::class, 'hoa_don_id');
     }
 
     // Khai báo quan hệ với model MaUuDai
