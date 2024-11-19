@@ -27,9 +27,10 @@ class TienIchToaNhaController extends Controller
             'name.unique' => 'Tên tiện ích đã tồn tại',
     ]);
     if($validate->fails()) return response()->json(['message'=>$validate->errors()->all()],400);
-        $tienIch = TienIchToaNha::create([
-            'name' => $request->name
-        ]);
+    
+    TienIchToaNha::create([
+        'name' => $request->name
+    ]);
 
         return response()->json(['message' => 'Tiện ích đã được thêm thành công.'], 201);
     }

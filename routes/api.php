@@ -278,9 +278,11 @@ Route::middleware(['Admin'])->group(function () {
 
     Route::prefix('utilities')->group(function () {
 
-        # Thống kê tổng
+        # Lấy tất cả
         Route::get('/all', [TienIchToaNhaController::class, 'all']);
         
+        # Thêm mới
+        Route::post('/add', [TienIchToaNhaController::class, 'store']);
 
     });
 });
