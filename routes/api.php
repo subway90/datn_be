@@ -3,6 +3,7 @@
 use App\Http\Controllers\BinhLuanToaNhaController;
 use App\Http\Controllers\BinhLuanTinTucController;
 use App\Http\Controllers\DashBoardController;
+use App\Http\Controllers\TienIchToaNhaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PhongController;
@@ -273,6 +274,14 @@ Route::middleware(['Admin'])->group(function () {
 
         # Nhân bản theo ID
         Route::get('/duplicate/{id}', [ToaNhaController::class, 'duplicate']);
+    });
+
+    Route::prefix('utilities')->group(function () {
+
+        # Thống kê tổng
+        Route::get('/all', [TienIchToaNhaController::class, 'all']);
+        
+
     });
 });
 
