@@ -29,15 +29,17 @@ class TienIchToaNhaController extends Controller
 
     public function store(Request $request) {
         $validate = Validator::make($request->all(),[
-            'name' => 'required|string|max:255|unique:tien_ich_toa_nha,name',
+            'name' => 'required|string|max:255',
         ],
     [
             'name.required' => 'Chưa nhập tên tiện ích',
             'name.string' => 'Tên nhập là chuỗi',
             'name.max' => 'Tên max 255 kí tự',
-            'name.unique' => 'Tên tiện ích đã tồn tại',
     ]);
+    //Kiểm tra unique name
     if($validate->fails()) return response()->json(['message'=>$validate->errors()->all()],400);
+    $check_name = TienIchToaNha::whereNull('deleted_at')->where('name',$request->name)->exists();
+    if($check_name) return response()->json(['message' => 'Tên tiện ích này đã tồn tại'], 400);
 
     TienIchToaNha::create([
         'name' => $request->name
@@ -77,5 +79,16 @@ class TienIchToaNhaController extends Controller
         $tienIch->delete();
 
         return response()->json(['message' => 'Tiện ích đã được xóa thành công.'], 200);
+    }
+
+     public function restore($id) {
+        $get = TienIchToaNha::withTrashed()->find($id);
+        // Kiểm tra tồn tại ở list_delete
+        if (!$get) return response()->json(['message' => 'Tiện ích không tồn tại.'], 404);
+        $check_exist = TienIchToaNha::where('name',$get->name)->exists();
+        // Kiểm tra tồn tại ở all
+        if($check_exist) return response()->json(['message' => 'Tên tiện ích này đã tồn tại rồi, không thể khôi phục thêm'], 400);
+        $get->restore();
+        return response()->json(['message' => 'Tiện ích đã được khôi phục thành công.'], 200);
     }
 }

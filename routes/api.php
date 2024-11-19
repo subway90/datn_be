@@ -293,6 +293,9 @@ Route::middleware(['Admin'])->group(function () {
         # Xóa
         Route::delete('/delete/{id}', [TienIchToaNhaController::class, 'destroy']);
 
+        # Khôi phục
+        Route::patch('/restore/{id}', [TienIchToaNhaController::class, 'restore']);
+
     });
 });
 
