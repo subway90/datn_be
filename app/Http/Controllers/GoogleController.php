@@ -17,27 +17,28 @@ class GoogleController extends Controller
     }
 
     // Xử lý callback từ Google
-    public function handleGoogleCallback()
+    public function handleGoogleCallback(Request $request)
     {
-        try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+        $code = $request->input('code');
 
-            // Tìm hoặc tạo người dùng trong DB
-            $user = User::updateOrCreate(
-                ['email' => $googleUser->getEmail()],
-                [
-                    'name' => $googleUser->getName(),
-                    'google_id' => $googleUser->getId(),
-                    'avatar' => $googleUser->getAvatar(),
-                ]
-            );
+        $googleUser = Socialite::driver('google')->stateless()->user();
 
-            // Đăng nhập người dùng
-            Auth::login($user);
+        $user = User::where('email', $googleUser->getEmail())->first();
 
-            return response()->json(['message' => 'Login successful', 'user' => $user], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        if (!$user) {
+            $user = User::create([
+                'name' => $googleUser->getName(),
+                'email' => $googleUser->getEmail(),
+                'google_id' => $googleUser->getId(),
+                'avatar' => $googleUser->getAvatar(),
+                'password' => bcrypt('random_password')
+            ]);
         }
+
+        Auth::login($user);
+
+        $token = $user->createToken('ID USER: ' . $user->id)->plainTextToken;
+
+        return response()->json(['token' => $token, 'user' => $user->name, 'email' => $user->email, 'google_id' => $user->id, 'avatar' => $user->avatar], 200);
     }
 }
