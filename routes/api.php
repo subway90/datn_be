@@ -3,6 +3,7 @@
 use App\Http\Controllers\BinhLuanToaNhaController;
 use App\Http\Controllers\BinhLuanTinTucController;
 use App\Http\Controllers\DashBoardController;
+use App\Http\Controllers\HoaDonController;
 use App\Http\Controllers\TienIchToaNhaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -295,6 +296,13 @@ Route::middleware(['Admin'])->group(function () {
 
         # Khôi phục
         Route::patch('/restore/{id}', [TienIchToaNhaController::class, 'restore']);
+
+    });
+
+    Route::prefix('hoa-don')->group(function () {
+
+        # Thêm mới
+        Route::post('/add', [HoaDonController::class, 'store']);
 
     });
 });
