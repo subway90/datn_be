@@ -384,18 +384,20 @@ class ToaNhaController extends Controller
         // Xử lý upload ảnh mới
         $newImagePaths = [];
         $newImage = $request->image;
-        foreach ($newImage as $image) {
-            // đổi tên file ảnh, hàm getClientOriginalExtesion là lấy tên đuôi file (image/png thì lấy png)
-            $filename = uniqid() . '.' . $image->getClientOriginalExtension();
-            // lưu vào storage/building
-            $imagePath = $image->storeAs('building', $filename, 'public');
-            // lưu đường dẫn file
-            $newImagePaths[] = $imagePath;
+        if($newImage) {
+            foreach ($newImage as $image) {
+                // đổi tên file ảnh, hàm getClientOriginalExtesion là lấy tên đuôi file (image/png thì lấy png)
+                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+                // lưu vào storage/building
+                $imagePath = $image->storeAs('building', $filename, 'public');
+                // lưu đường dẫn file
+                $newImagePaths[] = $imagePath;
+            }
         }
     
         // tạo mảng cho ảnh cần giữ lại
         $oldImages = explode(';', $request->input('image_old'));
-    
+        $keepImagePaths = [];
         // Giữ lại ảnh cũ nếu có trong danh sách ảnh cũ
         foreach ($currentImages as $image) {
             // Kiểm tra nếu ảnh cũ tồn tại trong ảnh hiện tại
