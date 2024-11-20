@@ -18,8 +18,6 @@ use App\Http\Controllers\LienHeDatPhongController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\YeuThichController;
 
-#
-Route::get('phong', [PhongController::class, 'getAll']);
 
 # Chi tiết 1 tòa nhà bởi slug (Trang chi tiết)
 Route::get('chi-tiet', [ToaNhaController::class, 'detail']);
@@ -305,6 +303,16 @@ Route::middleware(['Admin'])->group(function () {
         Route::post('/add', [HoaDonController::class, 'store']);
 
     });
+
+
+    Route::prefix('phong')->group(function () {
+
+        # Lấy danh sách
+        Route::get('/', [PhongController::class, 'getAll']);
+
+    });
+
+
 });
 
 
