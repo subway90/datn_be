@@ -184,4 +184,36 @@ class PhongController extends Controller
 
         return response()->json(['message' => 'Xóa thành công'], 200);
     }
+
+    public function list_delete()
+    {
+        // Lấy tất cả danh sách phòng
+        $list_room = Phong::onlyTrashed()->get();
+        //Chuyển đổi kết quả
+        $result = $list_room->map(function ($room) {
+            $toa_nha = ToaNha::where('id',$room->toa_nha_id)->first(['slug','ten','khu_vuc_id']);
+            $khu_vuc = khuVuc::where('id',$toa_nha->khu_vuc_id)->first(['slug','ten']);
+            return [
+                'id' => $room->id,
+                'ten_phong' => $room->ten_phong,
+                'ten_toa_nha' => $toa_nha->ten,
+                'slug_toa_nha' => $toa_nha->slug,
+                'ten_khu_vuc' => $khu_vuc->ten,
+                'slug_khu_vuc' => $khu_vuc->slug,
+                'hinh_anh' => Str::before($room->hinh_anh,';'),
+                'dien_tich' => $room->dien_tich,
+                'gac_lung' => $room->gac_lung ? 'Có' : ' Không',
+                'gia_thue' => $room->gia_thue,
+                'don_gia_dien' => $room->don_gia_dien,
+                'don_gia_nuoc' => $room->don_gia_nuoc,
+                'tien_xe_may' => $room->tien_xe_may,
+                'phi_dich_vu' => $room->phi_dich_vu,
+                'tien_ich' => $room->tien_ich,
+                'noi_that' => $room->noi_that,
+            ];
+        });
+    
+        return response()->json(['list_room' => $result],200);
+    }
+
 }

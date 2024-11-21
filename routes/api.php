@@ -310,6 +310,9 @@ Route::middleware(['Admin'])->group(function () {
         # Lấy danh sách
         Route::get('/', [PhongController::class, 'getAll']);
 
+        # Lấy danh sách đã xóa
+        Route::get('/list_delete', [PhongController::class, 'list_delete']);
+
         # Lấy theo id
         Route::get('/{id}', [PhongController::class, 'index']);
 
