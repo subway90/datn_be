@@ -319,6 +319,9 @@ Route::middleware(['Admin'])->group(function () {
         # Xóa theo id
         Route::delete('/delete/{id}', [PhongController::class, 'delete']);
 
+        # Khôi phục theo id
+        Route::patch('/restore/{id}', [PhongController::class, 'restore']);
+
 
     });
 

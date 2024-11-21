@@ -216,4 +216,19 @@ class PhongController extends Controller
         return response()->json(['list_room' => $result],200);
     }
 
+    public function restore($id)
+    {
+        $get = Phong::onlyTrashed()->find($id);
+
+        if (!$get) return response()->json(['message' => 'Phòng không tồn tại trong danh sách xóa'], 404);
+        
+        //Kiểm tra xem tên đã tồn tại chưa
+        $check_name = Phong::where('name',$get->name)->exists();
+        if($check_name) return response()->json(['message' => 'Tên phòng "'.$get->name.'" đã tồn tại, không thể khôi phục thêm'], 400);
+
+        // Khôi phục
+        $get->restore();
+        return response()->json(['message' => 'Phòng đã được khôi phục'], 200);
+    }
+
 }
