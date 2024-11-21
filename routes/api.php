@@ -241,7 +241,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::delete('/delete/{id}', [KhuVucController::class, 'delete']);
 
         # Khôi phục
-        Route::post('/restore/{id}', [KhuVucController::class, 'restore']);
+        Route::patch('/restore/{id}', [KhuVucController::class, 'restore']);
 
         # Nhân bản theo ID
         Route::get('/duplicate/{id}', [KhuVucController::class, 'duplicate']);
