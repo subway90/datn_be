@@ -273,7 +273,7 @@ class ToaNhaController extends Controller
                 'location' => $one->vi_tri,
                 'utilities' => $one->tien_ich,
                 'view' => $one->luot_xem,
-                'hot' => $one->noi_bat ? 'Có' : 'Không',
+                'hot' => $one->noi_bat,
                 'id_area' => $one->khu_vuc_id,
                 'name_area' =>$one->khuVuc->ten,
             ];
