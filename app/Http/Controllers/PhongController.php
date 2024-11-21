@@ -10,17 +10,37 @@ use Illuminate\Support\Str;
 
 class PhongController extends Controller
 {
-    public function index($id_toa_nha)
+    public function index($id)
     {
         // Lấy danh sách phòng theo id_toa_nha
-        $phongs = Phong::where('id_toa_nha', $id_toa_nha)->get();
+        $room = Phong::find($id);
 
-        if ($phongs->isEmpty()) {
+        if (!$room) {
             return response()->json(['message' => 'Không tìm thấy phòng'], 404);
         }
+        $toa_nha = ToaNha::where('id',$room->toa_nha_id)->first(['slug','ten','khu_vuc_id']);
+        $khu_vuc = khuVuc::where('id',$toa_nha->khu_vuc_id)->first(['slug','ten']);
+        $result = [
+            'id' => $room->id,
+            'ten_phong' => $room->ten_phong,
+            'ten_toa_nha' => $toa_nha->ten,
+            'slug_toa_nha' => $toa_nha->slug,
+            'ten_khu_vuc' => $khu_vuc->ten,
+            'slug_khu_vuc' => $khu_vuc->slug,
+            'hinh_anh' => $room->hinh_anh,
+            'dien_tich' => $room->dien_tich,
+            'gac_lung' => $room->gac_lung ? 'Có' : ' Không',
+            'gia_thue' => $room->gia_thue,
+            'don_gia_dien' => $room->don_gia_dien,
+            'don_gia_nuoc' => $room->don_gia_nuoc,
+            'tien_xe_may' => $room->tien_xe_may,
+            'phi_dich_vu' => $room->phi_dich_vu,
+            'tien_ich' => $room->tien_ich,
+            'noi_that' => $room->noi_that,
+        ];
 
         // Trả về phản hồi JSON
-        return response()->json($phongs);
+        return response()->json($result);
     }
 
     public function getAll()

@@ -310,14 +310,14 @@ Route::middleware(['Admin'])->group(function () {
         # Lấy danh sách
         Route::get('/', [PhongController::class, 'getAll']);
 
+        # Lấy theo id
+        Route::get('/{id}', [PhongController::class, 'index']);
+
     });
 
 
 });
 
-
-#
-Route::get('phong/{id_toa_nha}', [PhongController::class, 'index']);
 
 # Chức năng lọc theo tòa nhà
 Route::get('/filter', [ToaNhaController::class, 'filter']);
