@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('noi_that')->nullable();
             $table->boolean('trang_thai')->default(1);
             $table->timestamps();
+            $table->softDeletes();
             $table->foreign('toa_nha_id')->references('id')->on('toa_nha');
         });
     }

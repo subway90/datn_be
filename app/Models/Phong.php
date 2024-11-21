@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class Phong extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     // Đặt tên bảng nếu khác với quy tắc mặc định
     protected $table = 'phong';
