@@ -173,4 +173,15 @@ class PhongController extends Controller
     
         return response()->json(['list_room' => $result],200);
     }
+
+    public function delete($id)
+    {
+        $get = Phong::find($id);
+        if (!$get) {
+            return response()->json(['message' => 'Phòng không tồn tại'], 404);
+        }
+        $get->delete();
+
+        return response()->json(['message' => 'Xóa thành công'], 200);
+    }
 }

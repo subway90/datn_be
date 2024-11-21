@@ -313,6 +313,10 @@ Route::middleware(['Admin'])->group(function () {
         # Lấy theo id
         Route::get('/{id}', [PhongController::class, 'index']);
 
+        # Xóa theo id
+        Route::delete('/delete/{id}', [PhongController::class, 'delete']);
+
+
     });
 
 
