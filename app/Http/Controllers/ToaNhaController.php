@@ -357,7 +357,7 @@ class ToaNhaController extends Controller
             'utilities' => 'required',
             'location' => 'required',
             'hot' => 'required|boolean',
-            'image_old' => 'nullable|string', // Đảm bảo image_old là chuỗi
+            'image_delete' => 'nullable|string',
         ], [
             'id.required' => 'Chưa nhập ID tòa nhà',
             'id.exists' => 'Tòa nhà không tồn tại',
@@ -373,6 +373,7 @@ class ToaNhaController extends Controller
             'location.required' => 'Vui lòng nhập các vị trí',
             'hot.required' => 'Chưa nhập giá trị hot (boolean) | 0: không nổi bật, 1: nổi bật',
             'hot.boolean' => 'hot là giá trị boolean | 0: không nổi bật, 1: nổi bật',
+            'image_delete.string' => 'Path ảnh cũ phải là 1 chuỗi',
         ]);
     
         // Trả về message validate
@@ -395,17 +396,17 @@ class ToaNhaController extends Controller
             }
         }
     
-        // tạo mảng cho ảnh cần giữ lại
-        $oldImages = explode(';', $request->input('image_old'));
+        // tạo mảng cho ảnh cần xóa
+        $delete_image = explode(';', $request->input('image_delete'));
         $keepImagePaths = [];
         // Giữ lại ảnh cũ nếu có trong danh sách ảnh cũ
         foreach ($currentImages as $image) {
             // Kiểm tra nếu ảnh cũ tồn tại trong ảnh hiện tại
-            if (in_array($image, $oldImages)) {
-                $keepImagePaths[] = $image; // Giữ lại ảnh cũ
+            if (in_array($image, $delete_image)) {
+                Storage::disk('public')->delete($image);
             } else {
                 // Xóa ảnh không còn sử dụng
-                Storage::disk('public')->delete($image);
+                $keepImagePaths[] = $image; // Giữ lại ảnh cũ
             }
         }
     
