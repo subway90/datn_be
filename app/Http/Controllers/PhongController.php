@@ -189,6 +189,8 @@ class PhongController extends Controller
     {
         // Lấy tất cả danh sách phòng
         $list_room = Phong::onlyTrashed()->get();
+
+        if($list_room->isEmpty()) return response()->json(['message' => 'Danh sách phòng trống'], 404);
         //Chuyển đổi kết quả
         $result = $list_room->map(function ($room) {
             $toa_nha = ToaNha::where('id',$room->toa_nha_id)->first(['slug','ten','khu_vuc_id']);
