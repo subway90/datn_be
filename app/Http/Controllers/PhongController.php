@@ -58,7 +58,7 @@ class PhongController extends Controller
                 'slug_toa_nha' => $toa_nha->slug,
                 'ten_khu_vuc' => $khu_vuc->ten,
                 'slug_khu_vuc' => $khu_vuc->slug,
-                'hinh_anh' => $room->hinh_anh,
+                'hinh_anh' => Str::before($room->hinh_anh,';'),
                 'dien_tich' => $room->dien_tich,
                 'gac_lung' => $room->gac_lung ? 'Có' : ' Không',
                 'gia_thue' => $room->gia_thue,
