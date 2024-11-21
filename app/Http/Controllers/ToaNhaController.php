@@ -236,7 +236,7 @@ class ToaNhaController extends Controller
     public function all()
     {
         // Lấy tất cả khu vực
-        $list = ToaNha::orderBy('id','DESC')->get();
+        $list = ToaNha::withCount('phongTro as count_room')->orderBy('id','DESC')->get();
     
         // Kiểm tra nếu không có dữ liệu
         if ($list->isEmpty()) {
@@ -253,6 +253,7 @@ class ToaNhaController extends Controller
                 'view' => $rows->luot_xem,
                 'name_area' =>$rows->khuVuc->ten,
                 'hot' => $rows->hot ? 'Có' : 'Không',
+                'room' => $rows->count_room,
             ];
         });
     
