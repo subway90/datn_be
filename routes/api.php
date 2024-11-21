@@ -322,6 +322,9 @@ Route::middleware(['Admin'])->group(function () {
         # Khôi phục theo id
         Route::patch('/restore/{id}', [PhongController::class, 'restore']);
 
+        # Tạo mới
+        Route::post('/add', [PhongController::class, 'store']);
+
 
     });
 

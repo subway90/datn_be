@@ -7,6 +7,8 @@ use App\Models\ToaNha;
 use App\Models\KhuVuc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class PhongController extends Controller
 {
@@ -234,6 +236,78 @@ class PhongController extends Controller
         // Khôi phục
         $get->restore();
         return response()->json(['message' => 'Phòng đã được khôi phục'], 200);
+    }
+
+    public function store(Request $request)
+    {
+        # Kiểm tra validate
+        $validator = Validator::make($request->all(),[
+            'id_building' => 'required|exists:toa_nha,id',
+            'name' => 'required|unique:phong,ten',
+            'images' => 'required|array',
+            'images.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
+            'dien_tich' => 'required|integer',
+            'gac_lung' => 'required|boolean',
+            'tien_thue' => 'nullable|integer',
+            'tien_dien' => 'nullable|integer',
+            'tien_nuoc' => 'nullable|integer',
+            'tien_xe' => 'nullable|integer',
+            'tien_dich_vu' => 'nullable|integer',
+            'noi_that' => 'nullable|text',
+
+        ],[
+            'id_building.required' => 'Chưa nhập ID tòa nhà',
+            'id_building.exists' => 'ID tòa nhà không tồn tại',
+            'name.required' => 'Vui lòng nhập tên phòng',
+            'name.unique' => 'Tên phòng đã tồn tại',
+            'images.required' => 'Bạn chưa tải ảnh lên',
+            'images.array' => 'Ảnh phải là một mảng ( images[] )',
+            'images.*.mimes' => 'Chưa nhập đúng định dạng ảnh',
+            'images.*.max' => 'Ảnh phải dưới 2MB',
+            'dien_tich.required' => 'Vui lòng nhập diện tích',
+            'dien_tich.integer' => 'Diện tích phải là một số nguyên',
+            'gac_lung.required' => 'Vui lòng nhập gác lửng',
+            'gac_lung.boolean' => 'Gác lửng là 1 giá trị boolean (0 : không có, 1: có gác lửng)',
+            'tien_thue.integer' => 'Giá thuê phải là một số nguyên',
+            'tien_dien.integer' => 'Giá tiền điện phải là một số nguyên',
+            'tien_nuoc.integer' => 'Giá tiền nước phải là một số nguyên',
+            'tien_xe.integer' => 'Giá tiền xe phải là một số nguyên',
+            'tien_dich_vu.integer' => 'Giá tiền dịch vụ phải là một số nguyên',
+        ]); 
+        # Trả về message validate 
+        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
+
+        // Xử lý upload ảnh
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                // Mã hóa tên ảnh
+                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('building', $filename, 'public');
+                $imagePaths[] = $imagePath; // Lưu đường dẫn ảnh vào mảng
+            }
+        }
+
+        // Chuyển đổi mảng đường dẫn thành chuỗi và ngăn cách bằng dấu ';'
+        $imagesString = implode(';', $imagePaths);
+
+        // Tạo mới khu vực
+        $khuVuc = ToaNha::create([
+            'khu_vuc_id' => $request->id_building,
+            'ten' => $request->name,
+            'slug' => Str::slug($request->name),
+            'image' => $imagesString,
+            'gia_thue' => $request->price,
+            'dien_tich' => $request->size,
+            'mo_ta' => $request->description,
+            'tien_ich' => $request->utilities,
+            'vi_tri' => $request->location,
+            'noi_bat' => $request->noi_bat ?? 0,
+        ]);
+
+        return response()->json([
+            'message' => 'Khu vực đã được thêm thành công',
+        ], 201);
     }
 
 }
