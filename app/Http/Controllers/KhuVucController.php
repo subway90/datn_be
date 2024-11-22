@@ -61,7 +61,7 @@ class KhuVucController extends Controller
     public function all()
     {
         // Lấy tất cả khu vực
-        $list = KhuVuc::all();
+        $list = KhuVuc::orderBy('created_at','DESC')->get();
     
         // Kiểm tra nếu không có dữ liệu
         if ($list->isEmpty()) {
