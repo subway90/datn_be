@@ -164,7 +164,7 @@ class KhuVucController extends Controller
     public function list_delete()
     {
         // Lấy tất cả khu vực đã bị xóa mềm
-        $trashedKhuVuc = KhuVuc::onlyTrashed()->get();
+        $trashedKhuVuc = KhuVuc::onlyTrashed()->orderBy('deleted_at','DESC')->get();
 
         // Kiểm tra nếu không có dữ liệu
         if ($trashedKhuVuc->isEmpty()) {
