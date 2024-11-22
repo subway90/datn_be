@@ -314,4 +314,102 @@ class PhongController extends Controller
         ], 201);
     }
 
+    public function edit(Request $request,$id)
+    {
+        // Tìm tòa nhà theo ID
+        $phong = Phong::find($id);
+        if (!$phong) return response()->json(['message' => 'ID tòa nhà không tồn tại'], 400);
+    
+        // Kiểm tra validate
+        $validator = Validator::make($request->all(),[
+            'id_building' => 'required|exists:toa_nha,id',
+            'name' => 'required|unique:phong,ten_phong,'.$id,
+            'images' => 'nullable|array',
+            'images.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
+            'image_delte' => 'nullable',
+            'dien_tich' => 'required|integer',
+            'gac_lung' => 'required|boolean',
+            'tien_thue' => 'nullable|integer',
+            'tien_dien' => 'nullable|integer',
+            'tien_nuoc' => 'nullable|integer',
+            'tien_xe' => 'nullable|integer',
+            'tien_dich_vu' => 'nullable|integer',
+            'noi_that' => 'nullable',
+            'tien_ich' => 'nullable',
+        ],[
+            'id_building.required' => 'Chưa nhập ID tòa nhà',
+            'id_building.exists' => 'ID tòa nhà không tồn tại',
+            'name.required' => 'Vui lòng nhập tên phòng',
+            'name.unique' => 'Tên phòng đã tồn tại',
+            'images.array' => 'Ảnh phải là một mảng ( images[] )',
+            'images.*.mimes' => 'Chưa nhập đúng định dạng ảnh',
+            'images.*.max' => 'Ảnh phải dưới 2MB',
+            'dien_tich.required' => 'Vui lòng nhập diện tích',
+            'dien_tich.integer' => 'Diện tích phải là một số nguyên',
+            'gac_lung.required' => 'Vui lòng nhập gác lửng',
+            'gac_lung.boolean' => 'Gác lửng là 1 giá trị boolean (0 : không có, 1: có gác lửng)',
+            'tien_thue.integer' => 'Giá thuê phải là một số nguyên',
+            'tien_dien.integer' => 'Giá tiền điện phải là một số nguyên',
+            'tien_nuoc.integer' => 'Giá tiền nước phải là một số nguyên',
+            'tien_xe.integer' => 'Giá tiền xe phải là một số nguyên',
+            'tien_dich_vu.integer' => 'Giá tiền dịch vụ phải là một số nguyên',
+        ]); 
+    
+        // Trả về message validate
+        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
+    
+        // tạo mảng ảnh hiện tại
+        $currentImages = explode(';', $phong->image);
+    
+        // Xử lý upload ảnh mới
+        $newImagePaths = [];
+        $newImage = $request->image;
+        if($newImage) {
+            foreach ($newImage as $image) {
+                // đổi tên file ảnh, hàm getClientOriginalExtesion là lấy tên đuôi file (image/png thì lấy png)
+                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+                // lưu vào storage
+                $imagePath = $image->storeAs('room', $filename, 'public');
+                // lưu đường dẫn file
+                $newImagePaths[] = $imagePath;
+            }
+        }
+    
+        // tạo mảng cho ảnh cần xóa
+        $delete_image = explode(';', trim($request->input('image_delete'),';'));
+        $keepImagePaths = [];
+        // Giữ lại ảnh cũ nếu có trong danh sách ảnh cũ
+        foreach ($currentImages as $image) {
+            // Kiểm tra nếu ảnh cũ tồn tại trong ảnh hiện tại
+            if (in_array($image, $delete_image)) {
+                Storage::disk('public')->delete($image);
+            } else {
+                // Xóa ảnh không còn sử dụng
+                $keepImagePaths[] = $image; // Giữ lại ảnh cũ
+            }
+        }
+    
+        // tạo mảng lưu path ảnh để update (lưu path ảnh mới + ảnh cũ giữ lại) và đổi thành chuỗi
+        $imagePath = implode(';', array_merge($keepImagePaths, $newImagePaths));
+    
+        // Cập nhật thông tin tòa nhà
+        $phong->update([
+            'toa_nha_id' => $request->id_building,
+            'ten_phong' => $request->name,
+            'slug' => Str::slug($request->name),
+            'hinh_anh' => $imagePath,
+            'dien_tich' => $request->dien_tich,
+            'gac_lung' => $request->gac_lung,
+            'gia_thue' => $request->tien_thue,
+            'don_gia_dien' => $request->tien_dien ?? 0,
+            'don_gia_nuoc' => $request->tien_nuoc ?? 0,
+            'tien_xe_may' => $request->tien_xe ?? 0,
+            'phi_dich_vu' => $request->tien_dich_vu ?? 0,
+            'tien_ich' => trim($request->tien_ich,';'),
+            'noi_that' => trim($request->noi_that,';'),
+        ]);
+
+        return response()->json(['message' => 'Tòa nhà đã được cập nhật thành công','result' => $phong], 200);
+    }
+
 }

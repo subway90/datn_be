@@ -336,6 +336,8 @@ Route::middleware(['Admin'])->group(function () {
         # Tạo mới
         Route::post('/add', [PhongController::class, 'store']);
 
+        # Chỉnh sửa theo id
+        Route::post('/edit/{id}', [PhongController::class, 'edit']);
 
     });
 
