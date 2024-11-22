@@ -243,7 +243,7 @@ class PhongController extends Controller
         # Kiểm tra validate
         $validator = Validator::make($request->all(),[
             'id_building' => 'required|exists:toa_nha,id',
-            'name' => 'required|unique:phong,ten',
+            'name' => 'required|unique:phong,ten_phong',
             'images' => 'required|array',
             'images.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
             'dien_tich' => 'required|integer',
@@ -253,7 +253,8 @@ class PhongController extends Controller
             'tien_nuoc' => 'nullable|integer',
             'tien_xe' => 'nullable|integer',
             'tien_dich_vu' => 'nullable|integer',
-            'noi_that' => 'nullable|text',
+            'noi_that' => 'nullable',
+            'tien_ich' => 'nullable',
 
         ],[
             'id_building.required' => 'Chưa nhập ID tòa nhà',
@@ -283,7 +284,7 @@ class PhongController extends Controller
             foreach ($request->file('images') as $image) {
                 // Mã hóa tên ảnh
                 $filename = uniqid() . '.' . $image->getClientOriginalExtension();
-                $imagePath = $image->storeAs('building', $filename, 'public');
+                $imagePath = $image->storeAs('room', $filename, 'public');
                 $imagePaths[] = $imagePath; // Lưu đường dẫn ảnh vào mảng
             }
         }
@@ -292,21 +293,24 @@ class PhongController extends Controller
         $imagesString = implode(';', $imagePaths);
 
         // Tạo mới khu vực
-        $khuVuc = ToaNha::create([
-            'khu_vuc_id' => $request->id_building,
-            'ten' => $request->name,
+        $khuVuc = Phong::create([
+            'toa_nha_id' => $request->id_building,
+            'ten_phong' => $request->name,
             'slug' => Str::slug($request->name),
-            'image' => $imagesString,
-            'gia_thue' => $request->price,
-            'dien_tich' => $request->size,
-            'mo_ta' => $request->description,
-            'tien_ich' => $request->utilities,
-            'vi_tri' => $request->location,
-            'noi_bat' => $request->noi_bat ?? 0,
+            'hinh_anh' => $imagesString,
+            'dien_tich' => $request->dien_tich,
+            'gac_lung' => $request->gac_lung,
+            'gia_thue' => $request->tien_thue,
+            'don_gia_dien' => $request->tien_dien ?? 0,
+            'don_gia_nuoc' => $request->tien_nuoc ?? 0,
+            'tien_xe_may' => $request->tien_xe ?? 0,
+            'phi_dich_vu' => $request->tien_dich_vu ?? 0,
+            'tien_ich' => trim($request->tien_ich,';'),
+            'noi_that' => trim($request->noi_that,';'),
         ]);
 
         return response()->json([
-            'message' => 'Khu vực đã được thêm thành công',
+            'message' => 'Phòng đã được thêm thành công',
         ], 201);
     }
 
