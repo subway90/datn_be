@@ -273,6 +273,10 @@ Route::middleware(['Admin'])->group(function () {
 
         # Nhân bản theo ID
         Route::get('/duplicate/{id}', [ToaNhaController::class, 'duplicate']);
+
+        # Cập nhật hot
+        Route::patch('/editHot/{id}',[ToaNhaController::class,'editHot']);
+        
     });
 
     Route::prefix('utilities')->group(function () {

@@ -252,7 +252,7 @@ class ToaNhaController extends Controller
                 'image' => Str::before($rows->image, ';'),
                 'description' => $rows->mo_ta,
                 'name_area' =>$rows->khuVuc->ten,
-                'hot' => $rows->hot,
+                'hot' => $rows->noi_bat,
                 'room' => $rows->count_room,
             ];
         });
@@ -517,5 +517,27 @@ class ToaNhaController extends Controller
         ]);
     
         return response()->json(['message' => 'Nhân bản thành công tòa nhà'], 201);
+    }
+
+    public function editHot($id) {
+        $get = ToaNha::find($id);
+        // Check
+        if(!$get) return response()->json(['message' => 'Tòa nhà không tồn tại'], 404);
+        // Thay đổi trạng thái
+        else {
+            if($get['noi_bat'] == 0) {
+                $get->update([
+                    'noi_bat' => 1,
+                ]);
+            }else {
+                {
+                    $get->update([
+                        'noi_bat' => 0,
+                    ]);
+                }
+            }
+        }
+
+        return response()->json(['result' => 'Cập nhật trạng thái hot thành công'], 200);
     }
 }
