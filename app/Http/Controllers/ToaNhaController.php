@@ -250,7 +250,7 @@ class ToaNhaController extends Controller
                 'slug' => $rows->slug,
                 'name' => $rows->ten,
                 'image' => Str::before($rows->image, ';'),
-                'view' => $rows->luot_xem,
+                'description' => $rows->mo_ta,
                 'name_area' =>$rows->khuVuc->ten,
                 'hot' => $rows->hot ? 'Có' : 'Không',
                 'room' => $rows->count_room,
