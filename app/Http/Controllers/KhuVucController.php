@@ -75,6 +75,7 @@ class KhuVucController extends Controller
                 'slug' => $rows->slug,
                 'name' => $rows->ten,
                 'image' => $rows->image,
+                'hot' => $rows->noi_bat,
                 'created_at' => $rows->created_at,
                 'updated_at' => $rows->updated_at,
             ];
