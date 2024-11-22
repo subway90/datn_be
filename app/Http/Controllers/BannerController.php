@@ -170,5 +170,53 @@ class BannerController extends Controller
     }
 
 
-
+    public function duplicate($id)
+    {
+        // Tìm banner theo ID
+        $banner = Banner::find($id);
+        if (!$banner) {
+            return response()->json(['message' => 'Banner không tồn tại.'], 404);
+        }
+    
+        // Tạo tiêu đề mới bằng cách nối chuỗi
+        $baseTitle = $banner->title . '-copy';
+        $newTitle = $baseTitle;
+    
+        // Kiểm tra xem tiêu đề đã tồn tại trong cơ sở dữ liệu chưa
+        $counter = 1;
+        while (Banner::where('title', $newTitle)->exists()) {
+            $newTitle = $baseTitle . '-' . $counter; // Tạo tiêu đề mới với bộ đếm
+            $counter++;
+        }
+    
+        // Tạo file ảnh mới
+        $oldImagePath = $banner->image; // Đường dẫn ảnh cũ
+        $newImagePath = null;
+    
+        // Kiểm tra và sao chép file ảnh
+        if ($oldImagePath && Storage::disk('public')->exists($oldImagePath)) {
+            $imageExtension = pathinfo($oldImagePath, PATHINFO_EXTENSION);
+            $newImageName = pathinfo($oldImagePath, PATHINFO_FILENAME) . '-' . uniqid() . '.' . $imageExtension;
+            $newImagePath = 'banner/' . $newImageName; // Đường dẫn ảnh mới
+    
+            // Sao chép file từ đường dẫn cũ sang đường dẫn mới
+            Storage::disk('public')->copy($oldImagePath, $newImagePath);
+        } elseif ($oldImagePath) {
+            return response()->json(['message' => 'File ảnh cũ không tồn tại.'], 404);
+        }
+    
+        // Tạo bản sao trong database
+        $newBanner = Banner::create([
+            'title' => $newTitle,
+            'image' => $newImagePath,
+            'content' => $banner->content, // Sao chép nội dung
+            'order' => $banner->order, // Sao chép thứ tự
+        ]);
+    
+        return response()->json([
+            'message' => 'Nhân bản thành công banner với ID = ' . $id,
+            'new_banner' => $newBanner,
+        ], 200);
+    }
+    
 }
