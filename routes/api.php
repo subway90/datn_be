@@ -248,6 +248,10 @@ Route::middleware(['Admin'])->group(function () {
 
         # Nhân bản theo ID
         Route::get('/duplicate/{id}', [KhuVucController::class, 'duplicate']);
+
+        # Cập nhật hot
+        Route::patch('/editHot/{id}',[KhuVucController::class,'editHot']);
+
     });
 
 

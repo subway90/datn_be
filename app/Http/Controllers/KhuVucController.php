@@ -272,4 +272,26 @@ class KhuVucController extends Controller
             'message' => 'Khu vực đã được cập nhật thành công',
         ], 200);
     }
+
+    public function editHot($id) {
+        $get = KhuVuc::find($id);
+        // Check
+        if(!$get) return response()->json(['message' => 'Khu vực không tồn tại'], 404);
+        // Thay đổi trạng thái
+        else {
+            if($get['noi_bat'] == 0) {
+                $get->update([
+                    'noi_bat' => 1,
+                ]);
+            }else {
+                {
+                    $get->update([
+                        'noi_bat' => 0,
+                    ]);
+                }
+            }
+        }
+
+        return response()->json(['result' => 'Cập nhật trạng thái hot thành công'], 200);
+    }
 }
