@@ -35,6 +35,9 @@ Route::get('toa-nha/listCheap', [ToaNhaController::class, 'listCheap']);
 # Danh sách tin tức
 Route::get('blog/all', [TinTucController::class, 'getAll']);
 
+ # Banner list danh sách
+ Route::get('banner', [BannerController::class, 'all']);
+
 # Chi tiết tin tức & bình luận
 Route::get('blog', [TinTucController::class, 'getOne']);
 
@@ -332,8 +335,6 @@ Route::middleware(['Admin'])->group(function () {
 
     Route::prefix('banner')->group(function () {
 
-        # Thống kê tổng
-        Route::get('/', [BannerController::class, 'all']);
 
         # Thống kê tổng
         Route::get('/list_delete', [BannerController::class, 'list_delete']);

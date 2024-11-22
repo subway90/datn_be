@@ -178,17 +178,6 @@ class BannerController extends Controller
             return response()->json(['message' => 'Banner không tồn tại.'], 404);
         }
     
-        // Tạo tiêu đề mới bằng cách nối chuỗi
-        $baseTitle = $banner->title . '-copy';
-        $newTitle = $baseTitle;
-    
-        // Kiểm tra xem tiêu đề đã tồn tại trong cơ sở dữ liệu chưa
-        $counter = 1;
-        while (Banner::where('title', $newTitle)->exists()) {
-            $newTitle = $baseTitle . '-' . $counter; // Tạo tiêu đề mới với bộ đếm
-            $counter++;
-        }
-    
         // Tạo file ảnh mới
         $oldImagePath = $banner->image; // Đường dẫn ảnh cũ
         $newImagePath = null;
@@ -207,7 +196,7 @@ class BannerController extends Controller
     
         // Tạo bản sao trong database
         $newBanner = Banner::create([
-            'title' => $newTitle,
+            'title' => $banner->title, // Sao chép tiêu đề, nếu null vẫn là null
             'image' => $newImagePath,
             'content' => $banner->content, // Sao chép nội dung
             'order' => $banner->order, // Sao chép thứ tự
@@ -217,7 +206,7 @@ class BannerController extends Controller
             'message' => 'Nhân bản thành công banner với ID = ' . $id,
             'new_banner' => $newBanner,
         ], 200);
-    }
+    }      
     
         public function update(Request $request, $id)
     {
