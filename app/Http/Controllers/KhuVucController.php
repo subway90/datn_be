@@ -102,21 +102,20 @@ class KhuVucController extends Controller
     public function store(Request $request)
     {
         // Xác thực dữ liệu
-        $request->validate([
-            'name' => 'required|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        $validate = Validator::make($request->all(),[
+            'name' => 'required|max:255|unique:khu_vuc,ten',
+            'image' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
             'noi_bat' => 'nullable|boolean',
         ],[
             'name.required' => 'Vui lòng nhập tên',
-            'image.mimes' => 'Chưa nhập đúng định dạng ảnh',
+            'name.unique' => 'Tên đã tồn tại',
+            'image.mimes' => 'Chưa nhập đúng định dạng ảnh (jpeg,png,jpg,gif)',
             'image.max' => 'Ảnh phải dưới 2MB',
             'noi_bat.boolean' => 'Dữ liệu noi_bat sai. Nhập 0: không nổi bật, 1: nổi bật'
-        ]
-    );  
+        ]);
 
-        //Kiểm tra tên tồn tại hay chưa
-        $checkName = KhuVuc::where('ten',$request->name)->exists();
-        if($checkName) return response()->json(['message' => 'Tên này đã tồn tại'],400);
+        if($validate->fails()) return response()->json(['message'=>$validate->errors()->all()],400);
+
 
         // Xử lý upload ảnh
         $imagePath = null;
