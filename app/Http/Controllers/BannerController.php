@@ -141,4 +141,34 @@ class BannerController extends Controller
         return response()->json(['message' => 'Banner đã được khôi phục thành công'], 200);
     }
     
+
+    public function list_delete()
+    {
+        // Lấy tất cả banner đã bị xóa mềm
+        $trashedBanners = Banner::onlyTrashed()->get();
+
+        // Kiểm tra nếu không có dữ liệu
+        if ($trashedBanners->isEmpty()) {
+            return response()->json(['message' => 'Không có banner nào đã bị xóa'], 404);
+        }
+
+        // Chuyển đổi kết quả thành mảng
+        $result = $trashedBanners->map(function ($banner) {
+            return [
+                'id' => $banner->id,
+                'title' => $banner->title,
+                'image' => $banner->image,
+                'content' => $banner->content,
+                'order' => $banner->order,
+                'created_at' => $banner->created_at,
+                'updated_at' => $banner->updated_at,
+                'deleted_at' => $banner->deleted_at, // Thời gian bị xóa
+            ];
+        });
+
+        return response()->json($result, 200);
+    }
+
+
+
 }
