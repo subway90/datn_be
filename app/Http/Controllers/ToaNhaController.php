@@ -252,7 +252,7 @@ class ToaNhaController extends Controller
                 'image' => Str::before($rows->image, ';'),
                 'description' => $rows->mo_ta,
                 'name_area' =>$rows->khuVuc->ten,
-                'hot' => $rows->hot ? 'Có' : 'Không',
+                'hot' => $rows->hot,
                 'room' => $rows->count_room,
             ];
         });
