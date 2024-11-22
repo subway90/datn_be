@@ -24,8 +24,8 @@ class PhongSeeder extends Seeder
             'don_gia_nuoc' => 2000,
             'tien_xe_may' => 100000,
             'phi_dich_vu' => 50000,
-            'tien_ich' => 'Máy lạnh, Wifi',
-            'noi_that' => 'Giường, Tủ',
+            'tien_ich' => 'Máy lạnh;Wifi',
+            'noi_that' => 'Giường;Tủ',
             'trang_thai' => 1,
         ]);
 
@@ -56,8 +56,8 @@ class PhongSeeder extends Seeder
             'don_gia_nuoc' => 2000,
             'tien_xe_may' => 100000,
             'phi_dich_vu' => 50000,
-            'tien_ich' => 'Máy lạnh, Wifi',
-            'noi_that' => 'Giường, Tủ, Bàn',
+            'tien_ich' => 'Máy lạnh;Wifi',
+            'noi_that' => 'Giường;Tủ;Bàn',
             'trang_thai' => 1,
         ]);
         Phong::create([
@@ -71,8 +71,8 @@ class PhongSeeder extends Seeder
             'don_gia_nuoc' => 2000,
             'tien_xe_may' => 100000,
             'phi_dich_vu' => 50000,
-            'tien_ich' => 'Máy lạnh, Wifi',
-            'noi_that' => 'Giường, Tủ, Bàn',
+            'tien_ich' => 'Máy lạnh;Wifi',
+            'noi_that' => 'Giường;Tủ;Bàn',
             'trang_thai' => 1,
         ]);
         Phong::create([
@@ -86,8 +86,8 @@ class PhongSeeder extends Seeder
             'don_gia_nuoc' => 2000,
             'tien_xe_may' => 100000,
             'phi_dich_vu' => 50000,
-            'tien_ich' => 'Máy lạnh, Wifi',
-            'noi_that' => 'Giường, Tủ, Bàn',
+            'tien_ich' => 'Máy lạnh;Wifi',
+            'noi_that' => 'Giường;Tủ;Bàn',
             'trang_thai' => 1,
         ]);
         Phong::create([
@@ -101,8 +101,8 @@ class PhongSeeder extends Seeder
             'don_gia_nuoc' => 2000,
             'tien_xe_may' => 100000,
             'phi_dich_vu' => 50000,
-            'tien_ich' => 'Máy lạnh, Wifi',
-            'noi_that' => 'Giường, Tủ, Bàn',
+            'tien_ich' => 'Máy lạnh;Wifi',
+            'noi_that' => 'Giường;Tủ;Bàn',
             'trang_thai' => 1,
         ]);
         Phong::create([
@@ -116,8 +116,8 @@ class PhongSeeder extends Seeder
             'don_gia_nuoc' => 2000,
             'tien_xe_may' => 100000,
             'phi_dich_vu' => 50000,
-            'tien_ich' => 'Máy lạnh, Wifi',
-            'noi_that' => 'Giường, Tủ, Bàn',
+            'tien_ich' => 'Máy lạnh;Wifi',
+            'noi_that' => 'Giường;Tủ;Bàn',
             'trang_thai' => 1,
         ]);
         Phong::create([
@@ -131,8 +131,8 @@ class PhongSeeder extends Seeder
             'don_gia_nuoc' => 2000,
             'tien_xe_may' => 100000,
             'phi_dich_vu' => 50000,
-            'tien_ich' => 'Máy lạnh, Wifi',
-            'noi_that' => 'Giường, Tủ, Bàn',
+            'tien_ich' => 'Máy lạnh;Wifi',
+            'noi_that' => 'Giường;Tủ;Bàn',
             'trang_thai' => 1,
         ]);
     }
