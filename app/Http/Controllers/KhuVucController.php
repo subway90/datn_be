@@ -152,11 +152,9 @@ class KhuVucController extends Controller
 
     public function restore($id)
     {
-        $khuVuc = KhuVuc::withTrashed()->find($id);
+        $khuVuc = KhuVuc::onlyTrashed()->find($id);
 
-        if (!$khuVuc) {
-            return response()->json(['message' => 'Khu vực không tồn tại'], 404);
-        }
+        if (!$khuVuc) return response()->json(['message' => 'ID khu vực không tồn tại trong danh sách xóa'], 404);
         $khuVuc->restore();
         return response()->json(['message' => 'Khu vực đã được khôi phục'], 200);
     }
@@ -167,9 +165,7 @@ class KhuVucController extends Controller
         $trashedKhuVuc = KhuVuc::onlyTrashed()->orderBy('deleted_at','DESC')->get();
 
         // Kiểm tra nếu không có dữ liệu
-        if ($trashedKhuVuc->isEmpty()) {
-            return response()->json(['message' => 'Không có khu vực nào đã bị xóa'], 404);
-        }
+        if ($trashedKhuVuc->isEmpty()) return response()->json(['message' => 'Không có khu vực nào đã bị xóa'], 404);
 
         // Chuyển đổi kết quả thành mảng
         $result = $trashedKhuVuc->map(function ($khuVuc) {
