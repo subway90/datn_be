@@ -134,7 +134,6 @@ class KhuVucController extends Controller
 
         return response()->json([
             'message' => 'Khu vực đã được thêm thành công',
-            'khu_vuc' => $khuVuc,
         ], 201);
     }
 
