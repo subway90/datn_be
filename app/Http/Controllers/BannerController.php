@@ -103,5 +103,42 @@ class BannerController extends Controller
         ], 201);
     }
 
-   
+    public function delete($id)
+    {
+        // Tìm banner theo ID
+        $banner = Banner::find($id);
+    
+        // Kiểm tra nếu không tồn tại
+        if (!$banner) {
+            return response()->json(['message' => 'Banner không tồn tại'], 404);
+        }
+    
+        // Thực hiện xóa mềm
+        $banner->delete();
+    
+        return response()->json(['message' => 'Banner đã được xóa thành công'], 200);
+    }
+    
+
+    public function restore($id)
+    {
+        // Tìm banner kể cả khi đã bị xóa mềm
+        $banner = Banner::withTrashed()->find($id);
+    
+        // Kiểm tra nếu không tồn tại
+        if (!$banner) {
+            return response()->json(['message' => 'Banner không tồn tại'], 404);
+        }
+    
+        // Kiểm tra nếu bản ghi chưa bị xóa mềm
+        if ($banner->deleted_at === null) {
+            return response()->json(['message' => 'Banner chưa bị xóa, không cần khôi phục'], 400);
+        }
+    
+        // Khôi phục banner đã bị xóa mềm
+        $banner->restore();
+    
+        return response()->json(['message' => 'Banner đã được khôi phục thành công'], 200);
+    }
+    
 }
