@@ -35,4 +35,30 @@ class BannerController extends Controller
         return response()->json($result, 200);
     }
     
+
+    public function one($id)
+    {
+        // Tìm banner theo ID
+        $one = Banner::find($id);
+    
+        // Kiểm tra nếu không tồn tại
+        if (!$one) {
+            return response()->json(['message' => 'Banner không tồn tại'], 404);
+        }
+    
+        // Chuẩn hóa dữ liệu trả về
+        $result = [
+            'id' => $one->id,
+            'image' => $one->image,
+            'title' => $one->title,
+            'content' => $one->content,
+            'order' => $one->order,
+            'created_at' => $one->created_at,
+            'updated_at' => $one->updated_at,
+        ];
+    
+        // Trả về JSON
+        return response()->json($result, 200);
+    }
+    
 }
