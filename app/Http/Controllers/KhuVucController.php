@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\KhuVuc;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Validator;
 class KhuVucController extends Controller
 {
     public function listHot()
@@ -229,6 +230,50 @@ class KhuVucController extends Controller
     
         return response()->json([
             'message' => 'Nhân bản thành công khu vực với ID = '.$id,
+        ], 200);
+    }
+
+    public function edit(Request $request, $id)
+    {
+        // Xác thực dữ liệu
+        $validate = Validator::make($request->all(),[
+            'name' => 'required|max:255|unique:khu_vuc,ten,'.$id,
+            'image' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
+            'noi_bat' => 'nullable|boolean',
+        ], [
+            'name.required' => 'Vui lòng nhập tên',
+            'name.max' => 'Tên của bạn vượt quá 255 kí tự',
+            'name.unique' => 'Tên khu vực đã tồn tại',
+            'image.mimes' => 'Chưa nhập đúng định dạng ảnh (jpeg,png,jpg,gif)',
+            'image.max' => 'Ảnh phải dưới 2MB',
+            'noi_bat.boolean' => 'Nổi bật là boolean. Nhập 0: không nổi bật, 1: nổi bật'
+        ]);
+        // Tìm khu vực theo ID
+        $khuVuc = KhuVuc::find($id);
+        if (!$khuVuc) return response()->json(['message' => 'Khu vực không tồn tại'], 404);
+        
+        // Báo lỗi validate
+        if($validate->fails()) return response()->json(['message'=>$validate->errors()->all()],400);
+
+        // Xử lý upload ảnh
+        $imagePath = $khuVuc->image;
+        if ($request->hasFile('image')) {
+            // Xóa ảnh cũ nếu có
+            if ($imagePath) Storage::disk('public')->delete($imagePath);
+            // Lưu ảnh mới
+            $imagePath = $request->file('image')->store('area', 'public');
+        }
+
+        // Cập nhật thông tin khu vực
+        $khuVuc->update([
+            'ten' => $request->name,
+            'slug' => Str::slug($request->name),
+            'image' => $imagePath,
+            'noi_bat' => $request->noi_bat ?? 0,
+        ]);
+
+        return response()->json([
+            'message' => 'Khu vực đã được cập nhật thành công',
         ], 200);
     }
 }

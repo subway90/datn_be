@@ -240,6 +240,9 @@ Route::middleware(['Admin'])->group(function () {
         # Thêm mới
         Route::delete('/delete/{id}', [KhuVucController::class, 'delete']);
 
+        # Chỉnh sửa
+        Route::post('/edit/{id}', [KhuVucController::class, 'edit']);
+
         # Khôi phục
         Route::patch('/restore/{id}', [KhuVucController::class, 'restore']);
 
@@ -276,7 +279,7 @@ Route::middleware(['Admin'])->group(function () {
 
         # Cập nhật hot
         Route::patch('/editHot/{id}',[ToaNhaController::class,'editHot']);
-        
+
     });
 
     Route::prefix('utilities')->group(function () {
