@@ -219,4 +219,56 @@ class BannerController extends Controller
         ], 200);
     }
     
+        public function update(Request $request, $id)
+    {
+        // Tìm banner theo ID
+        $banner = Banner::find($id);
+
+        if (!$banner) {
+            return response()->json(['message' => 'Banner không tồn tại'], 404);
+        }
+
+        // Xác thực dữ liệu
+        $request->validate([
+            'title' => 'required|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'content' => 'nullable|string',
+            'order' => 'nullable|integer',
+        ], [
+            'title.required' => 'Vui lòng nhập tiêu đề',
+            'image.mimes' => 'Chưa nhập đúng định dạng ảnh',
+            'image.max' => 'Ảnh phải dưới 2MB',
+            'order.integer' => 'Thứ tự phải là số nguyên',
+        ]);
+
+        // Kiểm tra tiêu đề trùng lặp (ngoại trừ bản ghi hiện tại)
+        $checkTitle = Banner::where('title', $request->title)->where('id', '!=', $id)->exists();
+        if ($checkTitle) {
+            return response()->json(['message' => 'Tiêu đề này đã tồn tại'], 400);
+        }
+
+        // Xử lý upload ảnh nếu có
+        if ($request->hasFile('image')) {
+            // Xóa ảnh cũ nếu tồn tại
+            if ($banner->image && Storage::disk('public')->exists($banner->image)) {
+                Storage::disk('public')->delete($banner->image);
+            }
+
+            // Lưu ảnh mới vào thư mục public/storage/banner
+            $imagePath = $request->file('image')->store('banner', 'public');
+            $banner->image = $imagePath;
+        }
+
+        // Cập nhật dữ liệu khác
+        $banner->title = $request->title;
+        $banner->content = $request->content;
+        $banner->order = $request->order ?? 0;
+        $banner->save();
+
+        return response()->json([
+            'message' => 'Banner đã được cập nhật thành công',
+            'banner' => $banner,
+        ], 200);
+    }
+
 }
