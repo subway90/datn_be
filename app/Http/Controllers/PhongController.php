@@ -48,7 +48,7 @@ class PhongController extends Controller
     public function getAll()
     {
         // Lấy tất cả danh sách phòng
-        $list_room = Phong::all();
+        $list_room = Phong::orderBy('created_at','DESC')->get();
 
         if($list_room->isEmpty()) return response()->json(['message' => 'Danh sách phòng trống'], 404);
 
