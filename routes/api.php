@@ -338,6 +338,11 @@ Route::middleware(['Admin'])->group(function () {
 
         # Chỉnh sửa theo id
         Route::post('/edit/{id}', [PhongController::class, 'edit']);
+        
+        # Nhân bản theo id
+        Route::get('duplicate/{id}', [PhongController::class, 'duplicate']);
+
+
 
     });
 

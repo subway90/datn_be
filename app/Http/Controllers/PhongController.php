@@ -412,4 +412,58 @@ class PhongController extends Controller
         return response()->json(['message' => 'Tòa nhà đã được cập nhật thành công','result' => $phong], 200);
     }
 
+    public function duplicate($id)
+    {
+        // Tìm bản ghi theo ID
+        $get = Phong::find($id);
+
+        // Kiểm tra xem bản ghi có tồn tại không
+        if (!$get) return response()->json(['message' => 'Tòa nhà này không tồn tại'], 404);
+
+        // Thêm hậu tố copy để tránh bị trùng tên
+        $new_name = $get->ten_phong . ' (1)';
+        // Kiểm tra tên có tồn tại hay chưa nếu
+        $i = 2;
+        while(Phong::where('ten_phong',$new_name)->exists()) {
+            $new_name = substr($new_name,0,-3) . '('.$i.')';
+            $i++;
+        }
+
+        // Xử lý sao chép ảnh
+        $list_image = explode(';', $get->hinh_anh);
+        $newImagePaths = [];
+        foreach ($list_image as $image) {
+            // Lấy tên file gốc
+            $filename = basename($image);
+            // Mã hóa tên file mới
+            $newFilename = uniqid() . '.' . pathinfo($filename, PATHINFO_EXTENSION);
+            // Sao chép ảnh vào thư mục mới
+            Storage::disk('public')->copy($image, 'room/' . $newFilename);
+            // Lưu đường dẫn mới vào mảng
+            $newImagePaths[] = 'room/' . $newFilename;
+        }
+    
+        // Tạo chuỗi path từ mảng
+        $imagesString = implode(';', $newImagePaths);
+    
+        // Tạo bản sao mới
+        $duplicate = Phong::create([
+            'toa_nha_id' => $get->toa_nha_id,
+            'ten_phong' => $new_name,
+            'hinh_anh' => $imagesString,
+            'dien_tich' => $get->dien_tich,
+            'gac_lung' => $get->gac_lung,
+            'gia_thue' => $get->gia_thue,
+            'don_gia_dien' => $get->don_gia_dien,
+            'don_gia_nuoc' => $get->don_gia_nuoc,
+            'tien_xe_may' => $get->tien_xe_may,
+            'phi_dich_vu' => $get->phi_dich_vu,
+            'tien_ich' => $get->tien_ich,
+            'noi_that' => $get->noi_that,
+            'trang_thai' => $get->trang_thai,
+        ]);
+    
+        return response()->json(['message' => 'Nhân bản thành công tòa nhà','result' => $duplicate], 201);
+    }
+
 }
