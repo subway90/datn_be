@@ -324,8 +324,8 @@ class PhongController extends Controller
         $validator = Validator::make($request->all(),[
             'id_building' => 'required|exists:toa_nha,id',
             'name' => 'required|unique:phong,ten_phong,'.$id,
-            'images' => 'nullable|array',
-            'images.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|array',
+            'image.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
             'image_delte' => 'nullable',
             'dien_tich' => 'required|integer',
             'gac_lung' => 'required|boolean',
@@ -341,9 +341,9 @@ class PhongController extends Controller
             'id_building.exists' => 'ID tòa nhà không tồn tại',
             'name.required' => 'Vui lòng nhập tên phòng',
             'name.unique' => 'Tên phòng đã tồn tại',
-            'images.array' => 'Ảnh phải là một mảng ( images[] )',
-            'images.*.mimes' => 'Chưa nhập đúng định dạng ảnh',
-            'images.*.max' => 'Ảnh phải dưới 2MB',
+            'image.array' => 'Ảnh phải là một mảng ( image[] )',
+            'image.*.mimes' => 'Chưa nhập đúng định dạng ảnh',
+            'image.*.max' => 'Ảnh phải dưới 2MB',
             'dien_tich.required' => 'Vui lòng nhập diện tích',
             'dien_tich.integer' => 'Diện tích phải là một số nguyên',
             'gac_lung.required' => 'Vui lòng nhập gác lửng',
@@ -359,7 +359,7 @@ class PhongController extends Controller
         if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
     
         // tạo mảng ảnh hiện tại
-        $currentImages = explode(';', $phong->image);
+        $currentImages = explode(';', $phong->hinh_anh);
     
         // Xử lý upload ảnh mới
         $newImagePaths = [];
@@ -390,7 +390,7 @@ class PhongController extends Controller
         }
     
         // tạo mảng lưu path ảnh để update (lưu path ảnh mới + ảnh cũ giữ lại) và đổi thành chuỗi
-        $imagePath = implode(';', array_merge($keepImagePaths, $newImagePaths));
+        $imagePath = trim(implode(';', array_merge($keepImagePaths, $newImagePaths)),';');
     
         // Cập nhật thông tin tòa nhà
         $phong->update([
