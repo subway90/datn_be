@@ -341,27 +341,23 @@ class ToaNhaController extends Controller
         ], 201);
     }
 
-    public function edit(Request $request)
+    public function edit(Request $request,$id)
     {
         // Tìm tòa nhà theo ID
-        $toa_nha = ToaNha::find($request->id);
-        if (!$toa_nha) return response()->json(['message' => 'ID tòa nhà không tồn tại'], 400);
+        $toa_nha = ToaNha::find($id);
+        if (!$toa_nha) return response()->json(['message' => 'ID tòa nhà không tồn tại'], 404);
     
         // Kiểm tra validate
         $validator = Validator::make($request->all(), [
-            'id' => 'required|exists:toa_nha,id',
             'id_area' => 'required|exists:khu_vuc,id',
-            'name' => 'required|unique:toa_nha,ten,' . $request->id,
+            'name' => 'required|unique:toa_nha,ten,' . $id,
             'image' => 'nullable|array',
             'image.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'required',
             'utilities' => 'required',
             'location' => 'required',
-            'hot' => 'required|boolean',
             'image_delete' => 'nullable|string',
         ], [
-            'id.required' => 'Chưa nhập ID tòa nhà',
-            'id.exists' => 'Tòa nhà không tồn tại',
             'id_area.required' => 'Chưa nhập khu vực',
             'id_area.exists' => 'Khu vực không tồn tại',
             'name.required' => 'Vui lòng nhập tên',
@@ -372,8 +368,6 @@ class ToaNhaController extends Controller
             'description.required' => 'Vui lòng nhập mô tả',
             'utilities.required' => 'Vui lòng nhập tiện ích',
             'location.required' => 'Vui lòng nhập các vị trí',
-            'hot.required' => 'Chưa nhập giá trị hot (boolean) | 0: không nổi bật, 1: nổi bật',
-            'hot.boolean' => 'hot là giá trị boolean | 0: không nổi bật, 1: nổi bật',
             'image_delete.string' => 'Path ảnh cũ phải là 1 chuỗi',
         ]);
     
@@ -423,7 +417,6 @@ class ToaNhaController extends Controller
             'mo_ta' => $request->description,
             'tien_ich' => $request->utilities,
             'vi_tri' => $request->location,
-            'noi_bat' => $request->hot,
         ]);
     
         return response()->json(['message' => 'Tòa nhà đã được cập nhật thành công'], 200);
