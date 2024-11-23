@@ -463,7 +463,7 @@ class PhongController extends Controller
             'trang_thai' => $get->trang_thai,
         ]);
     
-        return response()->json(['message' => 'Nhân bản thành công tòa nhà','result' => $duplicate], 201);
+        return response()->json(['message' => 'Nhân bản thành công tòa nhà'], 201);
     }
 
 }
