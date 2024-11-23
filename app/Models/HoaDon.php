@@ -18,9 +18,13 @@ class HoaDon extends Model
         'hop_dong_id',
         'tien_thue',
         'tien_dien',
+        'so_ki_dien',
         'tien_nuoc',
+        'so_khoi_nuoc',
         'tien_xe',
+        'so_luong_xe',
         'tien_dich_vu',
+        'so_luong_nguoi',
         'noi_dung',
         'trang_thai',
     ];
