@@ -18,7 +18,7 @@ class HopDong extends Model
     ];
     public function user()
     {
-        return $this->hasOne(User::class, 'tai_khoan_id');
+        return $this->belongsTo(User::class, 'id');
     }
 
     // Quan hệ một-nhiều với thanh toán
