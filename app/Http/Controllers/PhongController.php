@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Phong;
 use App\Models\ToaNha;
 use App\Models\KhuVuc;
+use App\Models\HopDong;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -22,9 +23,19 @@ class PhongController extends Controller
         }
         $toa_nha = ToaNha::where('id',$room->toa_nha_id)->first(['slug','ten','khu_vuc_id']);
         $khu_vuc = khuVuc::where('id',$toa_nha->khu_vuc_id)->first(['slug','ten']);
+        $hop_dong = HopDong::where('phong_id',$room->id)->get();
+            // Xác định trạng thái phòng
+            $trang_thai = '';
+            if(!$hop_dong->isEmpty()){
+                foreach ($hop_dong as $row) {   
+                    if($row['ngay_ket_thuc'] > $this->date_now) $trang_thai = 'Đang cho thuê';
+                    else $trang_thai = 'Đang trống';
+                }
+            }else $trang_thai = 'Đang trống';
         $result = [
             'id' => $room->id,
             'ten_phong' => $room->ten_phong,
+            'trang_thai' => $trang_thai,
             'ten_toa_nha' => $toa_nha->ten,
             'slug_toa_nha' => $toa_nha->slug,
             'ten_khu_vuc' => $khu_vuc->ten,
@@ -56,9 +67,20 @@ class PhongController extends Controller
         $result = $list_room->map(function ($room) {
             $toa_nha = ToaNha::where('id',$room->toa_nha_id)->first(['slug','ten','khu_vuc_id']);
             $khu_vuc = khuVuc::where('id',$toa_nha->khu_vuc_id)->first(['slug','ten']);
+            $hop_dong = HopDong::where('phong_id',$room->id)->get();
+            // Xác định trạng thái phòng
+            $trang_thai = '';
+            if(!$hop_dong->isEmpty()){
+                foreach ($hop_dong as $row) {   
+                    if($row['ngay_ket_thuc'] > $this->date_now) $trang_thai = 'Đang cho thuê';
+                    else $trang_thai = 'Đang trống';
+                }
+            }else $trang_thai = 'Đang trống';
+            
             return [
                 'id' => $room->id,
                 'ten_phong' => $room->ten_phong,
+                'trang_thai' => $trang_thai,
                 'ten_toa_nha' => $toa_nha->ten,
                 'slug_toa_nha' => $toa_nha->slug,
                 'ten_khu_vuc' => $khu_vuc->ten,

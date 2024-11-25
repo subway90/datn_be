@@ -18,6 +18,8 @@ use App\Http\Controllers\LienHeDatPhongController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\YeuThichController;
 
+# Test thanh toán
+Route::get('thanh-toan', [ThanhToanController::class, 'testpay']);
 
 # Chi tiết 1 tòa nhà bởi slug (Trang chi tiết)
 Route::get('chi-tiet', [ToaNhaController::class, 'detail']);
@@ -53,6 +55,10 @@ Route::post('forgot/reset', [ResetPasswordController::class, 'reset']);
 
 # Những API cần đăng nhập
 Route::middleware(['CusTom'])->group(function () {
+
+    # Tạo thanh toán VNPAY
+    Route::get('pay/{id_order}', [ThanhToanController::class, 'pay']);
+
 
     # Danh sách liên hệ thông qua token của người đó
     Route::get('contact_room/list', [LienHeDatPhongController::class, 'contactList']);
