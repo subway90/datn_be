@@ -87,14 +87,7 @@ class PhongController extends Controller
                 'slug_khu_vuc' => $khu_vuc->slug,
                 'hinh_anh' => Str::before($room->hinh_anh,';'),
                 'dien_tich' => $room->dien_tich,
-                'gac_lung' => $room->gac_lung ? 'Có' : ' Không',
-                'gia_thue' => $room->gia_thue,
-                'don_gia_dien' => $room->don_gia_dien,
-                'don_gia_nuoc' => $room->don_gia_nuoc,
-                'tien_xe_may' => $room->tien_xe_may,
-                'phi_dich_vu' => $room->phi_dich_vu,
-                'tien_ich' => $room->tien_ich,
-                'noi_that' => $room->noi_that,
+                'ngay_tao' => $room->created_at->format('d').' tháng '.$room->created_at->format('m').' năm '.$room->created_at->format('Y').' lúc '.$room->created_at->format('H').':'.$room->created_at->format('i'),
             ];
         });
     
