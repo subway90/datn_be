@@ -13,3 +13,4 @@ php artisan db:seed --class=TinTucSeeder
 php artisan db:seed --class=BinhLuanTinTucSeeder
 php artisan db:seed --class=LienHeDatPhongSeeder
 php artisan db:seed --class=BinhLuanToaNhaSeeder
+php artisan db:seed --class=BannerSeeder

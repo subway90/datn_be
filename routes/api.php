@@ -7,6 +7,7 @@ use App\Http\Controllers\HoaDonController;
 use App\Http\Controllers\TienIchToaNhaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\PhongController;
 use App\Http\Controllers\ToaNhaController;
 use App\Http\Controllers\KhuVucController;
@@ -352,6 +353,33 @@ Route::middleware(['Admin'])->group(function () {
 
     });
 
+
+    Route::prefix('banner')->group(function () {
+
+        # Thống kê tổng
+        Route::get('/', [BannerController::class, 'all']);
+
+        # Thống kê tổng
+        Route::get('/list_delete', [BannerController::class, 'list_delete']);
+
+        # Thống kê tổng
+        Route::get('/{id}', [BannerController::class, 'one']);
+
+        # Thêm mới
+        Route::post('/add', [BannerController::class, 'store']);
+
+        # Chỉnh sữa
+        Route::post('/update/{id}', [BannerController::class, 'update']);
+
+        # Xóa mềm
+        Route::delete('/delete/{id}', [BannerController::class, 'delete']);
+
+        # Khôi phục
+        Route::patch('/restore/{id}', [BannerController::class, 'restore']);
+
+        # Nhân bản theo ID
+        Route::get('/duplicate/{id}', [BannerController::class, 'duplicate']);
+    });
 
 });
 
