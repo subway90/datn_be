@@ -21,7 +21,7 @@ class PhongController extends Controller
         if (!$room) {
             return response()->json(['message' => 'Không tìm thấy phòng'], 404);
         }
-        $toa_nha = ToaNha::where('id',$room->toa_nha_id)->first(['slug','ten','khu_vuc_id']);
+        $toa_nha = ToaNha::where('id',$room->toa_nha_id)->first(['slug','ten','id','khu_vuc_id']);
         $khu_vuc = khuVuc::where('id',$toa_nha->khu_vuc_id)->first(['slug','ten']);
         $hop_dong = HopDong::where('phong_id',$room->id)->get();
             // Xác định trạng thái phòng
@@ -36,6 +36,7 @@ class PhongController extends Controller
             'id' => $room->id,
             'ten_phong' => $room->ten_phong,
             'trang_thai' => $trang_thai,
+            'id_toa_nha' => $toa_nha->id,
             'ten_toa_nha' => $toa_nha->ten,
             'slug_toa_nha' => $toa_nha->slug,
             'ten_khu_vuc' => $khu_vuc->ten,
