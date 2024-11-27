@@ -34,14 +34,14 @@ class PhongController extends Controller
             }else $trang_thai = 'Đang trống';
         $result = [
             'id' => $room->id,
-            'ten_phong' => $room->ten_phong,
+            'name' => $room->ten_phong,
             'trang_thai' => $trang_thai,
-            'id_toa_nha' => $toa_nha->id,
+            'id_building' => $toa_nha->id,
             'ten_toa_nha' => $toa_nha->ten,
             'slug_toa_nha' => $toa_nha->slug,
             'ten_khu_vuc' => $khu_vuc->ten,
             'slug_khu_vuc' => $khu_vuc->slug,
-            'hinh_anh' => $room->hinh_anh,
+            'image' => $room->hinh_anh,
             'dien_tich' => $room->dien_tich,
             'gac_lung' => $room->gac_lung ? 'Có' : ' Không',
             'gia_thue' => $room->gia_thue,
