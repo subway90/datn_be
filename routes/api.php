@@ -153,6 +153,11 @@ Route::middleware(['Admin'])->group(function () {
 
     });
 
+    Route::prefix('comment_building')->group(function(){
+        Route::get('/', [BinhLuanToaNhaController::class, 'getAll']);
+
+    });
+
 
     Route::prefix('contact_room')->group(function () {
 

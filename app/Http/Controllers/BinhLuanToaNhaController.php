@@ -34,4 +34,23 @@ class BinhLuanToaNhaController extends Controller
         $comment->save();
         return response()->json(['message' => 'Bình luận đã được đăng thành công.'], 201);
     }
+    public function getAll()
+    {
+        try {
+            // Lấy danh sách bình luận chỉ với trường 'noi_dung'
+            $binhLuans = BinhLuanToaNha::all();
+    
+            return response()->json([
+                'success' => true,
+                'data' => $binhLuans,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi lấy danh sách bình luận',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    
 }
