@@ -19,8 +19,7 @@ use App\Http\Controllers\LienHeDatPhongController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\YeuThichController;
 
-# Test thanh toán
-Route::get('thanh-toan', [ThanhToanController::class, 'testpay']);
+
 
 # Chi tiết 1 tòa nhà bởi slug (Trang chi tiết)
 Route::get('chi-tiet', [ToaNhaController::class, 'detail']);
