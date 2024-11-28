@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('ho_ten');
             $table->string('so_dien_thoai');
             $table->text('noi_dung')->nullable();
-            $table->boolean('trang_thai')->default(1);
+            $table->boolean('trang_thai')->default(0); //0: chưa xử lí, 1: đã xử lí
             $table->timestamps();
             $table->foreign('phong_id')->references('id')->on('phong');
             $table->foreign('tai_khoan_id')->references('id')->on('users');

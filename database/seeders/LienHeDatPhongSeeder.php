@@ -26,7 +26,7 @@ class LienHeDatPhongSeeder extends Seeder
             'ho_ten' => 'Nguyễn Hoài An',
             'so_dien_thoai' => '0777655432',
             'noi_dung' => null,
-            'trang_thai' => 2,
+            'trang_thai' => 1,
         ]);
 
         LienHeDatPhong::create([
@@ -35,7 +35,7 @@ class LienHeDatPhongSeeder extends Seeder
             'ho_ten' => 'Lê Thanh Phong',
             'so_dien_thoai' => '0989655499',
             'noi_dung' => null,
-            'trang_thai' => 3,
+            'trang_thai' => 1,
         ]);
 
         LienHeDatPhong::create([
