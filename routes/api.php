@@ -8,6 +8,7 @@ use App\Http\Controllers\TienIchToaNhaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\DangKyNhanTinController;
 use App\Http\Controllers\PhongController;
 use App\Http\Controllers\ToaNhaController;
 use App\Http\Controllers\KhuVucController;
@@ -102,6 +103,8 @@ Route::middleware(['CusTom'])->group(function () {
         Route::get('get', [YeuThichController::class, 'index']);
         Route::post('add', [YeuThichController::class, 'create']);
     });
+
+    Route::post('/dang-ky-nhan-tin', [DangKyNhanTinController::class, 'register']);
 });
 
 # Những API cần đăng nhập và là ADMIN
@@ -111,7 +114,7 @@ Route::middleware(['Admin'])->group(function () {
     Route::prefix('cate_blog')->group(function () {
         # Lấy danh sách tất cả
         Route::get('/', [DanhMucTinTucController::class, 'all']);
-        
+
         # Lấy danh sách đã xóa
         Route::get('/list_delete', [DanhMucTinTucController::class, 'list_delete']);
 
@@ -150,7 +153,6 @@ Route::middleware(['Admin'])->group(function () {
 
         # Khôi phục hợp đồng
         Route::patch('/restore/{id}', [HopDongController::class, 'restore']);
-
     });
 
 
@@ -178,7 +180,7 @@ Route::middleware(['Admin'])->group(function () {
 
 
     Route::prefix('blog')->group(function () {
-        
+
         # Danh sách tin tức đã xóa
         Route::get('/list_delete', [TinTucController::class, 'listDelete']);
 
@@ -256,8 +258,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::get('/duplicate/{id}', [KhuVucController::class, 'duplicate']);
 
         # Cập nhật hot
-        Route::patch('/editHot/{id}',[KhuVucController::class,'editHot']);
-
+        Route::patch('/editHot/{id}', [KhuVucController::class, 'editHot']);
     });
 
 
@@ -276,7 +277,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::post('/add', [ToaNhaController::class, 'store']);
 
         // # Cập nhật
-        Route::post('/edit/{id}', [ToaNhaController::class, 'edit']);        
+        Route::post('/edit/{id}', [ToaNhaController::class, 'edit']);
 
         # Thêm mới
         Route::delete('/delete/{id}', [ToaNhaController::class, 'delete']);
@@ -288,8 +289,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::get('/duplicate/{id}', [ToaNhaController::class, 'duplicate']);
 
         # Cập nhật hot
-        Route::patch('/editHot/{id}',[ToaNhaController::class,'editHot']);
-
+        Route::patch('/editHot/{id}', [ToaNhaController::class, 'editHot']);
     });
 
     Route::prefix('utilities')->group(function () {
@@ -299,7 +299,7 @@ Route::middleware(['Admin'])->group(function () {
 
         # Lấy tất cả
         Route::get('/list_delete', [TienIchToaNhaController::class, 'all_delete']);
-        
+
         # Thêm mới
         Route::post('/add', [TienIchToaNhaController::class, 'store']);
 
@@ -311,14 +311,12 @@ Route::middleware(['Admin'])->group(function () {
 
         # Khôi phục
         Route::patch('/restore/{id}', [TienIchToaNhaController::class, 'restore']);
-
     });
 
     Route::prefix('hoa-don')->group(function () {
 
         # Thêm mới
         Route::post('/add', [HoaDonController::class, 'store']);
-
     });
 
 
@@ -344,12 +342,9 @@ Route::middleware(['Admin'])->group(function () {
 
         # Chỉnh sửa theo id
         Route::post('/edit/{id}', [PhongController::class, 'edit']);
-        
+
         # Nhân bản theo id
         Route::get('duplicate/{id}', [PhongController::class, 'duplicate']);
-
-
-
     });
 
 
@@ -380,6 +375,12 @@ Route::middleware(['Admin'])->group(function () {
         Route::get('/duplicate/{id}', [BannerController::class, 'duplicate']);
     });
 
+    Route::prefix('dang-ky-nhan-tin')->group(function () {
+        Route::get('show', [DangKyNhanTinController::class, 'index']);
+        Route::delete('delete/{id}', [DangKyNhanTinController::class, 'destroy']);
+        Route::patch('restore/{id}', [DangKyNhanTinController::class, 'restore']);
+        Route::post('/gui-mail', [DangKyNhanTinController::class, 'sendMail']);
+    });
 });
 
 
