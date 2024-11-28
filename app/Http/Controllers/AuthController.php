@@ -22,7 +22,7 @@ class AuthController extends Controller
     }
     public function all()
     {
-        $result = User::get();
+        $result = User::orderBy('created_at','DESC')->get();
         return response()->json(['list' => $result], 200);
     }
     public function register(Request $request)
