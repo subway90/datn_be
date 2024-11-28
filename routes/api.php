@@ -160,6 +160,9 @@ Route::middleware(['Admin'])->group(function () {
         # Lấy danh sách
         Route::get('/', [LienHeDatPhongController::class, 'all']);
 
+         # Lấy danh sách đã xóa
+         Route::get('/list_delete', [LienHeDatPhongController::class, 'list_delete']);
+
         # Xóa
         Route::delete('/delete/{id}', [LienHeDatPhongController::class, 'destroy']);
 
