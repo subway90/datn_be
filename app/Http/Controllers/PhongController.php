@@ -416,7 +416,7 @@ class PhongController extends Controller
             'hinh_anh' => $imagePath,
             'dien_tich' => $request->dien_tich,
             'gac_lung' => $request->gac_lung,
-            'gia_thue' => $request->tien_thue,
+            'gia_thue' => $request->tien_thue ?? 0,
             'don_gia_dien' => $request->tien_dien ?? 0,
             'don_gia_nuoc' => $request->tien_nuoc ?? 0,
             'tien_xe_may' => $request->tien_xe ?? 0,

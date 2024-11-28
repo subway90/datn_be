@@ -22,7 +22,21 @@ class AuthController extends Controller
     }
     public function all()
     {
-        $result = User::orderBy('created_at','DESC')->get();
+        $all = User::orderBy('created_at','DESC')->get();
+        $result = $all->map(function($user) {
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar' => $user->avatar,
+                'role' => $user->role,
+                'phone' => $user->phone,
+                'born' => $user->born,
+                'gender' => $user->gender,
+                'address' => $user->address,
+                'date_create' => $user->created_at->format('d').' Tháng '.$user->created_at->format('m').' lúc '.$user->created_at->format('H').':'.$user->created_at->format('i'),
+            ];
+        });
         return response()->json(['list' => $result], 200);
     }
     public function register(Request $request)

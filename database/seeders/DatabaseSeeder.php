@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Nguyễn Minh Hiếu',
             'email' => 'nguyenhieu3105@gmail.com',
+            'avatar' => 'avatar/img0.jpg',
             'password' => Hash::make('12345678'),
             'born' => '2024-05-31',
             'phone' => '0965279041',
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Tester 01',
             'email' => 'test01@gmail.com',
+            'avatar' => 'avatar/img1.png',
             'password' => Hash::make('12345678'),
             'gender' => 2,
             'address' => 'Tân Thới Nhất, Quận 12,TP Hồ Chí Minh',
