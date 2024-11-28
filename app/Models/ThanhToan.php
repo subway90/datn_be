@@ -14,6 +14,8 @@ class ThanhToan extends Model
     // Khai báo tên bảng
     protected $table = 'thanh_toan';
 
+    protected $primaryKey = 'token';
+
     // Khai báo các trường có thể gán hàng loạt
     protected $fillable = [
         'hoa_don_id',

@@ -233,48 +233,33 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['message' => 'Id user không tồn tại'], 404);
         }
+        
+        if($id == 1) return response()->json(['message' => 'Không thể chỉnh sửa thông tin ADMIN'], 400);
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'role' => 'nullable|integer|min:1', // Thay đổi thành nullable
-            'phone' => 'nullable|string|max:10',
-            'born' => 'nullable|date'
+            'role' => 'required|integer',
+            'address' => 'nullable|string',
         ], [
             'name.required' => 'Tên là bắt buộc.',
             'name.string' => 'Tên phải là chuỗi ký tự.',
+            'role.required' => 'Chưa nhập role (1: user, 0: admin)',
             'role.integer' => 'Vai trò phải là một số nguyên.',
             'role.min' => 'Vai trò phải lớn hơn hoặc bằng 1.',
-            'phone.string' => 'Số điện thoại phải là chuỗi ký tự.',
-            'phone.max' => 'Số điện thoại không được dài quá 10 ký tự.',
-            'born.date' => 'Ngày sinh phải là định dạng ngày hợp lệ.'
+            'phone.string' => 'Địa chỉ là chuỗi',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
+            return response()->json(['message' => $validator->errors()->all()], 400);
         }
-
-        // Chỉ cập nhật nếu có thay đổi
-        $updatedFields = [];
-
-        if ($request->has('role') && !$request->has('role') && $request->role !== $user->role) {
-            $updatedFields['role'] = $request->role;
-        }
-
-        if ($request->has('born') && !$request->has('born') && $request->born !== $user->born) {
-            $updatedFields['born'] = $request->born;
-        }
-
-        if ($request->has('phone') && $request->phone !== $user->phone) {
-            $updatedFields['phone'] = $request->phone;
-        }
-
-        // Cập nhật tên người dùng
-        $user->name = $request->name; // Cập nhật tên luôn
-
         // Nếu có trường nào được thay đổi thì cập nhật
-        if (!empty($updatedFields)) {
-            $user->update($updatedFields);
-        }
+            $user->update(
+                [
+                    'name' => $request->name,
+                    'role' => $request->role,
+                    'address' => $request->address,
+                ]
+            );
 
         // Lưu tên vào cơ sở dữ liệu
         $user->save();

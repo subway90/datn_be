@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('thanh_toan', function (Blueprint $table) {
-            $table->id();
+            $table->string('token')->primary();
             $table->unsignedBigInteger('hoa_don_id')->index();
             $table->boolean('hinh_thuc')->default(0); //0: tiền mặt, 1: ví điện tử
             $table->string('code_uu_dai', 20)->nullable(); // mã ưu đãi giảm giá

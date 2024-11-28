@@ -41,8 +41,6 @@ class ThanhToanController extends Controller
         $id_user = Auth::id();
         // Lấy thông tin hóa đơn
         $get_order = HoaDon::with(['hopDong.user:id,name','hopDong:id',])->where('id',$id_order)->first();
-        // test :mã hóa đơn random
-        $get_order->id = 'HD_'.rand(0,9999);
         
         if(!$get_order || $id_user !== $get_order->hopDong->user->id) return response()->json(['message' => 'Hóa đơn không tồn tại hoặc không phải của bạn'], 404);
 
@@ -52,8 +50,7 @@ class ThanhToanController extends Controller
         $total += $get_order->tien_xe * $get_order->so_luong_xe;
         $total += $get_order->tien_dich_vu * $get_order->so_luong_nguoi;
         
-        // return response()->json(['so_tien' => $total,'order' => $get_order],200);
-
+        # ID hóa đơn (test)
         // cấu hình thanh toán vnpay
         $vnpUrl = ENV('VNPAY_URL'); // URL sandbox
         // Tham số cho VNPAY
@@ -66,7 +63,7 @@ class ThanhToanController extends Controller
             "vnp_CurrCode" => "VND",
             "vnp_IpAddr" => $_SERVER['REMOTE_ADDR'],
             "vnp_Locale" => "vn",
-            "vnp_OrderInfo" => $get_order->id,
+            "vnp_OrderInfo" => 'Thanh toán cho hóa đơn ID = '.$get_order->id,
             "vnp_OrderType" => "other",
             "vnp_ReturnUrl" => ENV('VNPAY_RETURN_URL'), // URL trả về sau khi thanh toán
             "vnp_TxnRef" => $get_order->id,
@@ -82,6 +79,40 @@ class ThanhToanController extends Controller
         // Chuyển hướng đến VNPAY
         // return redirect($vnpUrl);
         return response()->json(['url'=>$vnpUrl],200);
+    }
+
+    public function handleCallback(Request $request) {
+        $vnp_HashSecret = ENV('VNPAY_HASH_SECRET'); // Mã bí mật từ VNPay
+        $vnp_SecureHash = $request->input('vnp_SecureHash');
+        unset($request['vnp_SecureHash']);
+        unset($request['vnp_SecureHashType']);
+    
+        // Sắp xếp và mã hóa lại dữ liệu
+        ksort($request->all());
+        $queryString = http_build_query($request->all());
+        $secureHash = hash_hmac('sha512', $queryString, $vnp_HashSecret);
+    
+        if ($secureHash === $vnp_SecureHash) {
+            // Xử lý thông tin thanh toán
+            $id_order = $request->input('vnp_TxnRef');
+            $get_order = HoaDon::find($id_order);
+            
+            
+            // Lưu thông tin thanh toán vào cơ sở dữ liệu
+            $get_order->update([
+                'hoa_don_id' => $request->input('vnp_TxnRef'),
+                'hinh_thuc' => 1, //thanh toán vnpay
+                'ma_giao_dich' => $request->input('vnp_TransactionNo'),
+                'ngay_giao_dich' => now(),
+                'so_tien' => $request->input('vnp_Amount') / 100,
+                'noi_dung' => $request->input('vnp_OrderInfo'),
+                'trang_thai' => ($request->input('vnp_ResponseCode') === '00') ? 1 : 0,
+            ]);
+    
+            return response()->json(['message' => 'Thanh toán thành công'], 200);
+        } else {
+            return response()->json(['message' => 'Chữ ký không hợp lệ'], 400);
+        }
     }
     
 }

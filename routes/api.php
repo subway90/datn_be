@@ -19,7 +19,8 @@ use App\Http\Controllers\LienHeDatPhongController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\YeuThichController;
 
-
+# Callback thanh toán vnpay
+Route::get('pay/callback', [ThanhToanController::class, 'handleCallback']);
 
 # Chi tiết 1 tòa nhà bởi slug (Trang chi tiết)
 Route::get('chi-tiet', [ToaNhaController::class, 'detail']);

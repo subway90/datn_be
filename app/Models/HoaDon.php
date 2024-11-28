@@ -25,6 +25,9 @@ class HoaDon extends Model
         'so_luong_xe',
         'tien_dich_vu',
         'so_luong_nguoi',
+        'hinh_thuc',
+        'code_uu_dai',
+        'ngay_thanh_toan',
         'noi_dung',
         'trang_thai',
     ];
