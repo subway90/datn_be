@@ -154,9 +154,13 @@ Route::middleware(['Admin'])->group(function () {
     });
 
     Route::prefix('comment_building')->group(function(){
-        Route::get('/', [BinhLuanToaNhaController::class, 'getAll']);
-
-    });
+        Route::get('/', [BinhLuanToaNhaController::class, 'getAll']); // Lấy tất cả
+        Route::get('/list_delete', [BinhLuanToaNhaController::class, 'getdelete']); // Lấy danh sách đã xóa
+        Route::get('/{id}', [BinhLuanToaNhaController::class, 'getid']); // Lấy theo id
+        Route::delete('/delete/{id}', [BinhLuanToaNhaController::class, 'delete']); // Xóa theo id
+        Route::post('/edit/{id}', [BinhLuanToaNhaController::class, 'edit']); // Chỉnh sửa nội dung theo id (k dùng put được đã test nhưng không nhận)
+        Route::patch('/restore/{id}', [BinhLuanToaNhaController::class, 'restore']); // Khôi phục theo id
+    });    
 
 
     Route::prefix('contact_room')->group(function () {

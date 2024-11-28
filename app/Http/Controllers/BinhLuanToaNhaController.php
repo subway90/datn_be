@@ -49,8 +49,139 @@ class BinhLuanToaNhaController extends Controller
                 'success' => false,
                 'message' => 'Lỗi khi lấy danh sách bình luận',
                 'error' => $e->getMessage(),
-            ], 500);
+            ], 200);
         }
     }
     
+    public function getid($id)
+    {
+        try {
+            // Tìm bình luận theo ID
+            $binhLuan = BinhLuanToaNha::findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $binhLuan,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy bình luận với ID: ' . $id,
+                'error' => $e->getMessage(),
+            ], 200);
+        }
+    }
+    public function edit(Request $request, $id)
+    {
+        // Xác định người dùng đã đăng nhập
+        $user = $request->user();
+
+        // Xác định các quy tắc xác thực
+        $validator = Validator::make($request->all(), [
+            'noi_dung' => 'required|string|max:255',
+        ], [
+            'noi_dung.required' => 'Nội dung bình luận không được để trống.',
+            'noi_dung.string' => 'Nội dung bình luận phải là chuỗi ký tự hợp lệ.',
+            'noi_dung.max' => 'Nội dung bình luận không được vượt quá 255 ký tự.',
+        ]);
+    
+        // Kiểm tra nếu có lỗi xác thực
+         if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu không hợp lệ.',
+                'errors' => $validator->errors() // Trả về toàn bộ danh sách lỗi dưới dạng key-value
+            ], 422); // Sử dụng HTTP 422 (Unprocessable Entity) cho lỗi validation
+        }
+
+    
+        // Lấy dữ liệu đã xác thực
+        $validated = $validator->validated();
+    
+        try {
+            // Tìm bình luận theo ID
+            $binhLuan = BinhLuanToaNha::findOrFail($id);
+    
+            // Cập nhật nội dung bình luận
+            $binhLuan->noi_dung = $validated['noi_dung'];
+            $binhLuan->save();
+    
+            // Trả về phản hồi JSON thành công
+            return response()->json([
+                'message' => 'Cập nhật nội dung bình luận thành công.',
+                'data' => $binhLuan,
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Lỗi không tìm thấy bình luận theo ID
+            return response()->json([
+                'message' => 'Không tìm thấy bình luận với ID: ' . $id,
+            ], 404); // HTTP 404 Not Found
+        } catch (\Exception $e) {
+            // Lỗi khác
+            return response()->json([
+                'message' => 'Lỗi khi cập nhật bình luận.',
+                'error' => $e->getMessage(),
+            ], 500); // HTTP 500 Internal Server Error
+        }
+    }    
+    
+    public function delete($id)
+    {
+        try {
+            // Tìm bình luận và thực hiện xóa mềm
+            $binhLuan = BinhLuanToaNha::findOrFail($id);
+            $binhLuan->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Xóa bình luận thành công',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi xóa bình luận',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function getdelete()
+    {
+        try {
+            // Lấy danh sách các bình luận đã bị xóa mềm
+            $binhLuans = BinhLuanToaNha::onlyTrashed()->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $binhLuans,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi lấy danh sách đã xóa',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function restore($id)
+    {
+        try {
+            // Tìm và khôi phục bình luận đã bị xóa mềm
+            $binhLuan = BinhLuanToaNha::onlyTrashed()->findOrFail($id);
+            $binhLuan->restore();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Khôi phục bình luận thành công',
+                'data' => $binhLuan,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi khôi phục bình luận',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
 }
