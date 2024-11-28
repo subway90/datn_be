@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
 use App\Models\LienHeDatPhong;
 use App\Models\Phong;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class LienHeDatPhongController extends Controller
 {
@@ -60,17 +62,23 @@ class LienHeDatPhongController extends Controller
 
     public function all() {
 
-        $list = LienHeDatPhong::all();;
+        $list = LienHeDatPhong::all();
         if (!$list) {
             return response()->json(['message' => 'Danh mục không tồn tại.'], 404);
         }
         // Tùy chỉnh tên các key
         $data = $list->map(function ($item) {
+            $room = Phong::where('id',$item->phong_id)->get(['ten_phong','hinh_anh'])->first();
+            $user = User::where('id',$item->tai_khoan_id)->get(['name','avatar'])->first();
             return [
                 'id' => $item->id,
                 'state' => $item->trang_thai,
                 'id_room' => $item->phong_id,
+                'name_room' => $room->ten_phong,
+                'image_room' => Str::before($room->hinh_anh, ';'),
                 'id_user' => $item->tai_khoan_id,
+                'name_user' => $user->name,
+                'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
                 'name' => $item->ho_ten,
                 'phone' => $item->so_dien_thoai,
                 'content' => $item->noi_dung,
