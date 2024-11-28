@@ -84,6 +84,28 @@ class LienHeDatPhongController extends Controller
         ], 200);
     }
 
+    public function list_delete() {
+
+        
+        $list = LienHeDatPhong::onlyTrashed()->get();
+        if ($list->isEmpty()) return response()->json(['message' => 'Danh sách trống'], 404);
+        // Tùy chỉnh tên các key
+        $data = $list->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'state' => $item->trang_thai,
+                'id_room' => $item->phong_id,
+                'id_user' => $item->tai_khoan_id,
+                'name' => $item->ho_ten,
+                'phone' => $item->so_dien_thoai,
+                'content' => $item->noi_dung,
+            ];
+        });
+        return response()->json([
+            'list' => $data,
+        ], 200);
+    }
+
     public function one($id)
     {
         // Tìm danh mục theo ID
