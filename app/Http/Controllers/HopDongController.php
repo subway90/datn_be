@@ -183,9 +183,6 @@ class HopDongController extends Controller
         # Tìm hợp đồng
         $hopDong = HopDong::find($id);
         if(!$hopDong) return response()->json(['message' => 'Hợp đồng này không tồn tại'], 404);
-
-        # Xóa danh sách thanh toán của hợp đồng đó
-        $hopDong->thanhToan()->delete();
         $hopDong->delete();
 
         # Trả kết quả res
