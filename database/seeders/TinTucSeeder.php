@@ -133,7 +133,7 @@ class TinTucSeeder extends Seeder
 
         TinTuc::create([
             'tai_khoan_id' => 1,
-            'danh_muc_id' => 6,
+            'danh_muc_id' => 4,
             'tieu_de' => 'Chuyên Gia Đến Hải Phòng Thuê Căn Hộ Ở Đâu?',
             'mo_ta' => 'Một không gian sống luôn cân bằng giữa an tĩnh và sôi động, tự do và riêng tư, biệt lập mà tiện ích và dễ dàng di chuyển, đó là tất cả những gì các chuyên gia cần cho một không gian sống. Hải Phòng, điểm đến thu hút của đông đảo chuyên gia trong và ngoài nước liệu đã sẵn sàng đáp ứng nhu cầu về chốn an cư lý tưởng cho chuyên gia?',
             'slug' => 'chuyen-gia-den-hai-phong-thue-can-ho-o-dau',
@@ -155,7 +155,7 @@ class TinTucSeeder extends Seeder
 
         TinTuc::create([
             'tai_khoan_id' => 1,
-            'danh_muc_id' => 7,
+            'danh_muc_id' => 3,
             'tieu_de' => 'Khám Phá Diện Mạo Của Trung Tâm Thương Mại Hanoi Centre: Điểm Đến “Trung Tâm” Mới Của Hà Nội',
             'mo_ta' => 'Tiếp nối thành công của các trung tâm thương mại Saigon Centre và Estella Place tại TP.HCM, Keppel đã chính thức gia nhập "cuộc đua" bất động sản thương mại tại Hà Nội với việc thuê toàn bộ khu trung tâm thương mại Hanoi Centre tại quận Ba Đình để quản lý, vận hành và khai thác.',
             'slug' => 'kham-pha-dien-mao-cua-trung-tam-thuong-mai-hanoi-centre-diem-den-trung-tam-moi-cua-ha-noi',
@@ -185,7 +185,7 @@ class TinTucSeeder extends Seeder
 
         TinTuc::create([
             'tai_khoan_id' => 1,
-            'danh_muc_id' => 8,
+            'danh_muc_id' => 2,
             'tieu_de' => 'Phân Khúc Bất Động Sản Nào Đang Thăng Hoa Nhờ Nguồn Vốn FDI?',
             'mo_ta' => 'Nguồn vốn FDI đang đóng góp một phần không nhỏ vào sự khởi sắc của thị trường bất động sản. Nhiều phân khúc bất động sản đã được hưởng lợi lớn cùng sự tăng trưởng của nguồn vốn này.',
             'slug' => 'phan-khuc-bat-dong-san-nao-dang-thang-hoa-nho-nguon-von-fdi-cd-hn',
@@ -203,7 +203,7 @@ class TinTucSeeder extends Seeder
 
         TinTuc::create([
             'tai_khoan_id' => 1,
-            'danh_muc_id' => 9,
+            'danh_muc_id' => 1,
             'tieu_de' => 'Chủ Đầu Tư Kim Long Kiến Tạo Khu Đô Thị Chuẩn Nhật Đầu Tiên Tại Đông Triều',
             'mo_ta' => 'Fujisan Đông Triều là dự án tâm huyết của Chủ đầu tư (CĐT) Kim Long với khát vọng kiến tạo biểu tượng sống mới cho người dân tại thành phố thứ 5 của tỉnh Quảng Ninh. Lần đầu tiên, Đông Triều xuất hiện một khu đô thị bán khép kín với chuỗi tiện ích và kiến trúc xây dựng mang phong cách từ đất nước mặt trời mọc.',
             'slug' => 'chu-dau-tu-kim-long-kien-tao-khu-do-thi-chuan-nhat-dau-tien-tai-dong-trieu',
@@ -227,7 +227,7 @@ class TinTucSeeder extends Seeder
 
         TinTuc::create([
             'tai_khoan_id' => 1,
-            'danh_muc_id' => 10,
+            'danh_muc_id' => 2,
             'tieu_de' => 'The Seahorse: Phú Mỹ Hưng Giữa Lòng Bình Phước',
             'mo_ta' => 'Sự xuất hiện của Khu dân cư trung tâm hành chính Bombo (The Seahorse Central Binh Phuoc) là lời hồi đáp cho khát vọng sống sang ngay tại tọa độ trung tâm hành chính khi kiến tạo nên một “Phú Mỹ Hưng giữa lòng Bình Phước”, nơi hứa hẹn sẽ trở thành niềm kiêu hãnh của tầng lớp thượng lưu vùng đất Bombo huyền thoại.',
             'slug' => 'the-seahorse-phu-my-hung-giua-long-binh-phuoc',

@@ -198,7 +198,7 @@ class ToaNhaSeeder extends Seeder
         ]);
 
         ToaNha::create([
-            'khu_vuc_id' => 8,
+            'khu_vuc_id' => 3,
             'ten' => 'Số 36/12 đường Hoàng Văn Thụ',
             'slug' => 'so-36-12-duong-hoang-van-thu',
             'image' => 'building/img',
@@ -209,7 +209,7 @@ class ToaNhaSeeder extends Seeder
         ]);
 
         ToaNha::create([
-            'khu_vuc_id' => 9,
+            'khu_vuc_id' => 6,
             'ten' => 'Số 28 Võ Văn Kiệt',
             'slug' => 'so-28-vo-van-kiet',
             'image' => 'building/img',
@@ -220,7 +220,7 @@ class ToaNhaSeeder extends Seeder
         ]);
 
         ToaNha::create([
-            'khu_vuc_id' => 10,
+            'khu_vuc_id' => 4,
             'ten' => 'Số 9 Hùng Vương',
             'slug' => 'so-9-hung-vuong',
             'image' => 'building/img',
@@ -231,7 +231,7 @@ class ToaNhaSeeder extends Seeder
         ]);
 
         ToaNha::create([
-            'khu_vuc_id' => 3,
+            'khu_vuc_id' => 5,
             'ten' => 'Số 40A Nguyễn Trãi',
             'slug' => 'so-40a-nguyen-trai',
             'image' => 'building/img',
