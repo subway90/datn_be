@@ -19,6 +19,10 @@ use App\Http\Controllers\LienHeDatPhongController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\YeuThichController;
 
+
+# Lấy theo id
+Route::get('phong/{id}', [PhongController::class, 'index']);
+
 # Callback thanh toán vnpay
 Route::get('pay/callback', [ThanhToanController::class, 'handleCallback']);
 
@@ -320,6 +324,9 @@ Route::middleware(['Admin'])->group(function () {
 
     Route::prefix('hoa-don')->group(function () {
 
+        # Lấy danh sách
+        Route::post('/', [HoaDonController::class, 'all']);
+
         # Thêm mới
         Route::post('/add', [HoaDonController::class, 'store']);
 
@@ -333,9 +340,6 @@ Route::middleware(['Admin'])->group(function () {
 
         # Lấy danh sách đã xóa
         Route::get('/list_delete', [PhongController::class, 'list_delete']);
-
-        # Lấy theo id
-        Route::get('/{id}', [PhongController::class, 'index']);
 
         # Xóa theo id
         Route::delete('/delete/{id}', [PhongController::class, 'delete']);
