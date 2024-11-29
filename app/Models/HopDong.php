@@ -22,9 +22,9 @@ class HopDong extends Model
     }
 
     // Quan hệ một-nhiều với thanh toán
-    public function thanhToan()
+    public function hoaDon()
     {
-        return $this->hasMany(ThanhToan::class, 'hop_dong_id');
+        return $this->hasMany(HoaDon::class, 'hop_dong_id');
     }
 
     public function phong()

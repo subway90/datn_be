@@ -13,6 +13,7 @@ class HoaDonSeeder extends Seeder
     public function run(): void
     {
         HoaDon::create([
+            'token' => uniqid(),
             'hop_dong_id' => 2,
             'tien_thue' => 4500000,
             'tien_dien' => 3500,
@@ -23,8 +24,8 @@ class HoaDonSeeder extends Seeder
             'so_luong_xe' => 1,
             'tien_dich_vu' => 150000,
             'so_luong_nguoi' => 1,
-            'noi_dung' => 'Thanh toán tiền thuê trọ tháng 1 | Tiền thuê + Tiền điện + Tiền xe máy + 150K Tiền dịch vụ',
-            'trang_thai' => 1,
+            'noi_dung' => 'Thanh toán tiền nhà tháng 11',
+            'trang_thai' => 0, //chưa thanh toán
         ]);
 
     }

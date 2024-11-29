@@ -12,6 +12,9 @@ class HoaDon extends Model
 
     // Khai báo tên bảng
     protected $table = 'hoa_don';
+    protected $primaryKey = 'token';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     // Khai báo các trường có thể gán hàng loạt
     protected $fillable = [
@@ -27,7 +30,7 @@ class HoaDon extends Model
         'so_luong_nguoi',
         'hinh_thuc',
         'code_uu_dai',
-        'ngay_thanh_toan',
+        'ma_uu_dai',
         'noi_dung',
         'trang_thai',
     ];
@@ -35,5 +38,10 @@ class HoaDon extends Model
     public function hopDong()
     {
         return $this->belongsTo(HopDong::class, 'hop_dong_id');
+    }
+
+    public function maUuDai()
+    {
+        return $this->belongsTo(MaUuDai::class, 'code_uu_dai');
     }
 }
