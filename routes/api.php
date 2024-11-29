@@ -58,7 +58,7 @@ Route::post('forgot/reset', [ResetPasswordController::class, 'reset']);
 Route::middleware(['CusTom'])->group(function () {
 
     # Tạo thanh toán VNPAY
-    Route::get('pay/{id_order}', [ThanhToanController::class, 'pay']);
+    Route::get('pay/{token}', [ThanhToanController::class, 'pay']);
 
 
     # Danh sách liên hệ thông qua token của người đó
