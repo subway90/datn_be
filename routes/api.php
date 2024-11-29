@@ -85,7 +85,7 @@ Route::middleware(['CusTom'])->group(function () {
 
     Route::prefix('hop-dong')->group(function () {
         # Hiển thị thông tin hợp đồng của người dùng
-        Route::get('/', [HopDongController::class, 'show']);
+        Route::get('/show', [HopDongController::class, 'show']);
     });
 
     # Bình luận tin tức
