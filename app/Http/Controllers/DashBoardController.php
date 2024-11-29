@@ -10,7 +10,7 @@ class DashBoardController extends Controller
 {
     public function total()
     {
-        $total_contract = HopDong::where('trang_thai',1)->count();
+        $total_contract = HopDong::count();
         $total_user = User::count();
         $total_contact = LienHeDatPhong::count();
         
