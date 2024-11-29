@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\HopDong;
 use App\Models\Phong;
+use App\Models\ToaNha;
 use App\Models\User;
 use Illuminate\Support\Str;
 class HopDongController extends Controller
@@ -15,13 +16,14 @@ class HopDongController extends Controller
     {
         $list = HopDong::orderBy('id','DESC')->get();
         $result = $list->map(function ($row) {
-            $room = Phong::withTrashed()->where('id',$row->phong_id)->get(['ten_phong','hinh_anh'])->first();
+            $room = Phong::withTrashed()->with('toaNha')->where('id',$row->phong_id)->get(['toa_nha_id','ten_phong','hinh_anh'])->first();
             $user = User::withTrashed()->where('id',$row->tai_khoan_id)->get(['name','avatar'])->first();
-            
+            $building = ToaNha::withTrashed()->where('id',$room->toa_nha_id)->get(['ten'])->first();
             return [
                 'id' => $row->id,
                 'id_room' => $row->phong_id,
                 'name_room' => $room->ten_phong,
+                'name_building' =>$building->ten,
                 'image_room' => Str::before($room->hinh_anh, ';'),
                 'id_user' => $row->tai_khoan_id,
                 'name_user' => $user->name,
