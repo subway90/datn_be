@@ -7,17 +7,25 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\HopDong;
 use App\Models\Phong;
-use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Support\Str;
 class HopDongController extends Controller
 {
     public function index()
     {
         $list = HopDong::orderBy('id','DESC')->get();
         $result = $list->map(function ($row) {
+            $room = Phong::where('id',$row->phong_id)->get(['ten_phong','hinh_anh'])->first();
+            $user = User::where('id',$row->tai_khoan_id)->get(['name','avatar'])->first();
+            
             return [
                 'id' => $row->id,
                 'id_room' => $row->phong_id,
+                'name_room' => $room->ten_phong,
+                'image_room' => Str::before($room->hinh_anh, ';'),
                 'id_user' => $row->tai_khoan_id,
+                'name_user' => $user->name,
+                'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
                 'date_start' => $row->ngay_bat_dau,
                 'date_end' => $row->ngay_ket_thuc,
                 'status' => $row->ngay_ket_thuc < $this->date_now ? 'Hết hạn' : 'Đang sử dụng',
