@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\HoaDon;
-use App\Models\HopDong;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
@@ -56,9 +55,9 @@ class HoaDonController extends Controller
             // if($this->date_now->diffInDays($get_contract->ngay_bat_dau) > 30)
         // }
 
-
         // Tạo hóa đơn mới
         $hoaDon = HoaDon::create([
+            'token' => uniqid(),
             'hop_dong_id' => $request->id_hop_dong,
             'tien_thue' => $request->tien_thue,
             'tien_dien' => $request->tien_dien,

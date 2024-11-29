@@ -14,10 +14,10 @@ class HoaDon extends Model
     protected $table = 'hoa_don';
     protected $primaryKey = 'token';
     public $incrementing = false;
-    protected $keyType = 'string';
 
     // Khai báo các trường có thể gán hàng loạt
     protected $fillable = [
+        'token',
         'hop_dong_id',
         'tien_thue',
         'tien_dien',
