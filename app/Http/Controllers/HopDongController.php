@@ -15,8 +15,8 @@ class HopDongController extends Controller
     {
         $list = HopDong::orderBy('id','DESC')->get();
         $result = $list->map(function ($row) {
-            $room = Phong::where('id',$row->phong_id)->get(['ten_phong','hinh_anh'])->first();
-            $user = User::where('id',$row->tai_khoan_id)->get(['name','avatar'])->first();
+            $room = Phong::withTrashed()->where('id',$row->phong_id)->get(['ten_phong','hinh_anh'])->first();
+            $user = User::withTrashed()->where('id',$row->tai_khoan_id)->get(['name','avatar'])->first();
             
             return [
                 'id' => $row->id,

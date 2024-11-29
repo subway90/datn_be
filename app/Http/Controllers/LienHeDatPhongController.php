@@ -68,8 +68,8 @@ class LienHeDatPhongController extends Controller
         }
         // Tùy chỉnh tên các key
         $data = $list->map(function ($item) {
-            $room = Phong::where('id',$item->phong_id)->get(['ten_phong','hinh_anh'])->first();
-            $user = User::where('id',$item->tai_khoan_id)->get(['name','avatar'])->first();
+            $room = Phong::withTrashed()->where('id',$item->phong_id)->get(['ten_phong','hinh_anh'])->first();
+            $user = User::withTrashed()->where('id',$item->tai_khoan_id)->get(['name','avatar'])->first();
             return [
                 'id' => $item->id,
                 'state' => $item->trang_thai,
