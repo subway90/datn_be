@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ToaNha;
+use App\Models\Phong;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -136,7 +137,7 @@ class ToaNhaController extends Controller
     public function listCheap()
     {
         // Truy vấn
-        $toaNhas = ToaNha::orderBy('gia_thue','ASC')->limit(12)
+        $toaNhas = ToaNha::orderBy('created_at','DESC')->limit(12)
             ->withCount(['phongTro as so_luong_phong' => function ($query) {
                 $query->where('trang_thai', 1); // Đếm số lượng phòng có trạng thái = 1
             }])
