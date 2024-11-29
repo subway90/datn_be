@@ -72,7 +72,7 @@ class LienHeDatPhongController extends Controller
             $user = User::withTrashed()->where('id',$item->tai_khoan_id)->get(['name','avatar'])->first();
             return [
                 'id' => $item->id,
-                'state' => $item->trang_thai,
+                'state' => $item->trang_thai ? 'Đã xử lí' : 'Chưa xử lí',
                 'id_room' => $item->phong_id,
                 'name_room' => $room->ten_phong,
                 'image_room' => Str::before($room->hinh_anh, ';'),
