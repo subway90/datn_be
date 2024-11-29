@@ -36,6 +36,29 @@ class HopDongController extends Controller
         return response()->json($result, 200);
     }
 
+    public function detail($id)
+    {
+        $row = HopDong::find($id);
+        if(!$row) return response()->json(['message'=>'Không tìm thấy hợp đồng'], 404);
+        $room = Phong::withTrashed()->with('toaNha')->where('id',$row->phong_id)->get(['toa_nha_id','ten_phong','hinh_anh'])->first();
+        $user = User::withTrashed()->where('id',$row->tai_khoan_id)->get(['name','avatar'])->first();
+        $building = ToaNha::withTrashed()->where('id',$room->toa_nha_id)->get(['ten'])->first();
+        $result = [
+            'id' => $row->id,
+            'id_room' => $row->phong_id,
+            'name_room' => $room->ten_phong,
+            'name_building' =>$building->ten,
+            'image_room' => Str::before($room->hinh_anh, ';'),
+            'id_user' => $row->tai_khoan_id,
+            'name_user' => $user->name,
+            'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
+            'date_start' => $row->ngay_bat_dau,
+            'date_end' => $row->ngay_ket_thuc,
+            'status' => $row->ngay_ket_thuc < $this->date_now ? 'Hết hạn' : 'Đang sử dụng',
+        ];
+        return response()->json($result, 200);
+    }
+
     public function list_delete()
     {
         $list = HopDong::onlyTrashed()->orderBy('deleted_at','DESC')->get();

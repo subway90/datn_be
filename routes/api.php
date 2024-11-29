@@ -140,6 +140,9 @@ Route::middleware(['Admin'])->group(function () {
         # Lấy danh sách
         Route::get('/all', [HopDongController::class, 'index']);
 
+        # Lấy theo id
+        Route::get('/{id}', [HopDongController::class, 'detail']);
+
         # Lấy danh sách đã xóa
         Route::get('/list_delete', [HopDongController::class, 'list_delete']);
 
