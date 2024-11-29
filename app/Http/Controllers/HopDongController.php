@@ -175,7 +175,6 @@ class HopDongController extends Controller
         if (!$hopDong) {
             return response()->json(['message' => 'Bạn chưa có hợp đồng nào.'], 404);
         }
-
         // Tạo mảng dữ liệu để trả về
         $data = [
             'id' => $hopDong->id,
@@ -197,15 +196,15 @@ class HopDongController extends Controller
                     'ngay_cap_nhat' => $order->updated_at->format('d').' tháng '.$order->updated_at->format('m').' năm '.$order->updated_at->format('Y').' lúc '.$order->updated_at->format('H').':'.$order->updated_at->format('i'),
                     'trang_thai' => $order->trang_thai ? 'Đã thanh toán' : 'Chưa thanh toán',
                     'hinh_thuc' => $order->hinh_thuc ? 'Thanh toán online' : 'Thanh toán tiền mặt',
-                    // 'tien_thue' => $order->tien_thue,
-                    // 'tien_dien' => $order->tien_dien,
-                    // 'so_ki_dien' => $order->so_ki_dien,
-                    // 'tien_nuoc' => $order->tien_nuoc,
-                    // 'so_khoi_nuoc' => $order->so_khoi_nuoc,
-                    // 'tien_xe' => $order->tien_xe,
-                    // 'so_luong_xe' => $order->so_luong_xe,
-                    // 'tien_dich_vu' => $order->tien_dich_vu,
-                    // 'so_luong_nguoi' => $order->so_luong_nguoi,
+                    'tien_thue' => $order->tien_thue,
+                    'tien_dien' => $order->tien_dien,
+                    'so_ki_dien' => $order->so_ki_dien,
+                    'tien_nuoc' => $order->tien_nuoc,
+                    'so_khoi_nuoc' => $order->so_khoi_nuoc,
+                    'tien_xe' => $order->tien_xe,
+                    'so_luong_xe' => $order->so_luong_xe,
+                    'tien_dich_vu' => $order->tien_dich_vu,
+                    'so_luong_nguoi' => $order->so_luong_nguoi,
                 ];
             }),
         ];
