@@ -91,11 +91,7 @@ class AuthController extends Controller
         ]);
 
         // Kiểm tra xem có lỗi xác thực không
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
 
         // Kiểm tra email có tồn tại không
         $user = User::withTrashed()->where('email', $request->email)->first();
