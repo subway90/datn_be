@@ -98,13 +98,10 @@ class AuthController extends Controller
         }
 
         // Kiểm tra email có tồn tại không
-        $user = User::where('email', $request->email)->first();
+        $user = User::withTrashed()->where('email', $request->email)->first();
 
-        if (!$user) {
-            return response()->json([
-                'message' => 'Email này chưa được đăng ký.'
-            ], 404);
-        }
+        if (!$user) return response()->json(['message' => 'Email này chưa được đăng ký.'], 404);
+        if ($user->deleted_at) return response()->json(['message' => 'Tài khoản này đã bị cấm. Liên hệ ADMIN để được hỗ trợ'], 404);
 
         // Kiểm tra thông tin đăng nhập
         if (!auth()->attempt($request->only('email', 'password'))) {
