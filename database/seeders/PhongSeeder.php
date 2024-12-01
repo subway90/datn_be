@@ -221,7 +221,7 @@ class PhongSeeder extends Seeder
         ]);
 
         Phong::create([
-            'toa_nha_id' => 6,
+            'toa_nha_id' => 4,
             'ten_phong' => 'Phòng 302',
             'hinh_anh' => 'room/img66.jpg;room/img67.jpg;room/img68.jpg;room/img69.jpg;room/img70.jpg',
             'dien_tich' => 40,
@@ -237,7 +237,7 @@ class PhongSeeder extends Seeder
         ]);
 
         Phong::create([
-            'toa_nha_id' => 7,
+            'toa_nha_id' => 3,
             'ten_phong' => 'Phòng 303',
             'hinh_anh' => 'room/img71.jpg;room/img72.jpg;room/img73.jpg;room/img74.jpg;room/img75.jpg',
             'dien_tich' => 22,
@@ -253,7 +253,7 @@ class PhongSeeder extends Seeder
         ]);
 
         Phong::create([
-            'toa_nha_id' => 8,
+            'toa_nha_id' => 2,
             'ten_phong' => 'Phòng 304',
             'hinh_anh' => 'room/img76.jpg;room/img77.jpg;room/img78.jpg;room/img79.jpg;room/img80.jpg',
             'dien_tich' => 36,
@@ -269,7 +269,7 @@ class PhongSeeder extends Seeder
         ]);
 
         Phong::create([
-            'toa_nha_id' => 8,
+            'toa_nha_id' => 1,
             'ten_phong' => 'Phòng 305',
             'hinh_anh' => 'room/img81.jpg;room/img82.jpg;room/img83.jpg;room/img84.jpg;room/img85.jpg',
             'dien_tich' => 38,
@@ -285,7 +285,7 @@ class PhongSeeder extends Seeder
         ]);
 
         Phong::create([
-            'toa_nha_id' => 8,
+            'toa_nha_id' => 5,
             'ten_phong' => 'Phòng 306',
             'hinh_anh' => 'room/img86.jpg;room/img87.jpg;room/img88.jpg;room/img89.jpg;room/img90.jpg',
             'dien_tich' => 30,
@@ -301,7 +301,7 @@ class PhongSeeder extends Seeder
         ]);
 
         Phong::create([
-            'toa_nha_id' => 8,
+            'toa_nha_id' => 4,
             'ten_phong' => 'Phòng 307',
             'hinh_anh' => 'room/img91.jpg;room/img92.jpg;room/img93.jpg;room/img94.jpg;room/img95.jpg',
             'dien_tich' => 42,
@@ -317,7 +317,7 @@ class PhongSeeder extends Seeder
         ]);
 
         Phong::create([
-            'toa_nha_id' => 8,
+            'toa_nha_id' => 3,
             'ten_phong' => 'Phòng 308',
             'hinh_anh' => 'room/img96.jpg;room/img97.jpg;room/img98.jpg;room/img99.jpg;room/img100.jpg',
             'dien_tich' => 34,
