@@ -10,30 +10,6 @@ use App\Models\HoaDon;
 
 class ThanhToanController extends Controller
 {
-    public function getThanhToan($id_hop_dong)
-    {
-        $user = Auth::user();
-
-        $thanhToans = ThanhToan::with('hopDong')
-            ->where('hop_dong_id', $id_hop_dong)
-            ->get();
-
-        if ($thanhToans->isEmpty()) {
-            return response()->json([
-                'message' => 'Không có thanh toán nào tồn tại cho hợp đồng này.'
-            ], 404);
-        }
-
-        $hopDong = $thanhToans->first()->hopDong;
-
-        if ($hopDong->tai_khoan_id !== $user->id) {
-            return response()->json([
-                'message' => 'Bạn không có quyền xem thông tin thanh toán này.'
-            ], 403);
-        }
-
-        return response()->json($thanhToans);
-    }
 
     public function pay($token)
     {   
@@ -106,7 +82,6 @@ class ThanhToanController extends Controller
                 'noi_dung' => $request->input('vnp_OrderInfo'),
                 'trang_thai' => ($request->input('vnp_ResponseCode') === '00') ? 1 : 0,
             ]);
-        
             // return response()->json(['message' => 'Thanh toán thành công'], 200);
             return redirect('pay_result');
         } else {

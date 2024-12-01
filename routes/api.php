@@ -97,8 +97,6 @@ Route::middleware(['CusTom'])->group(function () {
     Route::put('blog/update_comment', [BinhLuanTinTucController::class, 'updateComment']);
 
     #
-    Route::get('thanh-toan/{id_hop_dong}', [ThanhToanController::class, 'getThanhToan']);
-    #
     Route::post('updateAvatar', [AuthController::class, 'updateAvatar']);
 
     # Thay đổi mật khẩu
