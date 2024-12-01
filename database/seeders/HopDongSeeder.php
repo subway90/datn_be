@@ -19,6 +19,7 @@ class HopDongSeeder extends Seeder
         HopDong::create([
             'phong_id' => 1,
             'tai_khoan_id' => 2,
+            'file_hop_dong' => 'contract/hop_dong_01.pdf',
             'ngay_bat_dau' => '2024-01-01',
             'ngay_ket_thuc' => '2024-12-31',
         ]);

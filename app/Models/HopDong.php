@@ -13,6 +13,7 @@ class HopDong extends Model
     protected $fillable = [
         'phong_id',
         'tai_khoan_id',
+        'file_hop_dong',
         'ngay_bat_dau',
         'ngay_ket_thuc',
     ];
