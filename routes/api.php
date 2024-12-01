@@ -150,7 +150,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::post('/add', [HopDongController::class, 'create']);
 
         # Sửa hợp đồng
-        Route::put('/edit/{id}', [HopDongController::class, 'edit']);
+        Route::post('/edit/{id}', [HopDongController::class, 'edit']);
 
         # Xóa hợp đồng
         Route::delete('/delete/{id}', [HopDongController::class, 'delete']);

@@ -136,10 +136,15 @@ class HopDongController extends Controller
     
     public function edit(Request $request, $id)
     {
+        // Tìm hợp đồng cần cập nhật
+        $hopDong = HopDong::find($id);
+        if(!$hopDong) return response()->json(['message' => 'Hợp đồng không tồn tại'], 404);
+
         // Kiểm tra và xác thực dữ liệu đầu vào
         $validator = Validator::make($request->all(), [
             'id_room' => 'required|exists:phong,id',
             'id_user' => 'required|exists:users,id',
+            'file_hop_dong' => 'nullable|mimes:pdf|max:4096',
             'date_start' => 'required|date',
             'date_end' => 'required|date|after:date_start',
         ], [
@@ -147,6 +152,8 @@ class HopDongController extends Controller
             'id_room.exists' => 'ID Phòng không tồn tại',
             'id_user.required' => 'Chưa nhập ID User',
             'id_user.exists' => 'ID User không tồn tại',
+            'file_hop_dong.mimes' => 'File hợp đồng phải là file PDF',
+            'file_hop_dong.max' => 'Kích thước file hợp đồng không vượt quá 4MB',
             'date_start.required' => 'Chưa nhập ngày bắt đầu.',
             'date_start.date' => 'Chưa nhập đúng định dạng YYYY-MM-DD',
             'date_end.required' => 'Chưa nhập ngày kết thúc.',
@@ -156,9 +163,7 @@ class HopDongController extends Controller
 
         if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
 
-        // Tìm hợp đồng cần cập nhật
-        $hopDong = HopDong::findOrFail($id);
-
+        
         // Cập nhật các thông tin của hợp đồng
         $hopDong->phong_id = $request->id_room;
         $hopDong->tai_khoan_id = $request->id_user;
