@@ -107,7 +107,8 @@ class ThanhToanController extends Controller
                 'trang_thai' => ($request->input('vnp_ResponseCode') === '00') ? 1 : 0,
             ]);
         
-            return response()->json(['message' => 'Thanh toán thành công'], 200);
+            // return response()->json(['message' => 'Thanh toán thành công'], 200);
+            return redirect('pay_result');
         } else {
             return response()->json(['message' => 'Chữ ký không hợp lệ'], 400);
         }
