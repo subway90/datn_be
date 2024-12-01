@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 use App\Models\HoaDon;
+use App\Models\Phong;
 use App\Models\User;
 use App\Models\HopDong;
 use App\Models\LienHeDatPhong;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class DashBoardController extends Controller
 {
@@ -57,6 +59,45 @@ class DashBoardController extends Controller
             'nam' => $nam,
             'tong_doanh_thu' => $doanhThu ? $doanhThu->tong_doanh_thu : 0, // Trả về tổng doanh thu, nếu không có kết quả thì trả về 0
         ]);
+    }
+    public function lienhe()
+    {
+        // Lấy danh sách liên hệ chưa được xử lý (trang_thai = 0), giới hạn 5 bản ghi và sắp xếp theo created_at DESC
+        $list = LienHeDatPhong::where('trang_thai', 0) // Lọc theo trạng thái chưa xử lý
+            ->orderBy('created_at', 'ASC') // Sắp xếp theo created_at tăng dần, tức là cũ nhất để lên đầu
+            ->limit(5) // Giới hạn 5 bản ghi
+            ->get(); // Lấy danh sách
+    
+        if ($list->isEmpty()) {
+            return response()->json(['message' => 'Không có liên hệ nào chưa được xử lý.'], 404);
+        }
+    
+        // Tùy chỉnh tên các key
+        $data = $list->map(function ($item) {
+            // Lấy thông tin phòng và người dùng
+            $room = Phong::withTrashed()->where('id', $item->phong_id)->get(['ten_phong', 'hinh_anh'])->first();
+            $user = User::withTrashed()->where('id', $item->tai_khoan_id)->get(['name', 'avatar'])->first();
+    
+            return [
+                'id' => $item->id,
+                'state' => $item->trang_thai ? 'Đã xử lí' : 'Chưa xử lí',
+                'id_room' => $item->phong_id,
+                'name_room' => $room->ten_phong,
+                'image_room' => Str::before($room->hinh_anh, ';'),
+                'id_user' => $item->tai_khoan_id,
+                'name_user' => $user->name,
+                'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
+                'name' => $item->ho_ten,
+                'phone' => $item->so_dien_thoai,
+                'content' => $item->noi_dung ?? '(trống)',
+                'created_at' => $item->created_at->format('d').' Tháng '.$item->created_at->format('m').' lúc '.$item->created_at->format('H').':'.$item->created_at->format('i'),
+            ];
+        });
+    
+        // Trả về danh sách liên hệ chưa được xử lý
+        return response()->json([
+            'list_contact_room' => $data,
+        ], 200);
     }
     
 }

@@ -192,6 +192,9 @@ Route::middleware(['Admin'])->group(function () {
         
         # Thống kê doanh thu theo tháng
         Route::get('/doanh_thu', [DashBoardController::class, 'thongke']);
+
+        # Lấy danh sách liên hệ chưa được sữ lý, limit là 5
+        Route::get('/lien_he', [DashBoardController::class, 'lienhe']);
     });
 
 
