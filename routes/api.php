@@ -186,6 +186,10 @@ Route::middleware(['Admin'])->group(function () {
 
         # Thống kê tổng
         Route::get('/total', [DashBoardController::class, 'total']);
+
+        
+        # Thống kê doanh thu theo tháng
+        Route::get('/doanh_thu', [DashBoardController::class, 'thongke']);
     });
 
 
