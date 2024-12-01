@@ -10,6 +10,8 @@ use App\Models\Phong;
 use App\Models\ToaNha;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+
 class HopDongController extends Controller
 {
     public function index()
@@ -163,10 +165,23 @@ class HopDongController extends Controller
 
         if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
 
+        //
+        $old_file_hop_dong = $hopDong->file_hop_dong;
+
+        // xử lí thay đổi file nếu có
+        if ($request->hasFile('file_hop_dong')) {
+            $file_hop_dong = $request->file('file_hop_dong');
+            // Xóa file cũ nếu có
+            if($old_file_hop_dong) Storage::disk('public')->delete($hopDong->file_hop_dong);
+            // Mã hóa và thêm file mới vào storage
+            $filename = uniqid() . '.' . $file_hop_dong->getClientOriginalExtension();
+            $path_file = $file_hop_dong->storeAs('contract', $filename, 'public');
+        }else $path_file = $old_file_hop_dong;
         
         // Cập nhật các thông tin của hợp đồng
         $hopDong->phong_id = $request->id_room;
         $hopDong->tai_khoan_id = $request->id_user;
+        $hopDong->file_hop_dong = $path_file;
         $hopDong->ngay_bat_dau = $request->date_start;
         $hopDong->ngay_ket_thuc = $request->date_end;
 
