@@ -27,37 +27,38 @@ class DashBoardController extends Controller
     }
     public function thongke(Request $request)
     {
-        // Lấy tham số từ request, nếu không có thì mặc định là tháng và năm hiện tại
-        $thang = $request->input('thang'); // Tháng (tuỳ chọn)
+        // Lấy tham số từ request, nếu không có thì mặc định là năm hiện tại
         $nam = $request->input('nam', Carbon::now()->year); // Năm (mặc định là năm hiện tại)
     
-        // Xây dựng query cơ bản
-        $query = HoaDon::selectRaw('
-                SUM(tien_thue 
-                    + (tien_dien * so_ki_dien) 
-                    + (tien_nuoc * so_khoi_nuoc) 
-                    + (tien_xe * so_luong_xe) 
-                    + (tien_dich_vu * so_luong_nguoi)
-                ) as tong_doanh_thu 
-            ')
-            ->where('trang_thai', 1); // Chỉ lấy những hóa đơn có trạng thái = 1
-        
-        // Nếu người dùng chọn tháng
-        if ($thang) {
-            $query->whereMonth('created_at', $thang); // Lọc theo tháng
+        // Khởi tạo mảng kết quả
+        $doanhThuThang = [];
+    
+        // Duyệt qua các tháng từ 1 đến 12
+        for ($thang = 1; $thang <= 12; $thang++) {
+            // Xây dựng query cơ bản
+            $query = HoaDon::selectRaw('
+                    SUM(tien_thue 
+                        + (tien_dien * so_ki_dien) 
+                        + (tien_nuoc * so_khoi_nuoc) 
+                        + (tien_xe * so_luong_xe) 
+                        + (tien_dich_vu * so_luong_nguoi)
+                    ) as tong_doanh_thu 
+                ')
+                ->where('trang_thai', 1) // Chỉ lấy những hóa đơn có trạng thái = 1
+                ->whereMonth('created_at', $thang) // Lọc theo tháng
+                ->whereYear('created_at', $nam); // Lọc theo năm
+    
+            // Lấy kết quả
+            $doanhThu = $query->first();
+    
+            // Nếu không có doanh thu thì trả về 0, nếu có thì lấy giá trị
+            $doanhThuThang[$thang] = $doanhThu->tong_doanh_thu ?? 0;
         }
-    
-        // Lọc theo năm
-        $query->whereYear('created_at', $nam); // Lọc theo năm
-    
-        // Lấy kết quả
-        $doanhThu = $query->first();
     
         // Trả về kết quả
         return response()->json([
-            'thang' => $thang ?? null,  // Nếu không có tháng thì trả về null
             'nam' => $nam,
-            'tong_doanh_thu' => $doanhThu ? $doanhThu->tong_doanh_thu : 0, // Trả về tổng doanh thu, nếu không có kết quả thì trả về 0
+            'doanh_thu_theo_thang' => $doanhThuThang, // Mảng doanh thu theo từng tháng
         ]);
     }
     public function lienhe()
@@ -99,5 +100,6 @@ class DashBoardController extends Controller
             'list_contact_room' => $data,
         ], 200);
     }
+    
     
 }
