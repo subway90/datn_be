@@ -84,6 +84,7 @@ class HopDongController extends Controller
         $validator = Validator::make($request->all(), [
             'id_room' => 'required|exists:phong,id',
             'id_user' => 'required|exists:users,id',
+            'file_hop_dong' => 'nullable|mimes:pdf|max:4096',
             'date_start' => 'required|date',
             'date_end' => 'required|date|after:date_start',
         ], [
@@ -91,6 +92,8 @@ class HopDongController extends Controller
             'id_room.exists' => 'ID Phòng không tồn tại',
             'id_user.required' => 'Chưa nhập ID User',
             'id_user.exists' => 'ID User không tồn tại',
+            'file_hop_dong.mimes' => 'File hợp đồng phải là file PDF',
+            'file_hop_dong.max' => 'Kích thước file hợp đồng không vượt quá 4MB',
             'date_start.required' => 'Chưa nhập ngày bắt đầu.',
             'date_end.required' => 'Chưa nhập ngày kết thúc.',
             'date_end.after' => 'Ngày kết thúc phải sau ngày bắt đầu.',
@@ -109,17 +112,25 @@ class HopDongController extends Controller
             };
         }
 
-        $hopDong = new HopDong();
 
-        $hopDong->phong_id = $request->id_room;
-        $hopDong->tai_khoan_id = $request->id_user;
-        $hopDong->ngay_bat_dau = $request->date_start;
-        $hopDong->ngay_ket_thuc = $request->date_end;
+        if ($request->hasFile('file_hop_dong')) {
+            $file_hop_dong = $request->file('file_hop_dong');
+                // Mã hóa tên file
+                $filename = uniqid() . '.' . $file_hop_dong->getClientOriginalExtension();
+                $path_file = $file_hop_dong->storeAs('contract', $filename, 'public');
+        }
 
-        $hopDong->save();
+        $result = HopDong::create([
+            'phong_id' => $request->id_room,
+            'tai_khoan_id' => $request->id_user,
+            'file_hop_dong' => $path_file,
+            'ngay_bat_dau' => $request->date_start,
+            'ngay_ket_thuc' => $request->date_end,
+        ]);
 
         return response()->json([
             'message' => 'Hợp đồng đã được tạo thành công!',
+            'debug' => $result,
         ], 201);
     }
     
