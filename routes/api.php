@@ -22,6 +22,8 @@ use App\Http\Controllers\YeuThichController;
 
 
 
+# Danh sách banner
+Route::get('banner/', [BannerController::class, 'all']);
 
 # Callback thanh toán vnpay
 Route::get('pay/callback', [ThanhToanController::class, 'handleCallback']);
@@ -364,9 +366,6 @@ Route::middleware(['Admin'])->group(function () {
 
 
     Route::prefix('banner')->group(function () {
-
-        # Thống kê tổng
-        Route::get('/', [BannerController::class, 'all']);
 
         # Thống kê tổng
         Route::get('/list_delete', [BannerController::class, 'list_delete']);
