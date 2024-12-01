@@ -13,13 +13,13 @@
 </head>
 
 <body class="container-fluid">
-    <div class="container mt-3">
+    <div class="container mt-5">
         <div class="text-center">
             <div class="h3 text-warning">Kết Quả Thanh Toán</div>
-         <button class="btn btn-sm btn-outline-secondary" onclick="window.location.href=`https://sghouses.vercel.app`">Quay về trang chủ</button>
-         <div class="mt-3" id="result"></div>
+            <button class="btn btn-sm btn-outline-secondary" onclick="window.location.href=`https://sghouses.vercel.app`">Quay về trang chủ</button>
+            <div class="mt-3" id="result"></div>
         </div>
-        <table class="table" id="details" style="display:none;">
+        {{-- <table class="table" id="details" style="display:none;">
             <thead>
                 <tr>
                     <th>Tham Số</th>
@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody id="details-body"></tbody>
-        </table>
+        </table> --}}
     </div>
 
     <script>
@@ -35,10 +35,27 @@
         const params = new URLSearchParams(window.location.search);
         const txnRef = params.get('vnp_TxnRef');
         const responseCode = params.get('vnp_ResponseCode');
+        const amount = params.get('vnp_Amount');
+        const payDate = params.get('vnp_PayDate');
         const resultDiv = document.getElementById('result');
 
+        // Chuyển đổi định dạng thời gian
+        function formatDate(dateString) {
+            const year = dateString.substring(0, 4);
+            const month = dateString.substring(4, 6);
+            const day = dateString.substring(6, 8);
+            const hour = dateString.substring(8, 10);
+            const minute = dateString.substring(10, 12);
+            const second = dateString.substring(12, 14);
+            return `${day}-${month}-${year} lúc ${hour}:${minute}:${second}`;
+        }
+
         if (responseCode === '00') {
-            resultDiv.innerHTML = `<p class="text-success">Thanh toán thành công cho đơn hàng: ${txnRef}</p>`;
+            resultDiv.innerHTML = `
+                <p class="text-success">Thanh toán thành công cho đơn hàng: ${txnRef}</p>
+                <p>Số tiền giao dịch: ${amount/100 } vnđ</p>
+                <p>Thời gian thanh toán: ${formatDate(payDate)}</p>
+            `;
         } else {
             resultDiv.innerHTML = `<p class="text-danger">Thanh toán thất bại. Mã phản hồi: ${responseCode}</p>`;
         }
