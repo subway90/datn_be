@@ -159,7 +159,7 @@ class TinTucSeeder extends Seeder
             'tieu_de' => 'Khám Phá Diện Mạo Của Trung Tâm Thương Mại Hanoi Centre: Điểm Đến “Trung Tâm” Mới Của Hà Nội',
             'mo_ta' => 'Tiếp nối thành công của các trung tâm thương mại Saigon Centre và Estella Place tại TP.HCM, Keppel đã chính thức gia nhập "cuộc đua" bất động sản thương mại tại Hà Nội với việc thuê toàn bộ khu trung tâm thương mại Hanoi Centre tại quận Ba Đình để quản lý, vận hành và khai thác.',
             'slug' => 'kham-pha-dien-mao-cua-trung-tam-thuong-mai-hanoi-centre-diem-den-trung-tam-moi-cua-ha-noi',
-            'image' => 'blog/image10.jpg, blog/image11.jpg',
+            'image' => 'blog/image10.jpg',
             'noi_dung' => '
             Hanoi Centre tọa lạc tại 175 Nguyễn Thái Học, quận Ba Đình, Hà Nội – một khu vực đắc địa giữa lòng nội đô. Vị trí chiến lược của dự án không chỉ gần Quảng trường Ba Đình mà còn gần các điểm du lịch nổi tiếng như Văn Miếu Quốc Tử Giám và Hồ Tây.
 
@@ -189,7 +189,7 @@ class TinTucSeeder extends Seeder
             'tieu_de' => 'Phân Khúc Bất Động Sản Nào Đang Thăng Hoa Nhờ Nguồn Vốn FDI?',
             'mo_ta' => 'Nguồn vốn FDI đang đóng góp một phần không nhỏ vào sự khởi sắc của thị trường bất động sản. Nhiều phân khúc bất động sản đã được hưởng lợi lớn cùng sự tăng trưởng của nguồn vốn này.',
             'slug' => 'phan-khuc-bat-dong-san-nao-dang-thang-hoa-nho-nguon-von-fdi-cd-hn',
-            'image' => 'blog/image12.jpg, blog/image13.jpg',
+            'image' => 'blog/image12.jpg',
             'noi_dung' => '
             Báo cáo mới nhất của Tổng cục Thống kê đưa ra những thông tin đáng chú ý về nguồn vốn FDI. Theo đó, tính đến ngày 31/8, tổng vốn đầu tư trực tiếp nước ngoài (FDI) đăng ký vào Việt Nam đạt 20,52 tỉ USD. Con số này tăng hơn 8% so với cùng kỳ năm trước. Đặc biệt, lĩnh vực kinh doanh bất động sản chiếm gần 20% tổng vốn đăng ký cấp mới, đạt 2,4 tỉ USD, gấp 5,1 lần cùng kỳ. Nếu tính cả vốn đăng ký mới và vốn đăng ký điều chỉnh, vốn FDI đăng ký vào hoạt động kinh doanh bất động sản đạt 2,55 tỉ USD, gấp 3,7 lần cùng kỳ và chiếm gần 14,4% tổng vốn đăng ký cấp mới và tăng thêm.
 
@@ -207,7 +207,7 @@ class TinTucSeeder extends Seeder
             'tieu_de' => 'Chủ Đầu Tư Kim Long Kiến Tạo Khu Đô Thị Chuẩn Nhật Đầu Tiên Tại Đông Triều',
             'mo_ta' => 'Fujisan Đông Triều là dự án tâm huyết của Chủ đầu tư (CĐT) Kim Long với khát vọng kiến tạo biểu tượng sống mới cho người dân tại thành phố thứ 5 của tỉnh Quảng Ninh. Lần đầu tiên, Đông Triều xuất hiện một khu đô thị bán khép kín với chuỗi tiện ích và kiến trúc xây dựng mang phong cách từ đất nước mặt trời mọc.',
             'slug' => 'chu-dau-tu-kim-long-kien-tao-khu-do-thi-chuan-nhat-dau-tien-tai-dong-trieu',
-            'image' => 'blog/image14.jpg, blog/image15.jpg',
+            'image' => 'blog/image14.jpg',
             'noi_dung' => '
             Được biết đến là một trong những nhà thầu xây dựng uy tín tại Đông Triều, Công ty cổ phần Kim Long chính là đơn vị đã thực hiện có hiệu quả nhiều dự án hạ tầng kỹ thuật, công trình giao thông từ vốn ngân sách địa phương. Một số dự án cải tạo chỉnh trang đô thị nổi bật bao gồm: Hạ tầng kỹ thuật đất khu dân cư khu Yên Lâm 3, phường Đức Chính; Đường nối ngã ba đường tránh Hưng Đạo đến khu đô thị Hồng Phong; Hạ tầng kỹ thuật đất dân cư tại khu Vĩnh Hòa, phường Mạo Khê (khu C)… Không chỉ ghi dấu ấn bởi chất lượng xây dựng, Kim Long còn được đánh giá là một trong những CĐT luôn đặt yếu tố pháp lý dự án lên hàng đầu.
 
@@ -231,7 +231,7 @@ class TinTucSeeder extends Seeder
             'tieu_de' => 'The Seahorse: Phú Mỹ Hưng Giữa Lòng Bình Phước',
             'mo_ta' => 'Sự xuất hiện của Khu dân cư trung tâm hành chính Bombo (The Seahorse Central Binh Phuoc) là lời hồi đáp cho khát vọng sống sang ngay tại tọa độ trung tâm hành chính khi kiến tạo nên một “Phú Mỹ Hưng giữa lòng Bình Phước”, nơi hứa hẹn sẽ trở thành niềm kiêu hãnh của tầng lớp thượng lưu vùng đất Bombo huyền thoại.',
             'slug' => 'the-seahorse-phu-my-hung-giua-long-binh-phuoc',
-            'image' => 'blog/image16.jpg, blog/image17.jpg',
+            'image' => 'blog/image16.jpg',
             'noi_dung' => '
             Phú Mỹ Hưng – nơi kể ra huyền thoại khi biến một vùng đất thành đại đô thị đáng sống, cư dân nơi đây không chỉ được hòa mình vào nhịp điệu phồn hoa đô thị, hơn hết còn là giá trị định danh, niềm tự hào cho cộng đồng cư dân.
 
