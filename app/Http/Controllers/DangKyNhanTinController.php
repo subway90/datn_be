@@ -58,7 +58,8 @@ class DangKyNhanTinController extends Controller
         # Kiểm tra token
         $check = DangKyNhanTin::where('token_verify',$token)->where('trang_thai','0')->first();
 
-        if(!$check) return response()->json(['message'=>'Token không tồn tại'],404);
+        # Trả về 404
+        if(!$check) return view('404');
 
         # Thay đổi trạng thái
         $check->update([
