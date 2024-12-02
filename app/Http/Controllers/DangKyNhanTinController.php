@@ -47,7 +47,7 @@ class DangKyNhanTinController extends Controller
 
         
 
-        return response()->json(['message' => 'Đăng ký thành công, vui lòng kiểm tra email để xác nhận !','debug'=>ENV('DOMAIN').'/api/verify-email-register/'.$token_verify], 201);
+        return response()->json(['message' => 'Đăng ký thành công, vui lòng kiểm tra email để xác nhận !'], 201);
     }
 
     public function verify($token) {
