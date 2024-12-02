@@ -61,7 +61,9 @@ class KhuVucController extends Controller
     public function all()
     {
         // Lấy tất cả khu vực
-        $list = KhuVuc::orderBy('created_at','DESC')->get();
+        $list = KhuVuc::withCount('toaNha')
+            ->orderBy('created_at','DESC')
+            ->get();
     
         // Kiểm tra nếu không có dữ liệu
         if ($list->isEmpty()) {
@@ -70,11 +72,19 @@ class KhuVucController extends Controller
 
         //
         $result = $list->map(function ($rows) {
+            # Tính tổng số phòng
+            # Tạo hàm callback để cộng dồn những phòng lại
+            $count_room = $rows->toaNha->sum(
+                function ($building) {
+                    return $building->phongTro->count();
+                });
             return [
                 'id' => $rows->id,
                 'slug' => $rows->slug,
                 'name' => $rows->ten,
                 'image' => $rows->image,
+                'count_building' => $rows->toa_nha_count,
+                'count_room' => $count_room,
                 'hot' => $rows->noi_bat,
                 'created_at' => $rows->created_at,
                 'updated_at' => $rows->updated_at,
