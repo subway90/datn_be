@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('email')->unique();
             $table->string('token_verify')->unique();
+            $table->boolean('trang_thai')->default(0); //0: chưa xác thực, 1: đã xác thực
             $table->softDeletes();
             $table->timestamps();
         });
