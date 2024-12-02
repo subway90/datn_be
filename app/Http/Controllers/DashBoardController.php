@@ -99,5 +99,34 @@ class DashBoardController extends Controller
             'list_contact_room' => $data,
         ], 200);
     }
+    public function trehan(Request $request){
     
+    // Ngày mồng 2 đầu tháng (0h00 ngày 2)
+    $ngay2 = now()->startOfMonth()->addDay()->addDay();
+
+    // Query danh sách hóa đơn trễ hạn
+    $hoaDonTreHan = HoaDon::where('trang_thai', 0) // Chỉ lấy hóa đơn chưa thanh toán (trang_thai = 0)
+        ->whereRaw("UNIX_TIMESTAMP(created_at) + 86400 < UNIX_TIMESTAMP('$ngay2')") // Hóa đơn quá hạn
+        ->get();
+
+    // Xử lý dữ liệu trả về
+    $data = $hoaDonTreHan->map(function ($hoaDon) {
+        return [
+            'hop_dong_id' => $hoaDon->hop_dong_id,
+            'token' => $hoaDon->token,
+            'total' => $hoaDon->tien_thue 
+                + ($hoaDon->tien_dien * $hoaDon->so_ki_dien) 
+                + ($hoaDon->tien_nuoc * $hoaDon->so_khoi_nuoc) 
+                + ($hoaDon->tien_xe * $hoaDon->so_luong_xe) 
+                + ($hoaDon->tien_dich_vu * $hoaDon->so_luong_nguoi),
+            'created_at' => $hoaDon->created_at->toDateTimeString(),
+        ];
+    });
+
+    // Trả về kết quả
+    return response()->json([
+        'message' => 'Danh sách hóa đơn trễ hạn qua ngày mồng 2.',
+        'hoa_don_tre_han' => $data,
+    ], 200);
+    }
 }

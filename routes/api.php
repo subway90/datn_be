@@ -193,6 +193,11 @@ Route::middleware(['Admin'])->group(function () {
 
         # Lấy danh sách liên hệ chưa được sữ lý, limit là 5
         Route::get('/lien_he', [DashBoardController::class, 'lienhe']);
+        
+        # Lấy danh sách trễ hạn, mặc định là qua 0h00 ngày 1 hằng tháng
+        Route::get('/tre_han', [DashBoardController::class, 'trehan']);
+        
+    
     });
 
 
