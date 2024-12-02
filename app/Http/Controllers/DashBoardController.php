@@ -107,12 +107,17 @@ class DashBoardController extends Controller
     // Query danh sách hóa đơn trễ hạn
     $hoaDonTreHan = HoaDon::where('trang_thai', 0) // Chỉ lấy hóa đơn chưa thanh toán (trang_thai = 0)
         ->whereRaw("UNIX_TIMESTAMP(created_at) + 86400 < UNIX_TIMESTAMP('$ngay2')") // Hóa đơn quá hạn
+        ->with(['hopDong.user'])
         ->get();
 
     // Xử lý dữ liệu trả về
     $data = $hoaDonTreHan->map(function ($hoaDon) {
         return [
             'hop_dong_id' => $hoaDon->hop_dong_id,
+            'id_user' =>$hoaDon->hopDong->user->id,
+            'email_user' =>$hoaDon->hopDong->user->email,
+            'name_user' =>$hoaDon->hopDong->user->name,
+            'avatar_user' =>$hoaDon->hopDong->user->avatar ?? 'avatar/user_default.png.png',
             'token' => $hoaDon->token,
             'total' => $hoaDon->tien_thue 
                 + ($hoaDon->tien_dien * $hoaDon->so_ki_dien) 
