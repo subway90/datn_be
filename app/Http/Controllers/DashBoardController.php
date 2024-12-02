@@ -130,7 +130,6 @@ class DashBoardController extends Controller
 
     // Trả về kết quả
     return response()->json([
-        'message' => 'Danh sách hóa đơn trễ hạn qua ngày mồng 2.',
         'hoa_don_tre_han' => $data,
     ], 200);
     }
