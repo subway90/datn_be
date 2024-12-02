@@ -21,6 +21,8 @@ use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\YeuThichController;
 
 
+# Đăng kí email nhận tin
+Route::post('/dang-ky-nhan-tin', [DangKyNhanTinController::class, 'register']);
 
 # Xác thực email
 Route::get('/verify-email-register/{token}',[DangKyNhanTinController::class, 'verify']);

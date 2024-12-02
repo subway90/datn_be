@@ -50,6 +50,36 @@ class DangKyNhanTinController extends Controller
         return response()->json(['message' => 'Đăng ký thành công, vui lòng kiểm tra email để xác nhận !','debug'=>ENV('DOMAIN').'/api/verify-email-register/'.$token_verify], 201);
     }
 
+    public function verify($token) {
+
+        # Trả 400
+        if(!$token) return response()->json(['message'=>'Bad request'],400);
+
+        # Kiểm tra token
+        $check = DangKyNhanTin::where('token_verify',$token)->where('trang_thai','0')->first();
+
+        if(!$check) return response()->json(['message'=>'Token không tồn tại'],404);
+
+        # Thay đổi trạng thái
+        $check->update([
+                'trang_thai' => 1
+            ]);
+
+        # Gửi mail thông báo
+        try{
+            Mail::send('emails.success_email_register', [], function ($message) use ($check) {
+                $message->to($check->email)
+                        ->subject('Xác thực nhận tin tại SGHOUSES thành công');
+            });
+        }catch(\Exception $e)
+        {   
+            return response()->json(['message' => 'Lỗi hệ thống gửi Mail, vui lòng thử lại sau'], 500);
+        }
+
+        # Trả giao diện thông báo
+        return view('notify.success_email_register');
+    }
+
     //! Admin quản lí
     public function index()
     {
