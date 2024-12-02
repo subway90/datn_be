@@ -12,5 +12,6 @@ class DangKyNhanTin extends Model
 
     protected $fillable = [
         'email',
+        'token_verify',
     ];
 }

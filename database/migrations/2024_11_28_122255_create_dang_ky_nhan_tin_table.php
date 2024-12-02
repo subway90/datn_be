@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('dang_ky_nhan_tin', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
+            $table->string('token_verify')->unique();
             $table->softDeletes();
             $table->timestamps();
         });
