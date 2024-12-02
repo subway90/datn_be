@@ -22,6 +22,9 @@ use App\Http\Controllers\YeuThichController;
 
 
 
+# Xác thực email
+Route::get('/verify-email-register/{token}',[DangKyNhanTinController::class, 'verify']);
+
 # Danh sách banner
 Route::get('banner/', [BannerController::class, 'all']);
 
@@ -108,7 +111,6 @@ Route::middleware(['CusTom'])->group(function () {
         Route::post('add', [YeuThichController::class, 'create']);
     });
 
-    Route::post('/dang-ky-nhan-tin', [DangKyNhanTinController::class, 'register']);
 });
 
 # Những API cần đăng nhập và là ADMIN

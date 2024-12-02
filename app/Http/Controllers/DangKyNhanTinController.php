@@ -7,6 +7,7 @@ use App\Models\DangKyNhanTin;
 use App\Models\GuiMailThongBao;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Ramsey\Uuid\Uuid;
 
 class DangKyNhanTinController extends Controller
 {
@@ -18,16 +19,35 @@ class DangKyNhanTinController extends Controller
         ], [
             'email.required' => 'Bạn chưa nhập email',
             'email.email' => 'Email chưa đúng định dạng',
-            'email.unique' => 'Email đã được đăng ký',
+            'email.unique' => 'Email này đã đăng kí nhận tin rồi',
         ]);
+        
+        
+        if ($validator->fails()) return response()->json(['message' => $validator->errors()->first()],400);
+        
+        # Tạo token để xác thực (subway90 update)
+        $token_verify = Uuid::uuid4()->toString();
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()]);
+        # Gửi email xác thực (subway90 update)
+        try{
+            Mail::send('emails.verify_email_register', ['routeVerify' => ENV('DOMAIN').'/api/verify-email-register/'.$token_verify], function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject('Đăng kí xác thực nhận tin từ SGHOUSES');
+            });
+        }catch(\Exception $e)
+        {   
+            return response()->json(['message' => 'Lỗi hệ thống gửi Mail, vui lòng thử lại sau'], 500);
         }
 
-        DangKyNhanTin::create(['email' => $request->email]);
+        # Lưu vào database
+        DangKyNhanTin::create([
+            'email' => $request->email,
+            'token_verify'=> $token_verify,
+        ]);
 
-        return response()->json(['message' => 'Đăng ký thành công!'], 201);
+        
+
+        return response()->json(['message' => 'Đăng ký thành công, vui lòng kiểm tra email để xác nhận !','debug'=>ENV('DOMAIN').'/api/verify-email-register/'.$token_verify], 201);
     }
 
     //! Admin quản lí
