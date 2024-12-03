@@ -129,6 +129,9 @@ class TinTucController extends Controller
             ->with('danhMuc',)
             ->first();
 
+        // Lấy thông tin người đăng tin
+        $user = User::withTrashed()->where('id',$tintuc->tai_khoan_id)->get(['name','avatar','role'])->first();
+
         // Danh sách bình luận
         $list_cmt = BinhLuanTinTuc::where('tin_tuc_id', $tintuc->id)
             ->with('user')
@@ -153,6 +156,9 @@ class TinTucController extends Controller
         // Trả về JSON với tin tức và các bình luận
         return response()->json([
             'id' => $tintuc->id,
+            'name_user' => $user->name,
+            'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
+            'role_user' => !$user->role ? 'Quản trị viên' : 'Thành viên',
             'slug' => $tintuc->slug,
             'image' => $tintuc->image,
             'name_category' => $tintuc->danhMuc->ten_danh_muc,
