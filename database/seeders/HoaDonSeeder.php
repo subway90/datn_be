@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\HoaDon;
+use Ramsey\Uuid\Uuid;
 
 class HoaDonSeeder extends Seeder
 {
@@ -13,7 +14,7 @@ class HoaDonSeeder extends Seeder
     public function run(): void
     {
         HoaDon::create([
-            'token' => 'abcdxyz0123',
+            'token' => Uuid::uuid4()->toString(),
             'hop_dong_id' => 2,
             'tien_thue' => 4500000,
             'tien_dien' => 3500,
@@ -32,7 +33,7 @@ class HoaDonSeeder extends Seeder
         ]);
 
         HoaDon::create([
-            'token' => uniqid(),
+            'token' => Uuid::uuid4()->toString(),
             'hop_dong_id' => 2,
             'tien_thue' => 4500000,
             'tien_dien' => 3500,
