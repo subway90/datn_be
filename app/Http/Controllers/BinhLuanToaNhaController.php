@@ -68,9 +68,9 @@ class BinhLuanToaNhaController extends Controller
     {
         try {
             // Tìm bình luận theo ID
-            $cmt = BinhLuanToaNha::findOrFail($id);
+            $cmt = BinhLuanToaNha::find($id);
             // Kiểm tra tồn tại hay không (subway90 update)
-            if(!$cmt)return response()->json(['message' => 'Không tìm thấy bình luận này'], 404);
+            if(!$cmt) return response()->json(['message' => 'Không tìm thấy bình luận này'], 404);
             // Lấy thông tin user và tòa nhà
             $user = User::withTrashed()->where('id',$cmt->tai_khoan_id)->get(['name','avatar'])->first();
             $building = ToaNha::withTrashed()->where('id',$cmt->toa_nha_id)->get(['ten'])->first();
