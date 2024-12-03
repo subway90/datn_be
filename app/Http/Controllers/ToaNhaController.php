@@ -296,7 +296,7 @@ class ToaNhaController extends Controller
         ],[
             'id_area.required' => 'Chưa nhập khu vực',
             'id_area.exists' => 'Khu vực không tồn tại',
-            'name.required' => 'Vui lòng nhập tên',
+            'name.required' => 'Chưa nhập tên tòa nhà',
             'name.unique' => 'Tên tòa nhà đã tồn tại',
             'images.required' => 'Bạn chưa tải ảnh lên',
             'images.array' => 'Ảnh phải là một mảng ( images[] )',
@@ -307,7 +307,7 @@ class ToaNhaController extends Controller
             'location.required' => 'Vui lòng nhập các vị trí',
         ]); 
         # Trả về message validate 
-        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
+        if ($validator->fails()) return response()->json(['message' => $validator->errors()->first()], 400);
 
         // Xử lý upload ảnh
         $imagePaths = [];
