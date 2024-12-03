@@ -86,13 +86,12 @@ class BinhLuanToaNhaController extends Controller
     {
         try {
             // Tìm bình luận và thực hiện xóa mềm
-            $binhLuan = BinhLuanToaNha::findOrFail($id);
+            $binhLuan = BinhLuanToaNha::find($id);
+            // Kiểm tra tồn tại hay không (subway90 update)
+            if(!$binhLuan)return response()->json(['message' => 'Không tìm thấy bình luận này'], 404);
+            // Thực thi xóa
             $binhLuan->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Xóa bình luận thành công',
-            ], 200);
+            return response()->json(['message' => 'Xóa bình luận thành công'], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
