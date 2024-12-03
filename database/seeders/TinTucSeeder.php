@@ -46,7 +46,7 @@ class TinTucSeeder extends Seeder
             'tieu_de' => 'Luxora Bắc Giang - Toà Tháp Đôi Biểu Tượng Nằm Trong The Terra Được Văn Phú Invest Chuyển Nhượng Cho Chủ Đầu Tư Mới New Goldsun',
             'mo_ta' => 'New Goldsun chính thức tiếp nhận quyền phát triển tòa tháp đôi thuộc dự án The Terra - Bắc Giang từ Văn Phú - Invest. Công trình biểu tượng này đánh dấu bước tiến mới, góp phần kiến tạo diện mạo hiện đại và kết nối cho trung tâm vùng Bắc Giang.',
             'slug' => 'luxora-bac-giang-toa-thap-doi-bieu-tuong-nam-tromg-the-terra-duoc-van-phu-invest-chuyen-nhuong-cho-chu-dau-tu-moi-new-goldsun',
-            'image' => 'blog/image2.jpg, blog/image3.jpg',
+            'image' => 'blog/image3.jpg',
             'noi_dung' => '
             Ngày 2/8/2024 tại Hà Nội, buổi lễ ký kết đã diễn ra thành công, mở ra chương mới cho hành trình kiến tạo của New Goldsun tại The Terra – Bắc Giang. Dự án The Terra giờ đây chính thức có tên gọi mới “Luxora”. Với diện tích 4,5 ha, dự án tọa lạc tại vị trí đắc địa, kết nối linh hoạt giữa trung tâm thành phố và các vùng phụ cận, tạo điều kiện thuận lợi cho cư dân tiếp cận các tiện ích hiện đại và dịch vụ cao cấp. Trong đó, tòa tháp đôi được thiết kế với phong cách kiến trúc độc đáo, mang lại không gian sống đẳng cấp, đồng thời đóng vai trò là biểu tượng kiến trúc mới, nâng tầm giá trị khu đô thị.
 
@@ -105,7 +105,7 @@ class TinTucSeeder extends Seeder
             'tieu_de' => 'Hội Môi Giới Bất động Sản Việt Nam Công Bố “Bộ Quy Tắc Đạo Đức Và Ứng Xử Nghề Nghiệp Môi Giới Bất Động Sản Việt Nam - VPEC 2024”',
             'mo_ta' => 'Mới đây, Hội nghị “Công bố Bộ Quy tắc Đạo đức và Ứng xử Nghề nghiệp Môi giới Bất động sản Việt Nam – VPEC 2024” đã được tổ chức thành công với sự tham dự của đại diện Bộ Xây dựng, các chuyên gia uy tín trong ngành, cùng hơn 200 đại biểu từ các doanh nghiệp, các sàn giao dịch bất động sản và cá nhân hoạt động trong lĩnh vực bất động sản trên toàn quốc. Hội nghị do Viện Nghiên cứu Đánh giá thị trường bất động sản Việt Nam (VARS IRE) phối hợp cùng VARs Connect thực hiện tổ chức dưới sự chỉ đạo của Hội Môi giới Bất động sản Việt Nam.',
             'slug' => 'hoi-moi-gioi-bat-dong-san-viet-nam-cong-bo-bo-quy-tac-dao-duc-va-ung-xu-nghe-nghiep-moi-gioi-bat-dong-san-viet-nam-vpec-2024',
-            'image' => 'blog/image6.jpg, blog/image7.jpg',
+            'image' => 'blog/image7.jpg',
             'noi_dung' => '
             Tại Hội nghị, Ông Nguyễn Mạnh Quỳnh, Phó Tổng Thư ký kiêm Chánh Văn phòng đã thay mặt Ban Chấp hành VARS chính thức công bố Bộ Quy tắc Đạo đức và Ứng xử dành cho Môi giới Bất động sản, bản sửa đổi và bổ sung 2024, cùng với lần đầu tiên công bố Bộ Quy tắc Đạo đức và Ứng xử dành riêng cho các Sàn Giao dịch Bất động sản, trong đó:
 
@@ -137,7 +137,7 @@ class TinTucSeeder extends Seeder
             'tieu_de' => 'Chuyên Gia Đến Hải Phòng Thuê Căn Hộ Ở Đâu?',
             'mo_ta' => 'Một không gian sống luôn cân bằng giữa an tĩnh và sôi động, tự do và riêng tư, biệt lập mà tiện ích và dễ dàng di chuyển, đó là tất cả những gì các chuyên gia cần cho một không gian sống. Hải Phòng, điểm đến thu hút của đông đảo chuyên gia trong và ngoài nước liệu đã sẵn sàng đáp ứng nhu cầu về chốn an cư lý tưởng cho chuyên gia?',
             'slug' => 'chuyen-gia-den-hai-phong-thue-can-ho-o-dau',
-            'image' => 'blog/image8.jpg, blog/image9.jpg',
+            'image' => 'blog/image8.jpg',
             'noi_dung' => '
             Nằm trong top 20 hải cảng trên thế giới đón tàu siêu trọng, Hải Phòng luôn là đầu tàu kinh tế của các tỉnh phía Bắc. Sức hút của Hải Phòng đến từ tiềm lực phát triển kinh tế mạnh mẽ. Hiện có khoảng 9000 người nước ngoài đang sinh sống tại Hải Phòng và con số này sẽ còn tiếp tục tăng lên.
 

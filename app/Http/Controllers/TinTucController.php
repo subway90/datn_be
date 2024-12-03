@@ -31,7 +31,6 @@ class TinTucController extends Controller
                 'name_cate' => $rows->danhMuc->ten_danh_muc,
                 'title' => $rows->tieu_de,
                 'description' => $rows->mo_ta,
-                'content' => $rows->noi_dung,
                 'date' => $rows->created_at->format('d').' Tháng '.$rows->created_at->format('m').' lúc '.$rows->created_at->format('H').':'.$rows->created_at->format('i'),
             ];
         });
