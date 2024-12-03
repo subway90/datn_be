@@ -58,34 +58,42 @@ class ThanhToanController extends Controller
     }
 
     public function handleCallback(Request $request) {
-        $vnp_HashSecret = env('VNPAY_HASH_SECRET'); // Mã bí mật từ VNPay
+        // Lấy key secret
+        $vnp_HashSecret = env('VNPAY_HASH_SECRET');
+        //Lấy mã secure từ Request trả về
         $vnp_SecureHash = $request->input('vnp_SecureHash');
-        
-        // Remove secure hash and type from the request
+        // Lấy thôn tin hóa đơn
+        $token = $request->input('vnp_TxnRef');
+        $get_order = HoaDon::where('token',$token)->first();
+        if(!$get_order) return response()->json(['message' => 'Hoa don khong ton tai'], 400);
+
+        // Lấy tất cả Request ngoại trừ 2 cái SecureHash và SecureHashType
         $requestData = $request->except(['vnp_SecureHash', 'vnp_SecureHashType']);
         
-        // Sort and encode the data
+        // Tạo mã Secure từ các Request
         ksort($requestData);
         $queryString = http_build_query($requestData);
         $secureHash = hash_hmac('sha512', $queryString, $vnp_HashSecret);
         
+        // So sánh mã Secure, true là các Request trả về là đúng
         if ($secureHash === $vnp_SecureHash) {
-            // Process payment information
-            $token = $request->input('vnp_TxnRef');
-            $get_order = HoaDon::where('token',$token)->first();
-            
-            // Save payment information to the database
+            // Cập nhật trạng thái và ngày giao dịch
             $get_order->update([
-                'hinh_thuc' => 1, // Payment method: VNPay
-                'ngay_giao_dich' => now(),
-                'so_tien' => $request->input('vnp_Amount') / 100,
+                'hinh_thuc' => 1,
+                'updated_at' => now(),
                 'noi_dung' => $request->input('vnp_OrderInfo'),
                 'trang_thai' => ($request->input('vnp_ResponseCode') === '00') ? 1 : 0,
             ]);
             // return response()->json(['message' => 'Thanh toán thành công'], 200);
-            return redirect('pay_result');
+            $data = [
+                'ma_giao_dich' => $get_order->token,
+                'so_tien' => $request->input('vnp_Amount')/100,
+                'ngay_giao_dich' => $get_order->updated_at,
+                'noi_dung' => $get_order->noi_dung,
+            ];
+            return view('pay.result',$data);
         } else {
-            return response()->json(['message' => 'Chữ ký không hợp lệ'], 400);
+            return response()->json(['message' => 'Hoa don khong ton tai'], 400);
         }
     }
     
