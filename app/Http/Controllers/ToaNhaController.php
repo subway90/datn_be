@@ -307,7 +307,7 @@ class ToaNhaController extends Controller
             'location.required' => 'Vui lòng nhập các vị trí',
         ]); 
         # Trả về message validate 
-        if ($validator->fails()) return response()->json(['message' => $validator->errors()->first()], 400);
+        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
 
         // Xử lý upload ảnh
         $imagePaths = [];
