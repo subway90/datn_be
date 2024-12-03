@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\BinhLuanToaNha;
 use App\Models\ToaNha;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 class BinhLuanToaNhaController extends Controller
 {
@@ -38,11 +39,21 @@ class BinhLuanToaNhaController extends Controller
     {
         try {
             // Lấy danh sách bình luận chỉ với trường 'noi_dung'
-            $binhLuans = BinhLuanToaNha::all();
-    
+            $binhLuans = BinhLuanToaNha::orderBy('created_at','DESC')->get();
+            $result = $binhLuans->map(function($cmt){
+                $user = User::withTrashed()->where('id',$cmt->tai_khoan_id)->get(['name','avatar'])->first();
+                $building = ToaNha::withTrashed()->where('id',$cmt->toa_nha_id)->get(['ten'])->first();
+                return [
+                    'id' => $cmt->id,
+                    'name_user' => $user->name,
+                    'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
+                    'name_building' => $building->ten,
+                    'message' => $cmt->noi_dung,
+                    'date' => $cmt->created_at->format('d').' tháng '.$cmt->created_at->format('m').' năm '.$cmt->created_at->format('Y').' lúc '.$cmt->created_at->format('H').':'.$cmt->created_at->format('i'),
+                ];
+            });
             return response()->json([
-                'success' => true,
-                'data' => $binhLuans,
+                'list' => $result,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
