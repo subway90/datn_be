@@ -21,6 +21,9 @@ use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\YeuThichController;
 
 
+# Danh sách tòa nhà (option)
+Route::get('toa-nha/option', [ToaNhaController::class, 'option']);
+
 # Đăng kí email nhận tin
 Route::post('/dang-ky-nhan-tin', [DangKyNhanTinController::class, 'register']);
 

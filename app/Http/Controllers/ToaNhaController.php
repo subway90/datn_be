@@ -97,6 +97,24 @@ class ToaNhaController extends Controller
         ]);
     }
 
+    
+    public function option()
+    {
+        // Truy vấn
+        $list = ToaNha::get(['id','ten']);
+
+        // Chuyển đổi dữ liệu để trả JSON
+        $result = $list->map(function ($toaNha) {
+            return [
+                'id' => $toaNha->id,
+                'name' => $toaNha->ten,
+            ];
+        });
+        
+        // Trả JSON
+        return response()->json([$result],200);
+    }
+
     public function listView()
     {
         // Truy vấn
