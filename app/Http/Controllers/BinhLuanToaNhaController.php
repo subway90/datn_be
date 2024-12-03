@@ -105,10 +105,21 @@ class BinhLuanToaNhaController extends Controller
         try {
             // Lấy danh sách các bình luận đã bị xóa mềm
             $binhLuans = BinhLuanToaNha::onlyTrashed()->get();
-
+            // Trả về theo custom (subway90 update)
+            $result = $binhLuans->map(function($cmt){
+                $user = User::withTrashed()->where('id',$cmt->tai_khoan_id)->get(['name','avatar'])->first();
+                $building = ToaNha::withTrashed()->where('id',$cmt->toa_nha_id)->get(['ten'])->first();
+                return [
+                    'id' => $cmt->id,
+                    'name_user' => $user->name,
+                    'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
+                    'name_building' => $building->ten,
+                    'message' => $cmt->noi_dung,
+                    'date_delete' => $cmt->deleted_at->format('d').' tháng '.$cmt->deleted_at->format('m').' năm '.$cmt->deleted_at->format('Y').' lúc '.$cmt->deleted_at->format('H').':'.$cmt->deleted_at->format('i'),
+                ];
+            });
             return response()->json([
-                'success' => true,
-                'data' => $binhLuans,
+                'list' => $result,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
