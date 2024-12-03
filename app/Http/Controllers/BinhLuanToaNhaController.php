@@ -82,60 +82,6 @@ class BinhLuanToaNhaController extends Controller
             ], 200);
         }
     }
-    public function edit(Request $request, $id)
-    {
-        // Xác định người dùng đã đăng nhập
-        $user = $request->user();
-
-        // Xác định các quy tắc xác thực
-        $validator = Validator::make($request->all(), [
-            'noi_dung' => 'required|string|max:255',
-        ], [
-            'noi_dung.required' => 'Nội dung bình luận không được để trống.',
-            'noi_dung.string' => 'Nội dung bình luận phải là chuỗi ký tự hợp lệ.',
-            'noi_dung.max' => 'Nội dung bình luận không được vượt quá 255 ký tự.',
-        ]);
-    
-        // Kiểm tra nếu có lỗi xác thực
-         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Dữ liệu không hợp lệ.',
-                'errors' => $validator->errors() // Trả về toàn bộ danh sách lỗi dưới dạng key-value
-            ], 422); // Sử dụng HTTP 422 (Unprocessable Entity) cho lỗi validation
-        }
-
-    
-        // Lấy dữ liệu đã xác thực
-        $validated = $validator->validated();
-    
-        try {
-            // Tìm bình luận theo ID
-            $binhLuan = BinhLuanToaNha::findOrFail($id);
-    
-            // Cập nhật nội dung bình luận
-            $binhLuan->noi_dung = $validated['noi_dung'];
-            $binhLuan->save();
-    
-            // Trả về phản hồi JSON thành công
-            return response()->json([
-                'message' => 'Cập nhật nội dung bình luận thành công.',
-                'data' => $binhLuan,
-            ], 200);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            // Lỗi không tìm thấy bình luận theo ID
-            return response()->json([
-                'message' => 'Không tìm thấy bình luận với ID: ' . $id,
-            ], 404); // HTTP 404 Not Found
-        } catch (\Exception $e) {
-            // Lỗi khác
-            return response()->json([
-                'message' => 'Lỗi khi cập nhật bình luận.',
-                'error' => $e->getMessage(),
-            ], 500); // HTTP 500 Internal Server Error
-        }
-    }    
-    
     public function delete($id)
     {
         try {
