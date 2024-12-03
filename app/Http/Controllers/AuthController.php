@@ -159,14 +159,14 @@ class AuthController extends Controller
             'phone' => 'nullable|size:10',
             'born' => 'nullable|date',
             'address' => 'nullable',
-            'gender' => 'boolean',
+            'gender' => 'integer',
         ], [
             'name.required' => 'Tên chưa được nhập',
             'name.string' => 'Tên phải là chuỗi ký tự.',
             'name.max' => 'Tên vượt quá ký tự.',
             'phone.size' => 'SĐT phải có độ dài 10 ký tự.',
             'born.date' => 'Ngày sinh phải có định dạng hợp lệ.',
-            'gender.boolean' => 'Vui lòng nhập định dạng 0 hoặc 1 cho gender (0:nam, 1:nữ)',
+            'gender.integer' => 'Vui lòng nhập định dạng số cho gender (0:nam, 1:nữ, 2: khác)',
         ]);
 
         if ($validator->fails()) {
