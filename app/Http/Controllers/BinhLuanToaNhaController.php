@@ -68,12 +68,21 @@ class BinhLuanToaNhaController extends Controller
     {
         try {
             // Tìm bình luận theo ID
-            $binhLuan = BinhLuanToaNha::findOrFail($id);
-
-            return response()->json([
-                'success' => true,
-                'data' => $binhLuan,
-            ], 200);
+            $cmt = BinhLuanToaNha::findOrFail($id);
+            // Kiểm tra tồn tại hay không (subway90 update)
+            if(!$cmt)return response()->json(['message' => 'Không tìm thấy bình luận này'], 404);
+            // Lấy thông tin user và tòa nhà
+            $user = User::withTrashed()->where('id',$cmt->tai_khoan_id)->get(['name','avatar'])->first();
+            $building = ToaNha::withTrashed()->where('id',$cmt->toa_nha_id)->get(['ten'])->first();
+            $result = [
+                'id' => $cmt->id,
+                'name_user' => $user->name,
+                'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
+                'name_building' => $building->ten,
+                'message' => $cmt->noi_dung,
+                'date' => $cmt->created_at->format('d').' tháng '.$cmt->created_at->format('m').' năm '.$cmt->created_at->format('Y').' lúc '.$cmt->created_at->format('H').':'.$cmt->created_at->format('i'),
+            ];
+            return response()->json(['data' => $result], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
