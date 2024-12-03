@@ -133,14 +133,12 @@ class BinhLuanToaNhaController extends Controller
     {
         try {
             // Tìm và khôi phục bình luận đã bị xóa mềm
-            $binhLuan = BinhLuanToaNha::onlyTrashed()->findOrFail($id);
+            $binhLuan = BinhLuanToaNha::onlyTrashed()->find($id);
+            // Kiểm tra có tồn tại hay không (subway90 update)
+            if(!$binhLuan) return response()->json(['message' => 'Không tìm thấy bình luận này ở danh sách xóa'], 404);
+            // Thực thi khôi phục
             $binhLuan->restore();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Khôi phục bình luận thành công',
-                'data' => $binhLuan,
-            ], 200);
+            return response()->json(['message' => 'Khôi phục bình luận thành công',], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
