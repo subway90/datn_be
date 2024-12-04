@@ -84,7 +84,10 @@ class DangKyNhanTinController extends Controller
     //! Admin quản lí
     public function index()
     {
-        $list = DangKyNhanTin::withTrashed()->get();
+        $list = DangKyNhanTin::all();
+        // Trả 404 nếu trống
+        if($list->isEmpty()) return response()->json(['message'=>'Danh sách trống'],404);
+
         // custom json retunr (subway90 update)
         $result = $list->map(function($row) {
             return [
@@ -94,7 +97,7 @@ class DangKyNhanTinController extends Controller
                 'date' => $row->created_at->format('d').' Tháng '.$row->created_at->format('m').' lúc '.$row->created_at->format('H').':'.$row->created_at->format('i'),
             ];
         });
-        return response()->json($result);
+        return response()->json(['list'=>$result],200);
     }
 
     public function list_delete()
