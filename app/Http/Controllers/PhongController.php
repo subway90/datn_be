@@ -43,7 +43,7 @@ class PhongController extends Controller
             'slug_khu_vuc' => $khu_vuc->slug,
             'image' => $room->hinh_anh,
             'dien_tich' => $room->dien_tich,
-            'gac_lung' => $room->gac_lung ? 'Có' : ' Không',
+            'gac_lung' => $room->gac_lung,
             'gia_thue' => $room->gia_thue,
             'don_gia_dien' => $room->don_gia_dien,
             'don_gia_nuoc' => $room->don_gia_nuoc,
