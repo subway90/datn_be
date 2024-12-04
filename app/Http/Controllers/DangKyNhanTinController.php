@@ -97,6 +97,24 @@ class DangKyNhanTinController extends Controller
         return response()->json($result);
     }
 
+    public function list_delete()
+    {
+        $list = DangKyNhanTin::onlyTrashed()->get();
+        // Trả 404 nếu trống
+        if($list->isEmpty()) return response()->json(['message'=>'Danh sách trống'],404);
+
+        // custom json retunr (subway90 update)
+        $result = $list->map(function($row) {
+            return [
+                'id' => $row->id,
+                'email' => $row->email,
+                'status' => $row->trang_thai ? 'Đã xác nhận' : 'Chưa xác nhận',
+                'date_delete' => $row->deleted_at->format('d').' Tháng '.$row->deleted_at->format('m').' lúc '.$row->deleted_at->format('H').':'.$row->deleted_at->format('i'),
+            ];
+        });
+        return response()->json(['list'=>$result],200);
+    }
+
     public function destroy($id)
     {
         $record = DangKyNhanTin::findOrFail($id);

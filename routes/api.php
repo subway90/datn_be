@@ -411,7 +411,13 @@ Route::middleware(['Admin'])->group(function () {
     });
 
     Route::prefix('dang-ky-nhan-tin')->group(function () {
+
+        # Lấy danh sách
         Route::get('/', [DangKyNhanTinController::class, 'index']);
+
+        # Lấy danh sách đã xóa
+        Route::get('/list_delete', [DangKyNhanTinController::class, 'list_delete']);
+
         Route::delete('delete/{id}', [DangKyNhanTinController::class, 'destroy']);
         Route::patch('restore/{id}', [DangKyNhanTinController::class, 'restore']);
         Route::post('/gui-mail', [DangKyNhanTinController::class, 'sendMail']);
