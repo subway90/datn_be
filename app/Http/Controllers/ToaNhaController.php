@@ -112,7 +112,7 @@ class ToaNhaController extends Controller
         });
         
         // Trả JSON
-        return response()->json([$result],200);
+        return response()->json($result,200);
     }
 
     public function listView()
