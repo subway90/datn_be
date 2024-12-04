@@ -67,7 +67,7 @@
         <div class="footer">
             <hr style="margin-top:50px">
             <p>Cho thuê phòng trọ, căn hộ SGHOUSES</p>
-            <a target="_blank" href="{{ ENV('DOMAIN') }}" class="website">Truy cập website Sghouses</a>
+            <a target="_blank" href="{{ ENV('DOMAIN_FE') }}" class="website">Truy cập website Sghouses</a>
             <p class="hotline">Hotline: 0907.789.239</p>
         </div>
     </div>
