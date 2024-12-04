@@ -101,13 +101,15 @@ class ToaNhaController extends Controller
     public function option()
     {
         // Truy vấn
-        $list = ToaNha::get(['id','ten']);
+        $list = ToaNha::select('toa_nha.id', 'toa_nha.ten', 'khu_vuc.ten as ten_khu_vuc')
+        ->join('khu_vuc', 'toa_nha.khu_vuc_id', '=', 'khu_vuc.id')
+        ->get();
 
         // Chuyển đổi dữ liệu để trả JSON
         $result = $list->map(function ($toaNha) {
             return [
                 'id' => $toaNha->id,
-                'name' => $toaNha->ten,
+                'name' => $toaNha->ten.' - '.$toaNha->ten_khu_vuc,
             ];
         });
         
