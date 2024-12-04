@@ -411,7 +411,7 @@ Route::middleware(['Admin'])->group(function () {
     });
 
     Route::prefix('dang-ky-nhan-tin')->group(function () {
-        Route::get('show', [DangKyNhanTinController::class, 'index']);
+        Route::get('/', [DangKyNhanTinController::class, 'index']);
         Route::delete('delete/{id}', [DangKyNhanTinController::class, 'destroy']);
         Route::patch('restore/{id}', [DangKyNhanTinController::class, 'restore']);
         Route::post('/gui-mail', [DangKyNhanTinController::class, 'sendMail']);

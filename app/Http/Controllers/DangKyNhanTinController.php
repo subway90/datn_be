@@ -85,7 +85,16 @@ class DangKyNhanTinController extends Controller
     public function index()
     {
         $list = DangKyNhanTin::withTrashed()->get();
-        return response()->json($list);
+        // custom json retunr (subway90 update)
+        $result = $list->map(function($row) {
+            return [
+                'id' => $row->id,
+                'email' => $row->email,
+                'status' => $row->trang_thai ? 'Đã xác nhận' : 'Chưa xác nhận',
+                'date' => $row->created_at->format('d').' Tháng '.$row->created_at->format('m').' lúc '.$row->created_at->format('H').':'.$row->created_at->format('i'),
+            ];
+        });
+        return response()->json($result);
     }
 
     public function destroy($id)
