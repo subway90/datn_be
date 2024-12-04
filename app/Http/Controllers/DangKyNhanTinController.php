@@ -120,16 +120,23 @@ class DangKyNhanTinController extends Controller
 
     public function destroy($id)
     {
-        $record = DangKyNhanTin::findOrFail($id);
+        $record = DangKyNhanTin::find($id);
+        // Kiểm tra nếu không tồn tại
+        if(!$record) return response()->json(['message' => 'Không tìm thấy ID này'],404);
+        // Tiến hành xóa
         $record->delete();
-        return response()->json(['message' => 'Xóa thành công!']);
+        return response()->json(['message' => 'Xóa thành công!'],200);
     }
 
     public function restore($id)
     {
-        $record = DangKyNhanTin::onlyTrashed()->findOrFail($id);
+        
+        $record = DangKyNhanTin::onlyTrashed()->find($id);
+        // Kiểm tra nếu không tồn tại
+        if(!$record) return response()->json(['message' => 'Không tìm thấy ID này'],404);
+        // Tiến hành khôi phục
         $record->restore();
-        return response()->json(['message' => 'Khôi phục thành công!']);
+        return response()->json(['message' => 'Khôi phục thành công!'],200);
     }
     //! Gửi mail
     public function sendMail(Request $request)

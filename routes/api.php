@@ -418,8 +418,13 @@ Route::middleware(['Admin'])->group(function () {
         # Lấy danh sách đã xóa
         Route::get('/list_delete', [DangKyNhanTinController::class, 'list_delete']);
 
-        Route::delete('delete/{id}', [DangKyNhanTinController::class, 'destroy']);
-        Route::patch('restore/{id}', [DangKyNhanTinController::class, 'restore']);
+        # Xóa theo ID
+        Route::delete('/delete/{id}', [DangKyNhanTinController::class, 'destroy']);
+
+        # Khôi phục theo ID
+        Route::patch('/restore/{id}', [DangKyNhanTinController::class, 'restore']);
+        
+        # Gửi mail
         Route::post('/gui-mail', [DangKyNhanTinController::class, 'sendMail']);
     });
 });
