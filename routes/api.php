@@ -19,6 +19,7 @@ use App\Http\Controllers\DanhMucTinTucController;
 use App\Http\Controllers\LienHeDatPhongController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\YeuThichController;
+use App\Http\Controllers\GuiMailThongBaoController;
 
 
 # Danh sách tòa nhà (option)
@@ -426,7 +427,11 @@ Route::middleware(['Admin'])->group(function () {
         
         # Gửi mail
         Route::post('/gui-mail', [DangKyNhanTinController::class, 'sendMail']);
+
+        # Lịch sử gửi mail
+        Route::get('/lich-su', [GuiMailThongBaoController::class, 'all']);
     });
+
 });
 
 
