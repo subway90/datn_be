@@ -103,12 +103,6 @@ class BannerController extends Controller
         ]);
         if($validate->fails()) return response()->json(['message' => $validate->errors()->all()], 400);
 
-        // Kiểm tra tiêu đề đã tồn tại hay chưa
-        $checkTitle = Banner::where('title', $request->title)->exists();
-        if ($checkTitle) {
-            return response()->json(['message' => 'Tiêu đề này đã tồn tại'], 400);
-        }
-
         // Xử lý upload ảnh
         $imagePath = null;
         if ($request->file('image')) {
