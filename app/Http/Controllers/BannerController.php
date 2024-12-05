@@ -104,23 +104,17 @@ class BannerController extends Controller
         if($validate->fails()) return response()->json(['message' => $validate->errors()->all()], 400);
 
         // Xử lý upload ảnh
-        $imagePath = null;
-        if ($request->file('image')) {
-            // Xử lí mã hóa tên file (subway90 update)
-            $image = $request->file('image');
-            $filename = uniqid() . '.' . $image->getClientOriginalExtension();
-            $imagePath = $image->storeAs('banner', $filename, 'public');
-        }
+        if ($request->file('image')) $imagePath = $request->file('image')->store('banner', 'public');
 
         // Tạo mới banner
-        $banner = Banner::create([
+        Banner::create([
             'title' => $request->title,
             'image' => $imagePath,
             'content' => $request->content,
             'order' => $request->order ?? 0,
         ]);
 
-        return response()->json(['message' => 'Banner đã được thêm thành công',], 201);
+        return response()->json(['message' => 'Banner đã được thêm thành công'], 201);
     }
 
     public function delete($id)
