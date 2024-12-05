@@ -142,51 +142,34 @@ class DangKyNhanTinController extends Controller
     public function sendMail(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'content' => 'required|string',
-            'email' => 'nullable|string',
-            'all_mail' => 'required|in:0,1',
+            'title' => 'required',
+            'content' => 'required',
         ], [
+            'title.required' => 'Bạn chưa nhập tiêu đề thư',
             'content.required' => 'Bạn chưa nhập nội dung thư',
             'all_mail.required' => 'Trường all_mail là bắt buộc',
             'all_mail.in' => 'Trường all_mail phải là 0 hoặc 1',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()]);
-        }
+        // Báo lỗi validate
+        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()],400);
 
-        $emails = [];
-
-        if ($request->all_mail == 0) {
-            // Gửi đến tất cả email
-            $emails = DangKyNhanTin::pluck('email')->toArray();
-        } else {
-            // Gửi đến danh sách email được chỉ định
-            $emails = explode(';', $request->email);
-        }
-
-        // Lọc email không hợp lệ
-        $emails = array_filter($emails, function ($email) {
-            return filter_var($email, FILTER_VALIDATE_EMAIL);
-        });
+        // Lấy tất cả email đã xác nhận
+        $emails = DangKyNhanTin::where('trang_thai',1)->pluck('email')->toArray();
 
         // Kiểm tra nếu danh sách email trống
-        if (empty($emails)) {
-            return response()->json(['error' => 'Danh sách email trống!'], 400);
-        }
+        if (empty($emails)) return response()->json(['message' => 'Danh sách email trống'], 404);
 
-        foreach ($emails as $email) {
-            // Gửi mail (logic gửi mail mẫu)
-            Mail::raw($request->content, function ($message) use ($email) {
-                $message->to($email)->subject('Thông báo');
-            });
-        }
+        // Gửi mail theo BCC
+        Mail::raw($request->content, function ($message) use ($request,$emails) {
+            $message->bcc($emails)
+                    ->subject($request->title);
+        });
 
         // Lưu thông tin vào bảng gui_mail_thong_bao
         GuiMailThongBao::create([
+            'title' => $request->title,
             'content' => $request->content,
-            'email' => $request->email ?? implode(';', $emails),
-            'all_mail' => $request->all_mail,
         ]);
 
         return response()->json(['message' => 'Gửi mail thành công!']);
