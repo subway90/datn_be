@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('gui_mail_thong_bao', function (Blueprint $table) {
             $table->id();
+            $table->text('title');
             $table->text('content');
-            $table->string('email');
-            $table->boolean('all_mail')->default(0);
             $table->timestamps();
         });
     }

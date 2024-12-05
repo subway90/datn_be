@@ -9,8 +9,8 @@ class GuiMailThongBao extends Model
     protected $table = 'gui_mail_thong_bao';
 
     protected $fillable = [
+        'title',
         'content',
         'email',
-        'all_mail',
     ];
 }
