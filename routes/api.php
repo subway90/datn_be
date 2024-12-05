@@ -389,10 +389,13 @@ Route::middleware(['Admin'])->group(function () {
 
     Route::prefix('banner')->group(function () {
 
-        # Thống kê tổng
+        # Lấy danh sách
+        Route::get('/', [BannerController::class, 'all']);
+
+        # Lấy danh sách đã xóa
         Route::get('/list_delete', [BannerController::class, 'list_delete']);
 
-        # Thống kê tổng
+        # Lấy theo ID
         Route::get('/{id}', [BannerController::class, 'one']);
 
         # Thêm mới

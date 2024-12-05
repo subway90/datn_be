@@ -32,6 +32,33 @@ class BannerController extends Controller
         // Trả về dữ liệu dưới dạng JSON
         return response()->json($result, 200);
     }
+
+    public function all()
+    {
+        // Lấy tất cả banner
+        $list = Banner::orderBY('created_at','DESC')->get();
+    
+        // Kiểm tra nếu không có dữ liệu
+        if ($list->isEmpty()) {
+            return response()->json(['message' => 'Danh sách trống'], 404);
+        }
+    
+        // Map dữ liệu trả về
+        $result = $list->map(function ($row) {
+            return [
+                'id' => $row->id,
+                'title' => $row->title,
+                'content' => $row->content,
+                'image' => $row->image,
+                'order' => $row->order ?? 0,
+                'status' => $row->status,
+                'date' => $row->created_at->format('d').' Tháng '.$row->created_at->format('m').' lúc '.$row->created_at->format('H').':'.$row->created_at->format('i'),
+            ];
+        });
+    
+        // Trả về dữ liệu dưới dạng JSON
+        return response()->json($result, 200);
+    }
     
 
     public function one($id)
