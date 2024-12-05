@@ -6,6 +6,7 @@ use App\Models\Banner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Validator;
 class BannerController extends Controller
 {
     public function show()
@@ -89,17 +90,18 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         // Xác thực dữ liệu
-        $request->validate([
-            'title' => 'required|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        $validate = Validator::make($request->all(),[
+            'title' => 'nullable|max:255',
+            'image' => 'required|mimes:jpeg,png,jpg,gif|max:2048',
             'content' => 'nullable|string',
             'order' => 'nullable|integer',
         ], [
-            'title.required' => 'Vui lòng nhập tiêu đề',
-            'image.mimes' => 'Chưa nhập đúng định dạng ảnh',
+            'image.required' => 'Vui lòng nhập ảnh',
+            'image.mimes' => 'Chưa nhập đúng định dạng ảnh (jpeg,png,jpg,gif)',
             'image.max' => 'Ảnh phải dưới 2MB',
             'order.integer' => 'Thứ tự phải là số nguyên',
         ]);
+        if($validate->fails()) return response()->json(['message' => $validate->errors()->all()], 400);
 
         // Kiểm tra tiêu đề đã tồn tại hay chưa
         $checkTitle = Banner::where('title', $request->title)->exists();
@@ -109,9 +111,11 @@ class BannerController extends Controller
 
         // Xử lý upload ảnh
         $imagePath = null;
-        if ($request->hasFile('image')) {
-            // Lưu file vào thư mục public/storage/banner
-            $imagePath = $request->file('image')->store('banner', 'public');
+        if ($request->file('image')) {
+            // Xử lí mã hóa tên file (subway90 update)
+            $image = $request->file('image');
+            $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('banner', $filename, 'public');
         }
 
         // Tạo mới banner
@@ -122,10 +126,7 @@ class BannerController extends Controller
             'order' => $request->order ?? 0,
         ]);
 
-        return response()->json([
-            'message' => 'Banner đã được thêm thành công',
-            'banner' => $banner,
-        ], 201);
+        return response()->json(['message' => 'Banner đã được thêm thành công',], 201);
     }
 
     public function delete($id)
