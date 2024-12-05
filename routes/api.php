@@ -412,6 +412,9 @@ Route::middleware(['Admin'])->group(function () {
 
         # Nhân bản theo ID
         Route::get('/duplicate/{id}', [BannerController::class, 'duplicate']);
+
+        # Cập nhật trạng thái
+        Route::patch('/editStatus/{id}', [BannerController::class, 'editStatus']);
     });
 
     Route::prefix('dang-ky-nhan-tin')->group(function () {

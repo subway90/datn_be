@@ -296,4 +296,26 @@ class BannerController extends Controller
         ], 200);
     }
 
+    public function editStatus($id) {
+        $get = Banner::find($id);
+        // Check
+        if(!$get) return response()->json(['message' => 'Banner không tồn tại'], 404);
+        // Thay đổi trạng thái
+        else {
+            if($get['status'] == 0) {
+                $get->update([
+                    'status' => 1,
+                ]);
+            }else {
+                {
+                    $get->update([
+                        'status' => 0,
+                    ]);
+                }
+            }
+        }
+
+        return response()->json(['result' => 'Cập nhật trạng thái thành công'], 200);
+    }
+
 }
