@@ -17,6 +17,7 @@ class BannerSeeder extends Seeder
             'title' => null,
             'content' => null,
             'order' => 1,
+            'status' => 1,
         ]);
 
         Banner::create([
@@ -24,13 +25,15 @@ class BannerSeeder extends Seeder
             'title' => 'Tìm trọ ở Hồ Chí Minh',
             'content' => 'Hơn 2,000 phòng trọ với giá từ 2 triệu VNĐ',
             'order' => 2,
+            'status' => 1,
         ]);
 
         Banner::create([
             'image' => 'banner/banner03.jpg',
             'title' => null,
             'content' => null,
-            'order' => null
+            'order' => null,
+            'status' => 1,
         ]);
     }
 }

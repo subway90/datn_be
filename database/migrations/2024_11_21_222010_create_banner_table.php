@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('title')->nullable();
             $table->text('content')->nullable();
             $table->text('order')->nullable();
+            $table->boolean('status')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
