@@ -241,31 +241,24 @@ class BannerController extends Controller
     
         public function update(Request $request, $id)
     {
-        // Tìm banner theo ID
+        // Kiểm tra banner theo ID
         $banner = Banner::find($id);
-
-        if (!$banner) {
-            return response()->json(['message' => 'Banner không tồn tại'], 404);
-        }
+        if(!$banner) return response()->json(['message' => 'Banner không tồn tại'], 404);
 
         // Xác thực dữ liệu
-        $request->validate([
-            'title' => 'required|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        $validate = Validator::make($request->all(),[
+            'title' => 'nullable|max:255',
+            'image' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
             'content' => 'nullable|string',
             'order' => 'nullable|integer',
         ], [
-            'title.required' => 'Vui lòng nhập tiêu đề',
-            'image.mimes' => 'Chưa nhập đúng định dạng ảnh',
+            'image.required' => 'Vui lòng nhập ảnh',
+            'image.mimes' => 'Chưa nhập đúng định dạng ảnh (jpeg,png,jpg,gif)',
             'image.max' => 'Ảnh phải dưới 2MB',
             'order.integer' => 'Thứ tự phải là số nguyên',
         ]);
-
-        // Kiểm tra tiêu đề trùng lặp (ngoại trừ bản ghi hiện tại)
-        $checkTitle = Banner::where('title', $request->title)->where('id', '!=', $id)->exists();
-        if ($checkTitle) {
-            return response()->json(['message' => 'Tiêu đề này đã tồn tại'], 400);
-        }
+        // Trả message validate
+        if($validate->fails()) return response()->json(['message' => $validate->errors()->all()], 400);
 
         // Xử lý upload ảnh nếu có
         if ($request->hasFile('image')) {
