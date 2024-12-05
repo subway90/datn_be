@@ -32,7 +32,7 @@ Route::post('/dang-ky-nhan-tin', [DangKyNhanTinController::class, 'register']);
 Route::get('/verify-email-register/{token}',[DangKyNhanTinController::class, 'verify']);
 
 # Danh sách banner
-Route::get('banner/', [BannerController::class, 'all']);
+Route::get('banner/show', [BannerController::class, 'show']);
 
 # Callback thanh toán vnpay
 Route::get('pay/callback', [ThanhToanController::class, 'handleCallback']);

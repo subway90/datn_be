@@ -8,10 +8,10 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 class BannerController extends Controller
 {
-    public function all()
+    public function show()
     {
         // Lấy tất cả banner
-        $list = Banner::all();
+        $list = Banner::where('status','1')->orderBy('order','ASC')->get();
     
         // Kiểm tra nếu không có dữ liệu
         if ($list->isEmpty()) {
@@ -26,8 +26,6 @@ class BannerController extends Controller
                 'content' => $row->content,
                 'image' => $row->image,
                 'order' => $row->order,
-                'created_at' => $row->created_at,
-                'updated_at' => $row->updated_at,
             ];
         });
     
