@@ -54,11 +54,12 @@ class DashBoardController extends Controller
             // Nếu không có doanh thu thì trả về 0, nếu có thì lấy giá trị
             // Đã sửa key JSON trả về API (subway90 update)
             $doanhThuThang[$thang-1]["name"] = "Tháng ".$thang;
-            $doanhThuThang[$thang-1]["value"] = $doanhThu->tong_doanh_thu ?? '0';
+            $doanhThuThang[$thang-1]["doanh thu"] = $doanhThu->tong_doanh_thu ?? '0';
         }
     
         // Trả về kết quả
         return response()->json([
+            'year' => $nam,
             'data' => $doanhThuThang, // Mảng doanh thu theo từng tháng
         ]);
     }
