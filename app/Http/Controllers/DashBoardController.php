@@ -116,18 +116,18 @@ class DashBoardController extends Controller
     // Xử lý dữ liệu trả về
     $data = $hoaDonTreHan->map(function ($hoaDon) {
         return [
+            'token' => $hoaDon->token,
             'hop_dong_id' => $hoaDon->hop_dong_id,
-            'id_user' =>$hoaDon->hopDong->user->id,
             'email_user' =>$hoaDon->hopDong->user->email,
             'name_user' =>$hoaDon->hopDong->user->name,
             'avatar_user' =>$hoaDon->hopDong->user->avatar ?? 'avatar/user_default.png.png',
-            'token' => $hoaDon->token,
             'total' => $hoaDon->tien_thue 
                 + ($hoaDon->tien_dien * $hoaDon->so_ki_dien) 
                 + ($hoaDon->tien_nuoc * $hoaDon->so_khoi_nuoc) 
                 + ($hoaDon->tien_xe * $hoaDon->so_luong_xe) 
                 + ($hoaDon->tien_dich_vu * $hoaDon->so_luong_nguoi),
-            'created_at' => $hoaDon->created_at->toDateTimeString(),
+            // custom formate date (subway90 update)
+            'date' => $hoaDon->created_at->format('d').' Tháng '.$hoaDon->created_at->format('m').' lúc '.$hoaDon->created_at->format('H').':'.$hoaDon->created_at->format('i'),
         ];
     });
 
