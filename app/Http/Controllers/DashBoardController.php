@@ -52,13 +52,14 @@ class DashBoardController extends Controller
             $doanhThu = $query->first();
     
             // Nếu không có doanh thu thì trả về 0, nếu có thì lấy giá trị
-            $doanhThuThang[$thang] = $doanhThu->tong_doanh_thu ?? 0;
+            // Đã sửa key JSON trả về API (subway90 update)
+            $doanhThuThang[$thang-1]["name"] = "Tháng ".$thang;
+            $doanhThuThang[$thang-1]["value"] = $doanhThu->tong_doanh_thu ?? '0';
         }
     
         // Trả về kết quả
         return response()->json([
-            'nam' => $nam,
-            'doanh_thu_theo_thang' => $doanhThuThang, // Mảng doanh thu theo từng tháng
+            'data' => $doanhThuThang, // Mảng doanh thu theo từng tháng
         ]);
     }
     public function lienhe()
