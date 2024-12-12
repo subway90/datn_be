@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,12 +15,13 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('avatar',255)->nullable();
+            $table->string('avatar', 255)->nullable();
             $table->tinyInteger('role')->default(1); //0: admin, 1:user
-            $table->string('phone',10)->nullable();
+            $table->string('phone', 10)->nullable();
             $table->date('born')->nullable();
             $table->tinyInteger('gender')->default(1); //1: nam, 2:nữ, 3:khác
             $table->text('address')->nullable();
+            $table->string('google_id')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
