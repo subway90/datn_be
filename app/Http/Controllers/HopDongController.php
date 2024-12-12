@@ -114,12 +114,10 @@ class HopDongController extends Controller
             };
         }
 
-
+        $path_file = '';
         if ($request->hasFile('file_hop_dong')) {
             $file_hop_dong = $request->file('file_hop_dong');
-                // Mã hóa tên file
-                $filename = uniqid() . '.' . $file_hop_dong->getClientOriginalExtension();
-                $path_file = $file_hop_dong->storeAs('contract', $filename, 'public');
+                $path_file = $file_hop_dong->store('contract',  'public');
         }
 
         $result = HopDong::create([
@@ -130,10 +128,7 @@ class HopDongController extends Controller
             'ngay_ket_thuc' => $request->date_end,
         ]);
 
-        return response()->json([
-            'message' => 'Hợp đồng đã được tạo thành công!',
-            'debug' => $result,
-        ], 201);
+        return response()->json(['message' => 'Hợp đồng đã được tạo thành công!'], 201);
     }
     
     public function edit(Request $request, $id)
