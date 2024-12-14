@@ -44,6 +44,7 @@ class HopDongController extends Controller
         $row = HopDong::find($id);
         if(!$row) return response()->json(['message'=>'Không tìm thấy hợp đồng'], 404);
         $room = Phong::withTrashed()->with('toaNha')->where('id',$row->phong_id)->get(['toa_nha_id','ten_phong','hinh_anh'])->first();
+        $room = Phong::withTrashed()->with('toaNha')->where('id',$row->phong_id)->get(['toa_nha_id','ten_phong','hinh_anh','gia_thue','don_gia_dien','don_gia_nuoc','tien_xe_may','phi_dich_vu'])->first();
         $user = User::withTrashed()->where('id',$row->tai_khoan_id)->get(['name','avatar'])->first();
         $building = ToaNha::withTrashed()->where('id',$room->toa_nha_id)->get(['ten'])->first();
         $result = [
@@ -52,6 +53,11 @@ class HopDongController extends Controller
             'name_room' => $room->ten_phong,
             'name_building' =>$building->ten,
             'image_room' => Str::before($room->hinh_anh, ';'),
+            'tien_thue' => $room->gia_thue,
+            'tien_nuoc' => $room->don_gia_nuoc,
+            'tien_xe' => $room->tien_xe_may,
+            'tien_dich_vu' => $room->phi_dich_vu,
+            'name_building' =>$building->ten,
             'id_user' => $row->tai_khoan_id,
             'name_user' => $user->name,
             'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
