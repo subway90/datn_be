@@ -57,7 +57,6 @@ class HopDongController extends Controller
             'tien_nuoc' => $room->don_gia_nuoc,
             'tien_xe' => $room->tien_xe_may,
             'tien_dich_vu' => $room->phi_dich_vu,
-            'name_building' =>$building->ten,
             'id_user' => $row->tai_khoan_id,
             'name_user' => $user->name,
             'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
