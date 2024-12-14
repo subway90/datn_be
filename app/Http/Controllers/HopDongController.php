@@ -54,6 +54,7 @@ class HopDongController extends Controller
             'name_building' =>$building->ten,
             'image_room' => Str::before($room->hinh_anh, ';'),
             'tien_thue' => $room->gia_thue,
+            'tien_dien' => $room->don_gia_dien,
             'tien_nuoc' => $room->don_gia_nuoc,
             'tien_xe' => $room->tien_xe_may,
             'tien_dich_vu' => $room->phi_dich_vu,
