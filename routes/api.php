@@ -366,6 +366,9 @@ Route::middleware(['Admin'])->group(function () {
 
         # Thêm mới
         Route::post('/add', [HoaDonController::class, 'store']);
+
+        # Lấy theo ID
+        Route::get('/{token}', [HoaDonController::class, 'detail']);
     });
 
 
