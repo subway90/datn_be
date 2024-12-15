@@ -343,6 +343,13 @@ class PhongController extends Controller
         // Tìm tòa nhà theo ID
         $phong = Phong::find($id);
         if (!$phong) return response()->json(['message' => 'ID tòa nhà không tồn tại'], 400);
+        // Kiểm tra phòng có đang cho thuê hay không
+        $hop_dong = HopDong::where('phong_id',$phong->id)->get();
+        if(!$hop_dong->isEmpty()){
+            foreach ($hop_dong as $row) {   
+                if($row['ngay_ket_thuc'] > $this->date_now) return response()->json(['message' => 'Phòng đang cho thuê, không thể chỉnh sửa'], 404);
+            }
+        }
     
         // Kiểm tra validate
         $validator = Validator::make($request->all(),[
