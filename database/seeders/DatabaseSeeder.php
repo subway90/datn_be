@@ -27,8 +27,8 @@ class DatabaseSeeder extends Seeder
             'role' => 0, //admin
         ]);
         User::create([
-            'name' => 'Tester 01',
-            'email' => 'test01@gmail.com',
+            'name' => 'Mạnh Tường',
+            'email' => 'tuonghtmps33160@fpt.edu.vn',
             'avatar' => 'avatar/img1.png',
             'password' => Hash::make('12345678'),
             'gender' => 2,
@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         ]);
         User::create([
             'name' => 'Tester 02',
-            'email' => 'test02@gmail.com',
+            'email' => 'dnhieu2530@gmail.com',
             'password' => Hash::make('12345678'),
             'gender' => 3,
             'born' => '2024-05-31',
@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
         ]);
         User::create([
             'name' => 'Tester 03',
-            'email' => 'test03@gmail.com',
+            'email' => 'tannnps33351@fpt.edu.vn',
             'password' => Hash::make('12345678'),
             'born' => '2024-01-17',
             'gender' => 2,
