@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up with Google</title>
+</head>
+
+<body>
+    <button id="google-signup">Sign up with Google</button>
+
+    <script>
+        const googleSignupButton = document.getElementById('google-signup');
+
+        googleSignupButton.addEventListener('click', () => {
+            // Gọi API để chuyển hướng đến Google
+            fetch('http://localhost:8000/api/auth/google', {
+                method: 'GET',
+                credentials: 'include', // Nếu cần cookie (CSRF protection)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Điều hướng người dùng tới link Google OAuth
+                    if (data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>

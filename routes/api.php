@@ -16,6 +16,7 @@ use App\Http\Controllers\HopDongController;
 use App\Http\Controllers\ThanhToanController;
 use App\Http\Controllers\TinTucController;
 use App\Http\Controllers\DanhMucTinTucController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\LienHeDatPhongController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\YeuThichController;
@@ -68,7 +69,10 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('forgot/check', [ResetPasswordController::class, 'check']);
 # Quên mật khẩu : reset
 Route::post('forgot/reset', [ResetPasswordController::class, 'reset']);
-
+Route::prefix('google')->group(function () {
+    Route::get('/', [GoogleController::class, 'redirectToGoogle']);
+    Route::get('callback', [GoogleController::class, 'handleGoogleCallback']);
+});
 # Những API cần đăng nhập
 Route::middleware(['CusTom'])->group(function () {
 
@@ -321,7 +325,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::delete('/delete/{id}', [ToaNhaController::class, 'delete']);
 
         # Khôi phục
-        Route::patch('/restore/{id}', [ToaNhaController::class, 'restore']);
+        Route::post('/restore/{id}', [ToaNhaController::class, 'restore']);
 
         # Nhân bản theo ID
         Route::get('/duplicate/{id}', [ToaNhaController::class, 'duplicate']);
