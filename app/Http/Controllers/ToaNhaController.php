@@ -5,6 +5,7 @@ use App\Models\ToaNha;
 use App\Models\Phong;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Models\BinhLuanToaNha;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,10 +17,26 @@ class ToaNhaController extends Controller
         ->with('khuVuc')
         ->where('slug', $request->slug)->get();
 
+        
+
         if (!$detail) {
             return response()->json(['message' => 'Tòa nhà không tồn tại'], 404);
         }
+
+        // lấy danh sách bình luận
+        
+
         $result = $detail->map(function ($rows) {
+            $list_cmt = BinhLuanToaNha::where('toa_nha_id', $rows->id)->with('user')->get();
+            $result_list_cmt = $list_cmt->map(function ($cmt) {
+                return [
+                    'id_user' => $cmt->user->id,
+                    'name' => $cmt->user->name,
+                    'avatar' => $cmt->user->avatar,
+                    'content' => $cmt->noi_dung,
+                    'date' => $cmt->created_at->format('d').' Thg '.$cmt->created_at->format('m').' lúc '.$cmt->created_at->format('H').':'.$cmt->created_at->format('i'),
+                ];
+            });
             return [
                 'id' => $rows->id,
                 'khu_vuc_id' => $rows->khu_vuc_id,
@@ -32,6 +49,7 @@ class ToaNhaController extends Controller
                 'luot_xem' => $rows->luot_xem,
                 'noi_bat' => $rows->noi_bat,
                 'phong_tro' => $rows->phongTro,
+                'list_cmt' => $result_list_cmt,
             ];
         });
         return response()->json($result->first(),200);
