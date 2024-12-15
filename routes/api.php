@@ -158,6 +158,9 @@ Route::middleware(['Admin'])->group(function () {
          # Lấy danh sách hết hạn
          Route::get('/het_han', [HopDongController::class, 'het_han']);
 
+         # Lấy danh sách gần hết hạn 10 ngày kể từ lúc hết hạn 
+         Route::get ('/sap_het_han', [HopDongController::class, 'sap_het_han']);
+
         # Lấy danh sách đã xóa
         Route::get('/list_delete', [HopDongController::class, 'list_delete']);
 
