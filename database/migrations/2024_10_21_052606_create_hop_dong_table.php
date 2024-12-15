@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('phong_id')->index();
             $table->unsignedBigInteger('tai_khoan_id')->index();
             $table->string('file_hop_dong')->nullable();
+            $table->tinyInteger('so_luong_xe')->nullable();
+            $table->tinyInteger('so_luong_nguoi')->nullable();
             $table->date('ngay_bat_dau');
             $table->date('ngay_ket_thuc');
             $table->timestamps();
