@@ -146,6 +146,21 @@ class LienHeDatPhongController extends Controller
         $one->delete();
         return response()->json(['message' => 'Xóa thành công'], 200);
     }
+    public function delete($id)
+    {
+        // Tìm kiếm bản ghi (kể cả đã xóa mềm)
+        $one = LienHeDatPhong::withTrashed()->find($id); 
+
+        // Nếu không tồn tại bản ghi
+        if (!$one) {
+            return response()->json(['message' => 'Liên hệ không tồn tại'], 404);
+        }
+
+        // Thực hiện xóa vĩnh viễn
+        $one->forceDelete();
+        
+        return response()->json(['message' => 'Xóa  thành công'], 200);
+    }
 
     public function restore($id)
     {
