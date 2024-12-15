@@ -14,6 +14,8 @@ class HopDong extends Model
         'phong_id',
         'tai_khoan_id',
         'file_hop_dong',
+        'so_luong_xe',
+        'so_luong_nguoi',
         'ngay_bat_dau',
         'ngay_ket_thuc',
     ];

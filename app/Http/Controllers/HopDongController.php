@@ -16,29 +16,97 @@ class HopDongController extends Controller
 {
     public function index()
     {
-        $list = HopDong::orderBy('id','DESC')->get();
+        $list = HopDong::where('ngay_ket_thuc', '>=', now())->orderBy('id', 'DESC')->get();
         $result = $list->map(function ($row) {
-            $room = Phong::withTrashed()->with('toaNha')->where('id',$row->phong_id)->get(['toa_nha_id','ten_phong','hinh_anh'])->first();
-            $user = User::withTrashed()->where('id',$row->tai_khoan_id)->get(['name','avatar'])->first();
-            $building = ToaNha::withTrashed()->where('id',$room->toa_nha_id)->get(['ten'])->first();
+            $room = Phong::withTrashed()->with('toaNha')->where('id', $row->phong_id)->get(['toa_nha_id', 'ten_phong', 'hinh_anh'])->first();
+            $user = User::withTrashed()->where('id', $row->tai_khoan_id)->get(['name', 'avatar'])->first();
+            $building = ToaNha::withTrashed()->where('id', $room->toa_nha_id)->get(['ten'])->first();
             return [
                 'id' => $row->id,
                 'id_room' => $row->phong_id,
                 'name_room' => $room->ten_phong,
-                'name_building' =>$building->ten,
+                'name_building' => $building->ten,
                 'image_room' => Str::before($room->hinh_anh, ';'),
                 'id_user' => $row->tai_khoan_id,
                 'name_user' => $user->name,
                 'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
+                'so_luong_xe' => $row->so_luong_xe,
+                'so_luong_nguoi' => $row->so_luong_nguoi,
                 'file_hop_dong' => $row->file_hop_dong,
                 'date_start' => $row->ngay_bat_dau,
                 'date_end' => $row->ngay_ket_thuc,
-                'status' => $row->ngay_ket_thuc < $this->date_now ? 'Hết hạn' : 'Đang sử dụng',
+                'status' => 'Đang sử dụng',
             ];
         });
+    
         return response()->json($result, 200);
     }
+    public function het_han(){
+        
+    $list = HopDong::where('ngay_ket_thuc', '<', now())
+        ->orderBy('id', 'DESC')
+        ->get();
 
+    $result = $list->map(function ($row) {
+        $room = Phong::withTrashed()->with('toaNha')->where('id', $row->phong_id)->get(['toa_nha_id', 'ten_phong', 'hinh_anh'])->first();
+        $user = User::withTrashed()->where('id', $row->tai_khoan_id)->get(['name', 'avatar'])->first();
+        $building = ToaNha::withTrashed()->where('id', $room->toa_nha_id)->get(['ten'])->first();
+
+        return [
+            'id' => $row->id,
+            'id_room' => $row->phong_id,
+            'name_room' => $room->ten_phong,
+            'name_building' => $building->ten,
+            'image_room' => Str::before($room->hinh_anh, ';'),
+            'id_user' => $row->tai_khoan_id,
+            'name_user' => $user->name,
+            'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
+            'so_luong_xe' => $row->so_luong_xe,
+            'so_luong_nguoi' => $row->so_luong_nguoi,
+            'file_hop_dong' => $row->file_hop_dong,
+            'date_start' => $row->ngay_bat_dau,
+            'date_end' => $row->ngay_ket_thuc,
+            'status' => 'Hết hạn',
+        ];
+    });
+
+    return response()->json($result, 200);
+}
+    public function sap_het_han(){
+        $today = now();
+        $saphethan = $today->copy()->addDays(10);
+    
+        $list = HopDong::where('ngay_ket_thuc', '>=', $today)
+            ->where('ngay_ket_thuc', '<=', $saphethan)
+            ->orderBy('id', 'DESC')
+            ->get();
+    
+        $result = $list->map(function ($row) {
+            $room = Phong::withTrashed()->with('toaNha')->where('id', $row->phong_id)->get(['toa_nha_id', 'ten_phong', 'hinh_anh'])->first();
+            $user = User::withTrashed()->where('id', $row->tai_khoan_id)->get(['name', 'avatar'])->first();
+            $building = ToaNha::withTrashed()->where('id', $room->toa_nha_id)->get(['ten'])->first();
+    
+            return [
+                'id' => $row->id,
+                'id_room' => $row->phong_id,
+                'name_room' => $room->ten_phong,
+                'name_building' => $building->ten,
+                'image_room' => Str::before($room->hinh_anh, ';'),
+                'id_user' => $row->tai_khoan_id,
+                'name_user' => $user->name,
+                'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
+                'so_luong_xe' => $row->so_luong_xe,
+                'so_luong_nguoi' => $row->so_luong_nguoi,
+                'file_hop_dong' => $row->file_hop_dong,
+                'date_start' => $row->ngay_bat_dau,
+                'date_end' => $row->ngay_ket_thuc,
+                'status' => 'Gần hết hạn',
+            ];
+        });
+    
+        return response()->json($result, 200);
+    }
+   
     public function detail($id)
     {
         $row = HopDong::find($id);
@@ -61,6 +129,8 @@ class HopDongController extends Controller
             'id_user' => $row->tai_khoan_id,
             'name_user' => $user->name,
             'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
+            'so_luong_xe' => $row->so_luong_xe,
+            'so_luong_nguoi' => $row->so_luong_nguoi,
             'file_hop_dong' => $row->file_hop_dong,
             'date_start' => $row->ngay_bat_dau,
             'date_end' => $row->ngay_ket_thuc,
@@ -93,6 +163,8 @@ class HopDongController extends Controller
             'id_room' => 'required|exists:phong,id',
             'id_user' => 'required|exists:users,id',
             'file_hop_dong' => 'nullable|mimes:pdf|max:4096',
+            'so_luong_xe' => 'required',
+            'so_luong_nguoi' => 'required|integer|min:1',
             'date_start' => 'required|date',
             'date_end' => 'required|date|after:date_start',
         ], [
@@ -102,6 +174,9 @@ class HopDongController extends Controller
             'id_user.exists' => 'ID User không tồn tại',
             'file_hop_dong.mimes' => 'File hợp đồng phải là file PDF',
             'file_hop_dong.max' => 'Kích thước file hợp đồng không vượt quá 4MB',
+            'so_luong_xe.required' => 'Chưa nhập số lượng xe',
+            'so_luong_nguoi.required' => 'Chưa nhập số lượng người',
+            'so_luong_nguoi.min' => 'Số lượng người ít nhất phải bằng 1',
             'date_start.required' => 'Chưa nhập ngày bắt đầu.',
             'date_end.required' => 'Chưa nhập ngày kết thúc.',
             'date_end.after' => 'Ngày kết thúc phải sau ngày bắt đầu.',
@@ -130,6 +205,8 @@ class HopDongController extends Controller
             'phong_id' => $request->id_room,
             'tai_khoan_id' => $request->id_user,
             'file_hop_dong' => $path_file,
+            'so_luong_xe' => $request->so_luong_xe,
+            'so_luong_nguoi' => $request->so_luong_nguoi,
             'ngay_bat_dau' => $request->date_start,
             'ngay_ket_thuc' => $request->date_end,
         ]);
@@ -148,6 +225,8 @@ class HopDongController extends Controller
             'id_room' => 'required|exists:phong,id',
             'id_user' => 'required|exists:users,id',
             'file_hop_dong' => 'nullable|mimes:pdf|max:4096',
+            'so_luong_xe' => 'required',
+            'so_luong_nguoi' => 'required|integer|min:1',
             'date_start' => 'required|date',
             'date_end' => 'required|date|after:date_start',
         ], [
@@ -157,6 +236,9 @@ class HopDongController extends Controller
             'id_user.exists' => 'ID User không tồn tại',
             'file_hop_dong.mimes' => 'File hợp đồng phải là file PDF',
             'file_hop_dong.max' => 'Kích thước file hợp đồng không vượt quá 4MB',
+            'so_luong_xe.required' => 'Chưa nhập số lượng xe',
+            'so_luong_nguoi.required' => 'Chưa nhập số lượng người',
+            'so_luong_nguoi.min' => 'Số lượng người ít nhất phải bằng 1',
             'date_start.required' => 'Chưa nhập ngày bắt đầu.',
             'date_start.date' => 'Chưa nhập đúng định dạng YYYY-MM-DD',
             'date_end.required' => 'Chưa nhập ngày kết thúc.',
@@ -183,6 +265,8 @@ class HopDongController extends Controller
         $hopDong->phong_id = $request->id_room;
         $hopDong->tai_khoan_id = $request->id_user;
         $hopDong->file_hop_dong = $path_file;
+        $hopDong->so_luong_xe = $request->so_luong_xe;
+        $hopDong->so_luong_nguoi = $request->so_luong_nguoi;
         $hopDong->ngay_bat_dau = $request->date_start;
         $hopDong->ngay_ket_thuc = $request->date_end;
 
