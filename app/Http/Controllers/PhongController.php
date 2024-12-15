@@ -240,6 +240,7 @@ class PhongController extends Controller
                 'phi_dich_vu' => $room->phi_dich_vu,
                 'tien_ich' => $room->tien_ich,
                 'noi_that' => $room->noi_that,
+                'ngay_xoa' => $room->deleted_at->format('d').' tháng '.$room->deleted_at->format('m').' năm '.$room->deleted_at->format('Y').' lúc '.$room->deleted_at->format('H').':'.$room->deleted_at->format('i'),
             ];
         });
     
