@@ -201,8 +201,15 @@ class PhongController extends Controller
         if (!$get) {
             return response()->json(['message' => 'Phòng không tồn tại'], 404);
         }
+        // Kiểm tra phòng có đang cho thuê hay không
+        $hop_dong = HopDong::where('phong_id',$get->id)->get();
+        if(!$hop_dong->isEmpty()){
+            foreach ($hop_dong as $row) {   
+                if($row['ngay_ket_thuc'] > $this->date_now) return response()->json(['message' => 'Phòng đang cho thuê, không thể xóa'], 404);
+            }
+        }
+        // Xóa mềm
         $get->delete();
-
         return response()->json(['message' => 'Xóa thành công'], 200);
     }
 
