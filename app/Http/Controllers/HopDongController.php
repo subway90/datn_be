@@ -6,31 +6,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\HopDong;
-use App\Models\Phong;
-use App\Models\ToaNha;
 use App\Models\User;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
-
+use Mail;
+use App\Mail\SendMailHopDong;
+use App\Models\Phong;
+use Carbon\Carbon;
 class HopDongController extends Controller
 {
     public function index()
     {
-        $list = HopDong::orderBy('id','DESC')->get();
+        $list = HopDong::orderBy('id', 'DESC')->get();
         $result = $list->map(function ($row) {
-            $room = Phong::withTrashed()->with('toaNha')->where('id',$row->phong_id)->get(['toa_nha_id','ten_phong','hinh_anh'])->first();
-            $user = User::withTrashed()->where('id',$row->tai_khoan_id)->get(['name','avatar'])->first();
-            $building = ToaNha::withTrashed()->where('id',$room->toa_nha_id)->get(['ten'])->first();
             return [
                 'id' => $row->id,
                 'id_room' => $row->phong_id,
-                'name_room' => $room->ten_phong,
-                'name_building' =>$building->ten,
-                'image_room' => Str::before($room->hinh_anh, ';'),
                 'id_user' => $row->tai_khoan_id,
-                'name_user' => $user->name,
-                'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
-                'file_hop_dong' => $row->file_hop_dong,
                 'date_start' => $row->ngay_bat_dau,
                 'date_end' => $row->ngay_ket_thuc,
                 'status' => $row->ngay_ket_thuc < $this->date_now ? 'Hết hạn' : 'Đang sử dụng',
@@ -39,40 +29,11 @@ class HopDongController extends Controller
         return response()->json($result, 200);
     }
 
-    public function detail($id)
-    {
-        $row = HopDong::find($id);
-        if(!$row) return response()->json(['message'=>'Không tìm thấy hợp đồng'], 404);
-        $room = Phong::withTrashed()->with('toaNha')->where('id',$row->phong_id)->get(['toa_nha_id','ten_phong','hinh_anh'])->first();
-        $room = Phong::withTrashed()->with('toaNha')->where('id',$row->phong_id)->get(['toa_nha_id','ten_phong','hinh_anh','gia_thue','don_gia_dien','don_gia_nuoc','tien_xe_may','phi_dich_vu'])->first();
-        $user = User::withTrashed()->where('id',$row->tai_khoan_id)->get(['name','avatar'])->first();
-        $building = ToaNha::withTrashed()->where('id',$room->toa_nha_id)->get(['ten'])->first();
-        $result = [
-            'id' => $row->id,
-            'id_room' => $row->phong_id,
-            'name_room' => $room->ten_phong,
-            'name_building' =>$building->ten,
-            'image_room' => Str::before($room->hinh_anh, ';'),
-            'tien_thue' => $room->gia_thue,
-            'tien_dien' => $room->don_gia_dien,
-            'tien_nuoc' => $room->don_gia_nuoc,
-            'tien_xe' => $room->tien_xe_may,
-            'tien_dich_vu' => $room->phi_dich_vu,
-            'id_user' => $row->tai_khoan_id,
-            'name_user' => $user->name,
-            'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
-            'file_hop_dong' => $row->file_hop_dong,
-            'date_start' => $row->ngay_bat_dau,
-            'date_end' => $row->ngay_ket_thuc,
-            'status' => $row->ngay_ket_thuc < $this->date_now ? 'Hết hạn' : 'Đang sử dụng',
-        ];
-        return response()->json($result, 200);
-    }
-
     public function list_delete()
     {
-        $list = HopDong::onlyTrashed()->orderBy('deleted_at','DESC')->get();
-        if($list->isEmpty()) return response()->json(['message' => 'Danh sách trống'], 404);
+        $list = HopDong::onlyTrashed()->orderBy('deleted_at', 'DESC')->get();
+        if ($list->isEmpty())
+            return response()->json(['message' => 'Danh sách trống'], 404);
 
         $result = $list->map(function ($row) {
             return [
@@ -92,7 +53,6 @@ class HopDongController extends Controller
         $validator = Validator::make($request->all(), [
             'id_room' => 'required|exists:phong,id',
             'id_user' => 'required|exists:users,id',
-            'file_hop_dong' => 'nullable|mimes:pdf|max:4096',
             'date_start' => 'required|date',
             'date_end' => 'required|date|after:date_start',
         ], [
@@ -100,54 +60,55 @@ class HopDongController extends Controller
             'id_room.exists' => 'ID Phòng không tồn tại',
             'id_user.required' => 'Chưa nhập ID User',
             'id_user.exists' => 'ID User không tồn tại',
-            'file_hop_dong.mimes' => 'File hợp đồng phải là file PDF',
-            'file_hop_dong.max' => 'Kích thước file hợp đồng không vượt quá 4MB',
             'date_start.required' => 'Chưa nhập ngày bắt đầu.',
             'date_end.required' => 'Chưa nhập ngày kết thúc.',
             'date_end.after' => 'Ngày kết thúc phải sau ngày bắt đầu.',
         ]);
 
-        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
+        if ($validator->fails())
+            return response()->json(['message' => $validator->errors()->all()], 400);
         # Lấy thông tin của phòng đó
-        $list_hop_dong = HopDong::where('phong_id',$request->id_room)->get();
+        $list_hop_dong = HopDong::where('phong_id', $request->id_room)->get();
 
         # Kiểm tra xem hợp đồng có còn sử dụng hay không
-        if($list_hop_dong) {
+        if ($list_hop_dong) {
             foreach ($list_hop_dong as $key => $hop_dong) {
-                if($hop_dong->ngay_ket_thuc > $this->date_now) {
-                    return response()->json(['message'=> 'Phòng này đang có hợp đồng sử dụng'], 400);
+                if ($hop_dong->ngay_ket_thuc > $this->date_now) {
+                    return response()->json(['message' => 'Phòng này đang có hợp đồng sử dụng'], 400);
                 }
-            };
+            }
+            ;
         }
 
-        $path_file = '';
-        if ($request->hasFile('file_hop_dong')) {
-            $file_hop_dong = $request->file('file_hop_dong');
-                $path_file = $file_hop_dong->store('contract',  'public');
+        $hopDong = new HopDong();
+
+        $hopDong->phong_id = $request->id_room;
+        $hopDong->tai_khoan_id = $request->id_user;
+        $hopDong->ngay_bat_dau = $request->date_start;
+        $hopDong->ngay_ket_thuc = $request->date_end;
+
+        $hopDong->save();
+
+        $user = User::find($request->id_user);
+        $phong = Phong::find($request->id_room);
+
+        try {
+            Mail::to($user->email)->send(new SendMailHopDong($user, $phong->gia_thue, $phong->don_gia_dien, $phong->don_gia_nuoc, $phong->phi_dich_vu, $phong->tien_xe_may, $hopDong->ngay_bat_dau, $hopDong->ngay_ket_thuc));
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
 
-        $result = HopDong::create([
-            'phong_id' => $request->id_room,
-            'tai_khoan_id' => $request->id_user,
-            'file_hop_dong' => $path_file,
-            'ngay_bat_dau' => $request->date_start,
-            'ngay_ket_thuc' => $request->date_end,
-        ]);
-
-        return response()->json(['message' => 'Hợp đồng đã được tạo thành công!'], 201);
+        return response()->json([
+            'message' => 'Hợp đồng đã được tạo thành công!',
+        ], 201);
     }
-    
+
     public function edit(Request $request, $id)
     {
-        // Tìm hợp đồng cần cập nhật
-        $hopDong = HopDong::find($id);
-        if(!$hopDong) return response()->json(['message' => 'Hợp đồng không tồn tại'], 404);
-
         // Kiểm tra và xác thực dữ liệu đầu vào
         $validator = Validator::make($request->all(), [
             'id_room' => 'required|exists:phong,id',
             'id_user' => 'required|exists:users,id',
-            'file_hop_dong' => 'nullable|mimes:pdf|max:4096',
             'date_start' => 'required|date',
             'date_end' => 'required|date|after:date_start',
         ], [
@@ -155,8 +116,6 @@ class HopDongController extends Controller
             'id_room.exists' => 'ID Phòng không tồn tại',
             'id_user.required' => 'Chưa nhập ID User',
             'id_user.exists' => 'ID User không tồn tại',
-            'file_hop_dong.mimes' => 'File hợp đồng phải là file PDF',
-            'file_hop_dong.max' => 'Kích thước file hợp đồng không vượt quá 4MB',
             'date_start.required' => 'Chưa nhập ngày bắt đầu.',
             'date_start.date' => 'Chưa nhập đúng định dạng YYYY-MM-DD',
             'date_end.required' => 'Chưa nhập ngày kết thúc.',
@@ -164,25 +123,15 @@ class HopDongController extends Controller
             'date_end.after' => 'Ngày kết thúc phải sau ngày bắt đầu.',
         ]);
 
-        if ($validator->fails()) return response()->json(['message' => $validator->errors()->all()], 400);
+        if ($validator->fails())
+            return response()->json(['message' => $validator->errors()->all()], 400);
 
-        //
-        $old_file_hop_dong = $hopDong->file_hop_dong;
+        // Tìm hợp đồng cần cập nhật
+        $hopDong = HopDong::findOrFail($id);
 
-        // xử lí thay đổi file nếu có
-        if ($request->hasFile('file_hop_dong')) {
-            $file_hop_dong = $request->file('file_hop_dong');
-            // Xóa file cũ nếu có
-            if($old_file_hop_dong) Storage::disk('public')->delete($hopDong->file_hop_dong);
-            // Mã hóa và thêm file mới vào storage
-            $filename = uniqid() . '.' . $file_hop_dong->getClientOriginalExtension();
-            $path_file = $file_hop_dong->storeAs('contract', $filename, 'public');
-        }else $path_file = $old_file_hop_dong;
-        
         // Cập nhật các thông tin của hợp đồng
         $hopDong->phong_id = $request->id_room;
         $hopDong->tai_khoan_id = $request->id_user;
-        $hopDong->file_hop_dong = $path_file;
         $hopDong->ngay_bat_dau = $request->date_start;
         $hopDong->ngay_ket_thuc = $request->date_end;
 
@@ -201,7 +150,7 @@ class HopDongController extends Controller
         $userId = Auth::id();
 
         // Lấy hợp đồng của người dùng (mỗi tài khoản chỉ có một hợp đồng không bắt buộc)
-        $hopDong = HopDong::with('hoaDon') // Tải danh sách thanh toán liên quan
+        $hopDong = HopDong::with('thanhToan') // Tải danh sách thanh toán liên quan
             ->where('tai_khoan_id', $userId)
             ->first(); // Sử dụng first() để lấy một đối tượng duy nhất
 
@@ -209,6 +158,7 @@ class HopDongController extends Controller
         if (!$hopDong) {
             return response()->json(['message' => 'Bạn chưa có hợp đồng nào.'], 404);
         }
+
         // Tạo mảng dữ liệu để trả về
         $data = [
             'id' => $hopDong->id,
@@ -216,29 +166,17 @@ class HopDongController extends Controller
             'date_start' => $hopDong->ngay_bat_dau,
             'date_end' => $hopDong->ngay_ket_thuc,
             'price' => $hopDong->gia_thue,
-            'file_hop_dong' => $hopDong->file_hop_dong,
-            'list_pay' => $hopDong->hoaDon->map(function ($order) {
-                $total = $order->tien_thue;
-                $total += $order->tien_dien * $order->so_ki_dien;
-                $total += $order->tien_nuoc * $order->so_khoi_nuoc;
-                $total += $order->tien_xe * $order->so_luong_xe;
-                $total += $order->tien_dich_vu * $order->so_luong_nguoi;
+            'file' => null,
+            'list_pay' => $hopDong->thanhToan->map(function ($row) {
                 return [
-                    'token' => $order->token,
-                    'tong_tien' => $total,
-                    'ngay_tao' => $order->created_at->format('d').' tháng '.$order->created_at->format('m').' năm '.$order->created_at->format('Y').' lúc '.$order->created_at->format('H').':'.$order->created_at->format('i'),
-                    'ngay_cap_nhat' => $order->updated_at->format('d').' tháng '.$order->updated_at->format('m').' năm '.$order->updated_at->format('Y').' lúc '.$order->updated_at->format('H').':'.$order->updated_at->format('i'),
-                    'trang_thai' => $order->trang_thai ? 'Đã thanh toán' : 'Chưa thanh toán',
-                    'hinh_thuc' => $order->hinh_thuc ? 'Thanh toán online' : 'Thanh toán tiền mặt',
-                    'tien_thue' => $order->tien_thue,
-                    'tien_dien' => $order->tien_dien,
-                    'so_ki_dien' => $order->so_ki_dien,
-                    'tien_nuoc' => $order->tien_nuoc,
-                    'so_khoi_nuoc' => $order->so_khoi_nuoc,
-                    'tien_xe' => $order->tien_xe,
-                    'so_luong_xe' => $order->so_luong_xe,
-                    'tien_dich_vu' => $order->tien_dich_vu,
-                    'so_luong_nguoi' => $order->so_luong_nguoi,
+                    'id' => $row->id,
+                    'pay_id' => $row->ma_giao_dich,
+                    'voucher_code' => $row->code_uu_dai,
+                    'pay_type' => $row->hinh_thuc,
+                    'amount' => $row->so_tien,
+                    'content' => $row->noi_dung,
+                    'pay_date' => $row->ngay_giao_dich,
+                    'status' => $row->trang_thai,
                 ];
             }),
         ];
@@ -250,7 +188,11 @@ class HopDongController extends Controller
     {
         # Tìm hợp đồng
         $hopDong = HopDong::find($id);
-        if(!$hopDong) return response()->json(['message' => 'Hợp đồng này không tồn tại'], 404);
+        if (!$hopDong)
+            return response()->json(['message' => 'Hợp đồng này không tồn tại'], 404);
+
+        # Xóa danh sách thanh toán của hợp đồng đó
+        $hopDong->thanhToan()->delete();
         $hopDong->delete();
 
         # Trả kết quả res
@@ -259,7 +201,8 @@ class HopDongController extends Controller
     public function restore($id)
     {
         $hopDong = HopDong::onlyTrashed()->find($id);
-        if(!$hopDong) return response()->json(['message' => 'Hợp đồng này không tồn tại'], 404);
+        if (!$hopDong)
+            return response()->json(['message' => 'Hợp đồng này không tồn tại'], 404);
         $hopDong->restore();
 
         return response()->json(['message' => 'Khôi phục hợp đồng thành công'], 200);
