@@ -266,13 +266,16 @@ Route::middleware(['Admin'])->group(function () {
         Route::put('edit/{id}', [AuthController::class, 'editUser']);
 
         # Xóa theo ID
-        Route::delete('delete/{id}', [AuthController::class, 'deleteUser']);
+        Route::post('ban/{id}', [AuthController::class, 'banUser']);
 
         #Khôi phục theo ID
         Route::post('restore/{id}', [AuthController::class, 'restoreUser']);
 
         # Nhân bản theo ID
         Route::get('duplicate/{id}', [AuthController::class, 'duplicateUser']);
+
+        // # Cấm tài khoản
+        // Route::delete('banUser/{id}', [AuthController::class, 'banUser']);
     });
 
 

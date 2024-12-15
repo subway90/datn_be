@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BanNotificationMail;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -273,20 +274,45 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Chỉnh sửa thông tin thành công!', 'user' => $user], 200);
     }
-    public function deleteUser($id)
+    public function banUser(Request $request, $id)
     {
         $user = User::find($id);
+
+        $validator = Validator::make($request->all(), [
+            'noi_dung_cam' => 'required|string|min:10',
+        ], [
+            'noi_dung_cam.required' => 'Bạn chưa nhập nội dung cấm',
+            'noi_dung_cam.min' => 'Đội dài nội dung cấm tối thiểu là 10!',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         if (!$user) {
             return response()->json(['message' => 'Id user không tồn tại'], 404);
         }
 
         if ($user->role == 0) {
-            return response()->json(['error' => 'Không được xóa tài khoản admin'], 403);
+            return response()->json(['error' => 'Không được cấm tài khoản admin'], 403);
         }
 
+        $user->noi_dung_cam = $request->input('noi_dung_cam');
+        $user->save();
         $user->delete();
 
-        return response()->json(['message' => 'Xóa thành công!'], 200);
+        $noiDungCam = $request->input('noi_dung_cam');
+        $user->noi_dung_cam = $noiDungCam;
+        $user->save();
+
+        // Gửi email thông báo cấm tài khoản
+        try {
+            Mail::to($user->email)->send(new BanNotificationMail($user, $noiDungCam));
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Không thể gửi email. Vui lòng thử lại sau.'], 500);
+        }
+
+        return response()->json(['message' => 'Tài khoản đã bị cấm!'], 200);
     }
     public function restoreUser($id)
     {
@@ -378,4 +404,41 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Thay đổi mật khẩu thành công!'], 200);
     }
+    // public function banUser(Request $request, $id)
+    // {
+    //     $user = User::find($id);
+
+    //     if (!$user) {
+    //         return response()->json(['message' => 'Id user không tồn tại!'], 404);
+    //     }
+
+    //     if ($user->role == 0) {
+    //         return response()->json(['message' => 'Không được cấm tài khoản của Admin'], 403);
+    //     }
+
+    //     $noiDungCam = $request->input('noi_dung_cam', 'Tài khoản của bạn đã bị cấm do vi phạm chính sách.');
+
+    //     // Lưu nội dung cấm vào database
+    //     $user->noi_dung_cam = $noiDungCam;
+    //     $user->save();
+
+    //     // Gửi email thông báo cấm
+    //     Mail::send([], [], function ($message) use ($user, $noiDungCam) {
+    //         // Tạo phần nội dung email dưới dạng text
+    //         $textBody = new TextPart("Xin chào {$user->name},\n\nTài khoản của bạn đã bị cấm.\n\nLý do: {$noiDungCam}\n\nTrân trọng,\nĐội ngũ quản trị.");
+
+    //         // Hoặc tạo phần nội dung dưới dạng HTML nếu cần
+    //         // $htmlBody = new HtmlPart("<h1>Xin chào {$user->name},</h1><p>Tài khoản của bạn đã bị cấm. Lý do: {$noiDungCam}</p>");
+
+    //         // Gửi email
+    //         $message->to($user->email)
+    //             ->subject('Tài khoản của bạn đã bị cấm')
+    //             ->setBody($textBody);  // Hoặc sử dụng $htmlBody nếu bạn muốn gửi nội dung HTML
+    //     });
+
+    //     // Xóa user
+    //     $user->delete();
+
+    //     return response()->json(['message' => 'Tài khoản đã bị cấm']);
+    // }
 }
