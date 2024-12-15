@@ -72,7 +72,6 @@ class LienHeDatPhongController extends Controller
             $user = User::withTrashed()->where('id',$item->tai_khoan_id)->get(['name','avatar'])->first();
             return [
                 'id' => $item->id,
-                'state' => $item->trang_thai ? 'Đã xử lí' : 'Chưa xử lí',
                 'id_room' => $item->phong_id,
                 'name_room' => $room->ten_phong,
                 'image_room' => Str::before($room->hinh_anh, ';'),
@@ -83,8 +82,6 @@ class LienHeDatPhongController extends Controller
                 'phone' => $item->so_dien_thoai,
                 'content' => $item->noi_dung,
                 'created_at' => $item->created_at,
-                'updated_at' => $item->updated_at,
-                'deleted_at' => $item->deleted_at,
             ];
         });
         return response()->json([
@@ -99,14 +96,20 @@ class LienHeDatPhongController extends Controller
         if ($list->isEmpty()) return response()->json(['message' => 'Danh sách trống'], 404);
         // Tùy chỉnh tên các key
         $data = $list->map(function ($item) {
+            $room = Phong::withTrashed()->where('id',$item->phong_id)->get(['ten_phong','hinh_anh'])->first();
+            $user = User::withTrashed()->where('id',$item->tai_khoan_id)->get(['name','avatar'])->first();
             return [
                 'id' => $item->id,
-                'state' => $item->trang_thai,
                 'id_room' => $item->phong_id,
+                'name_room' => $room->ten_phong,
+                'image_room' => Str::before($room->hinh_anh, ';'),
                 'id_user' => $item->tai_khoan_id,
+                'name_user' => $user->name,
+                'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
                 'name' => $item->ho_ten,
                 'phone' => $item->so_dien_thoai,
                 'content' => $item->noi_dung,
+                'updated_at' => $item->updated_at,
             ];
         });
         return response()->json([
