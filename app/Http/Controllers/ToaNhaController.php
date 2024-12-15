@@ -32,7 +32,7 @@ class ToaNhaController extends Controller
                 return [
                     'id_user' => $cmt->user->id,
                     'name' => $cmt->user->name,
-                    'avatar' => $cmt->user->avatar,
+                    'avatar' => $cmt->user->avatar ?? 'avatar/user_default.png',
                     'content' => $cmt->noi_dung,
                     'date' => $cmt->created_at->format('d').' Thg '.$cmt->created_at->format('m').' lúc '.$cmt->created_at->format('H').':'.$cmt->created_at->format('i'),
                 ];
