@@ -135,6 +135,8 @@ class HopDongController extends Controller
             'phong_id' => $request->id_room,
             'tai_khoan_id' => $request->id_user,
             'file_hop_dong' => $path_file,
+            'so_luong_xe' => $request->so_luong_xe,
+            'so_luong_nguoi' => $request->so_luong_nguoi,
             'ngay_bat_dau' => $request->date_start,
             'ngay_ket_thuc' => $request->date_end,
         ]);
@@ -193,6 +195,8 @@ class HopDongController extends Controller
         $hopDong->phong_id = $request->id_room;
         $hopDong->tai_khoan_id = $request->id_user;
         $hopDong->file_hop_dong = $path_file;
+        $hopDong->so_luong_xe = $request->so_luong_xe;
+        $hopDong->so_luong_nguoi = $request->so_luong_nguoi;
         $hopDong->ngay_bat_dau = $request->date_start;
         $hopDong->ngay_ket_thuc = $request->date_end;
 
