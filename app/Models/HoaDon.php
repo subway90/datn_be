@@ -29,8 +29,6 @@ class HoaDon extends Model
         'tien_dich_vu',
         'so_luong_nguoi',
         'hinh_thuc',
-        'code_uu_dai',
-        'ma_uu_dai',
         'noi_dung',
         'trang_thai',
     ];
@@ -40,8 +38,4 @@ class HoaDon extends Model
         return $this->belongsTo(HopDong::class, 'hop_dong_id');
     }
 
-    public function maUuDai()
-    {
-        return $this->belongsTo(MaUuDai::class, 'code_uu_dai');
-    }
 }

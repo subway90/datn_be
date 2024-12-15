@@ -24,12 +24,10 @@
                 $table->integer('tien_dich_vu');
                 $table->integer('so_luong_nguoi');
                 $table->boolean('hinh_thuc')->default(0); //: 0 thanh toán tiền mặt, 1: thanh toán vnpay
-                $table->string('code_uu_dai', 20)->nullable(); // mã ưu đãi giảm giá
                 $table->text('noi_dung')->nullable();
                 $table->boolean('trang_thai')->default(0); //0: chưa thanh toán, 1: đã thanh toán
                 $table->timestamps();
                 $table->softDeletes();
-                $table->foreign('code_uu_dai')->references('code')->on('ma_uu_dai');
                 $table->foreign('hop_dong_id')->references('id')->on('hop_dong')->onDelete('cascade');
             });
         }

@@ -5,7 +5,6 @@ php artisan db:seed --class=KhuVucSeeder
 php artisan db:seed --class=ToaNhaSeeder
 php artisan db:seed --class=PhongSeeder
 php artisan db:seed --class=HopDongSeeder
-php artisan db:seed --class=MaUuDaiSeeder
 php artisan db:seed --class=HoaDonSeeder
 php artisan db:seed --class=DanhMucTinTucSeeder
 php artisan db:seed --class=TinTucSeeder
