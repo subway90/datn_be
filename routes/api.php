@@ -152,8 +152,11 @@ Route::middleware(['Admin'])->group(function () {
 
     Route::prefix('hop-dong')->group(function () {
 
-        # Lấy danh sách
-        Route::get('/all', [HopDongController::class, 'index']);
+        # Lấy danh sách đang hoạt động 
+        Route::get('/hoat_dong', [HopDongController::class, 'index']);
+
+         # Lấy danh sách hết hạn
+         Route::get('/het_han', [HopDongController::class, 'het_han']);
 
         # Lấy danh sách đã xóa
         Route::get('/list_delete', [HopDongController::class, 'list_delete']);
