@@ -27,24 +27,24 @@ class LienHeDatPhongController extends Controller
             'phone.required' => 'Vui lòng nhập SĐT',
             'phone.size' => 'Độ dài SĐT không hợp lệ (độ dài = 10 kí tự)',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'message' => $validator->errors()->all(),
-            ], 400); 
+            ], 400);
         }
-    
+
         // Kiểm tra xem đã có LienHeHopDong nào cho id_user và id_room chưa
         $existingLienHe = LienHeDatPhong::where('phong_id', $request->id_room)
             ->where('tai_khoan_id', $request->id_user)
             ->exists();
-    
+
         if ($existingLienHe) {
             return response()->json([
                 'message' => 'Bạn đã tạo liên hệ trước đó rồi.',
             ], 400);
         }
-    
+
         // Tạo mới liên hệ đặt phòng
         LienHeDatPhong::create([
             'phong_id' => $request->id_room,
@@ -53,14 +53,15 @@ class LienHeDatPhongController extends Controller
             'so_dien_thoai' => $request->phone,
             'noi_dung' => $request->content,
         ]);
-    
+
         // Trả về phản hồi JSON thành công
         return response()->json([
             'message' => 'Tạo liên hệ thành công'
         ], 201);
     }
 
-    public function all() {
+    public function all()
+    {
 
         $list = LienHeDatPhong::all();
         if (!$list) {
@@ -68,8 +69,8 @@ class LienHeDatPhongController extends Controller
         }
         // Tùy chỉnh tên các key
         $data = $list->map(function ($item) {
-            $room = Phong::withTrashed()->where('id',$item->phong_id)->get(['ten_phong','hinh_anh'])->first();
-            $user = User::withTrashed()->where('id',$item->tai_khoan_id)->get(['name','avatar'])->first();
+            $room = Phong::withTrashed()->where('id', $item->phong_id)->get(['ten_phong', 'hinh_anh'])->first();
+            $user = User::withTrashed()->where('id', $item->tai_khoan_id)->get(['name', 'avatar'])->first();
             return [
                 'id' => $item->id,
                 'state' => $item->trang_thai ? 'Đã xử lí' : 'Chưa xử lí',
@@ -92,11 +93,13 @@ class LienHeDatPhongController extends Controller
         ], 200);
     }
 
-    public function list_delete() {
+    public function list_delete()
+    {
 
-        
+
         $list = LienHeDatPhong::onlyTrashed()->get();
-        if ($list->isEmpty()) return response()->json(['message' => 'Danh sách trống'], 404);
+        if ($list->isEmpty())
+            return response()->json(['message' => 'Danh sách trống'], 404);
         // Tùy chỉnh tên các key
         $data = $list->map(function ($item) {
             return [
@@ -125,24 +128,25 @@ class LienHeDatPhongController extends Controller
         }
         // Tùy chỉnh tên các key
         $data = [
-                'id' => $get->id,
-                'state' => $get->trang_thai,
-                'id_room' => $get->phong_id,
-                'id_user' => $get->tai_khoan_id,
-                'name' => $get->ho_ten,
-                'phone' => $get->so_dien_thoai,
-                'content' => $get->noi_dung,
-                'created_at' => $get->created_at,
-                'updated_at' => $get->updated_at,
-                'deleted_at' => $get->deleted_at,
-            ];
+            'id' => $get->id,
+            'state' => $get->trang_thai,
+            'id_room' => $get->phong_id,
+            'id_user' => $get->tai_khoan_id,
+            'name' => $get->ho_ten,
+            'phone' => $get->so_dien_thoai,
+            'content' => $get->noi_dung,
+            'created_at' => $get->created_at,
+            'updated_at' => $get->updated_at,
+            'deleted_at' => $get->deleted_at,
+        ];
         return response()->json($data, 200);
     }
 
     public function destroy($id)
     {
         $one = LienHeDatPhong::find($id);
-        if (!$one) return response()->json(['message' => 'Liên hệ không tồn tại'], 404);
+        if (!$one)
+            return response()->json(['message' => 'Liên hệ không tồn tại'], 404);
         $one->delete();
         return response()->json(['message' => 'Xóa thành công'], 200);
     }
@@ -150,7 +154,8 @@ class LienHeDatPhongController extends Controller
     public function restore($id)
     {
         $one = LienHeDatPhong::withTrashed()->find($id);
-        if (!$one) return response()->json(['message' => 'Liên hệ không tồn tại'], 404);
+        if (!$one)
+            return response()->json(['message' => 'Liên hệ không tồn tại'], 404);
         $one->restore();
         return response()->json(['message' => 'Khôi phục thành công.'], 200);
     }
@@ -176,4 +181,14 @@ class LienHeDatPhongController extends Controller
         return response()->json(['contacts' => $contacts], 200);
     }
 
+    public function hardDelete($id)
+    {
+        $record = LienHeDatPhong::withTrashed()->find($id);
+
+        if ($record) {
+            $record = $record->forceDelete();
+        }
+
+        return response()->json(['message' => 'Liên hệ đã xóa thành công!'], 200);
+    }
 }

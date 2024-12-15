@@ -30,7 +30,7 @@ Route::get('toa-nha/option', [ToaNhaController::class, 'option']);
 Route::post('/dang-ky-nhan-tin', [DangKyNhanTinController::class, 'register']);
 
 # Xác thực email
-Route::get('/verify-email-register/{token}',[DangKyNhanTinController::class, 'verify']);
+Route::get('/verify-email-register/{token}', [DangKyNhanTinController::class, 'verify']);
 
 # Danh sách banner
 Route::get('banner/show', [BannerController::class, 'show']);
@@ -169,19 +169,19 @@ Route::middleware(['Admin'])->group(function () {
 
         # Khôi phục hợp đồng
         Route::patch('/restore/{id}', [HopDongController::class, 'restore']);
-        
+
         # Lấy theo id
         Route::get('/{id}', [HopDongController::class, 'detail']);
 
     });
 
-    Route::prefix('comment_building')->group(function(){
+    Route::prefix('comment_building')->group(function () {
         Route::get('/', [BinhLuanToaNhaController::class, 'getAll']); // Lấy tất cả
         Route::get('/list_delete', [BinhLuanToaNhaController::class, 'getdelete']); // Lấy danh sách đã xóa
         Route::get('/{id}', [BinhLuanToaNhaController::class, 'getid']); // Lấy theo id
         Route::delete('/delete/{id}', [BinhLuanToaNhaController::class, 'delete']); // Xóa theo id
         Route::patch('/restore/{id}', [BinhLuanToaNhaController::class, 'restore']); // Khôi phục theo id
-    });    
+    });
 
 
     Route::prefix('contact_room')->group(function () {
@@ -189,8 +189,8 @@ Route::middleware(['Admin'])->group(function () {
         # Lấy danh sách
         Route::get('/', [LienHeDatPhongController::class, 'all']);
 
-         # Lấy danh sách đã xóa
-         Route::get('/list_delete', [LienHeDatPhongController::class, 'list_delete']);
+        # Lấy danh sách đã xóa
+        Route::get('/list_delete', [LienHeDatPhongController::class, 'list_delete']);
 
         # Xóa
         Route::delete('/delete/{id}', [LienHeDatPhongController::class, 'destroy']);
@@ -198,6 +198,8 @@ Route::middleware(['Admin'])->group(function () {
 
         # Khôi phục
         Route::post('/restore/{id}', [LienHeDatPhongController::class, 'restore']);
+        # xóa cứng
+        Route::delete('hardDelete/{id}', [LienHeDatPhongController::class, 'hardDelete']);
     });
 
 
@@ -212,11 +214,11 @@ Route::middleware(['Admin'])->group(function () {
 
         # Lấy danh sách liên hệ chưa được sữ lý, limit là 5
         Route::get('/lien_he', [DashBoardController::class, 'lienhe']);
-        
+
         # Lấy danh sách trễ hạn, mặc định là qua 0h00 ngày 1 hằng tháng
         Route::get('/tre_han', [DashBoardController::class, 'trehan']);
-        
-    
+
+
     });
 
 
@@ -433,7 +435,7 @@ Route::middleware(['Admin'])->group(function () {
 
         # Khôi phục theo ID
         Route::patch('/restore/{id}', [DangKyNhanTinController::class, 'restore']);
-        
+
         # Gửi mail
         Route::post('/gui-mail', [DangKyNhanTinController::class, 'sendMail']);
 
