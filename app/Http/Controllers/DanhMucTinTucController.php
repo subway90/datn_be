@@ -24,11 +24,8 @@ class DanhMucTinTucController extends Controller
                 'id' => $item->id,
                 'name' => $item->ten_danh_muc,
                 'slug' => $item->slug,
-                'status' => $item->trang_thai,
-                'order' => $item->thu_tu,
                 'created_at' => $item->created_at,
                 'updated_at' => $item->updated_at,
-                'deleted_at' => $item->deleted_at,
             ];
         });
         return response()->json([
@@ -49,11 +46,8 @@ class DanhMucTinTucController extends Controller
                 'id' => $item->id,
                 'name' => $item->ten_danh_muc,
                 'slug' => $item->slug,
-                'status' => $item->trang_thai,
-                'order' => $item->thu_tu,
                 'created_at' => $item->created_at,
                 'updated_at' => $item->updated_at,
-                'deleted_at' => $item->deleted_at,
             ];
         });
         return response()->json([
@@ -74,11 +68,8 @@ class DanhMucTinTucController extends Controller
                 'id' => $get->id,
                 'name' => $get->ten_danh_muc,
                 'slug' => $get->slug,
-                'status' => $get->trang_thai,
-                'order' => $get->thu_tu,
                 'created_at' => $get->created_at,
                 'updated_at' => $get->updated_at,
-                'deleted_at' => $get->deleted_at,
             ];
         return response()->json($data, 200);
     }
