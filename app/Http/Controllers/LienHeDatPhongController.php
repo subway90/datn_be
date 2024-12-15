@@ -150,6 +150,14 @@ class LienHeDatPhongController extends Controller
         return response()->json(['message' => 'Xóa thành công'], 200);
     }
 
+    public function force_delete($id)
+    {
+        $one = LienHeDatPhong::onlyTrashed()->find($id);
+        if (!$one) return response()->json(['message' => 'Liên hệ chưa được xử lí hoặc không tồn tại'], 404);
+        $one->forceDelete();
+        return response()->json(['message' => 'Xóa thành công'], 200);
+    }
+
     public function restore($id)
     {
         $one = LienHeDatPhong::withTrashed()->find($id);

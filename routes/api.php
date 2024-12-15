@@ -195,6 +195,10 @@ Route::middleware(['Admin'])->group(function () {
         # Xóa
         Route::delete('/delete/{id}', [LienHeDatPhongController::class, 'destroy']);
 
+        # Xóa cứng
+        Route::delete('/force_delete/{id}', [LienHeDatPhongController::class, 'force_delete']);
+
+
 
         # Khôi phục
         Route::post('/restore/{id}', [LienHeDatPhongController::class, 'restore']);
