@@ -221,8 +221,8 @@ class PhongController extends Controller
         if($list_room->isEmpty()) return response()->json(['message' => 'Danh sách phòng trống'], 404);
         //Chuyển đổi kết quả
         $result = $list_room->map(function ($room) {
-            $toa_nha = ToaNha::where('id',$room->toa_nha_id)->first(['slug','ten','khu_vuc_id']);
-            $khu_vuc = khuVuc::where('id',$toa_nha->khu_vuc_id)->first(['slug','ten']);
+            $toa_nha = ToaNha::withTrashed()->where('id',$room->toa_nha_id)->first(['slug','ten','khu_vuc_id']);
+            $khu_vuc = khuVuc::withTrashed()->where('id',$toa_nha->khu_vuc_id)->first(['slug','ten']);
             return [
                 'id' => $room->id,
                 'ten_phong' => $room->ten_phong,
