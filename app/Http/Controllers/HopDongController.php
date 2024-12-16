@@ -11,6 +11,7 @@ use App\Models\ToaNha;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class HopDongController extends Controller
 {
@@ -363,6 +364,8 @@ class HopDongController extends Controller
         # Tìm hợp đồng
         $hopDong = HopDong::find($id);
         if(!$hopDong) return response()->json(['message' => 'Hợp đồng này không tồn tại'], 404);
+        # Kiểm tra tình trạng hợp đồng
+        if($hopDong->ngay_ket_thuc > Carbon::now()) return response()->json(['message' => 'Hợp đồng đang hoạt động, không thể xoá'], 404);
         $hopDong->delete();
 
         # Trả kết quả res
