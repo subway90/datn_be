@@ -9,7 +9,7 @@ class LienHeDatPhong extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $table = 'lien-he-dat-phong'; // Tên bảng nếu không theo quy tắc Laravel
+    protected $table = 'lien_he_dat_phong'; // Tên bảng nếu không theo quy tắc Laravel
 
     protected $fillable = [
         'phong_id',
