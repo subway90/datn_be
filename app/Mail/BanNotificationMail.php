@@ -17,12 +17,12 @@ class BanNotificationMail extends Mailable
      * Create a new message instance.
      */
     public $user;
-    public $noiDungCam;
+    public $date_ban;
 
-    public function __construct($user, $noiDungCam)
+    public function __construct($user, $date_ban)
     {
         $this->user = $user;
-        $this->noiDungCam = $noiDungCam;
+        $this->date_ban = $date_ban;
     }
 
     public function build()
@@ -44,11 +44,10 @@ class BanNotificationMail extends Mailable
             <title>Thông báo tài khoản bị cấm</title>
         </head>
         <body>
-            <h1>Xin chào {$this->user->name},</h1>
-            <p>Tài khoản của bạn đã bị cấm vì lý do sau:</p>
-            <p><strong>{$this->noiDungCam}</strong></p>
+            <h6>Xin chào {$this->user->name},</h6>
+            <p>Tài khoản của bạn đã bị cấm vào <strong>Ngày {$this->date_ban}</strong></p>
             <p>Vui lòng liên hệ bộ phận hỗ trợ nếu bạn có thắc mắc.</p>
-            <p>Trân trọng,<br>Đội ngũ quản trị</p>
+            <p>Trân trọng,<br>Admin SGHouses</p>
         </body>
         </html>
         ";
@@ -60,7 +59,7 @@ class BanNotificationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Ban Notification Mail',
+            subject: 'Thông báo tài khoản đã bị cấm',
         );
     }
 

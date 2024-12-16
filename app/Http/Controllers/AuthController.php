@@ -279,36 +279,20 @@ class AuthController extends Controller
     {
         $user = User::find($id);
 
-        $validator = Validator::make($request->all(), [
-            'noi_dung_cam' => 'required|string|min:10',
-        ], [
-            'noi_dung_cam.required' => 'Bạn chưa nhập nội dung cấm',
-            'noi_dung_cam.min' => 'Đội dài nội dung cấm tối thiểu là 10!',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        if (!$user) {
-            return response()->json(['message' => 'Id user không tồn tại'], 404);
-        }
+        if (!$user) return response()->json(['message' => 'Id user không tồn tại'], 404);
 
         if ($user->role == 0) {
-            return response()->json(['error' => 'Không được cấm tài khoản admin'], 403);
+            return response()->json(['message' => 'Không được cấm tài khoản admin'], 400);
         }
 
-        $user->noi_dung_cam = $request->input('noi_dung_cam');
-        $user->save();
+        // Xóa mềm
         $user->delete();
 
-        $noiDungCam = $request->input('noi_dung_cam');
-        $user->noi_dung_cam = $noiDungCam;
-        $user->save();
+        $date_ban = $user->deleted_at->format('d').' Tháng '.$user->deleted_at->format('m').' Năm '.$user->deleted_at->format('Y').' lúc '.$user->deleted_at->format('H').':'.$user->deleted_at->format('i');
 
         // Gửi email thông báo cấm tài khoản
         try {
-            Mail::to($user->email)->send(new BanNotificationMail($user, $noiDungCam));
+            Mail::to($user->email)->send(new BanNotificationMail($user, $date_ban));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể gửi email. Vui lòng thử lại sau.'], 500);
         }
@@ -325,7 +309,7 @@ class AuthController extends Controller
 
         $user->restore();
 
-        return response()->json(['message' => 'Khôi phục thành công!', 'user' => $user], 200);
+        return response()->json(['message' => 'Khôi phục thành công!'], 200);
     }
     public function getDeletedUsers()
     {

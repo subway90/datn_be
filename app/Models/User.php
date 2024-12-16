@@ -30,7 +30,6 @@ class User extends Authenticatable
         'gender',
         'address',
         'role',
-        'noi_dung_cam'
     ];
 
     /**
