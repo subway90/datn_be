@@ -307,7 +307,9 @@ class ToaNhaController extends Controller
 
     public function one($id)
     {
-        $one = ToaNha::find($id);
+        $one = ToaNha::where('id',$id)->with(['khuVuc' => function($query) {
+                $query->withTrashed(); // Lấy cả các bản ghi đã bị xóa mềm
+            }])->first();
         if (!$one) return response()->json(['message' => 'Tòa nhà không tồn tại'], 404);
         $result = [
                 'id' => $one->id,
