@@ -6,6 +6,7 @@ use App\Models\Phong;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\BinhLuanToaNha;
+use App\Models\KhuVuc;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,17 +16,17 @@ class ToaNhaController extends Controller
     {
         $detail = ToaNha::with('phongTro')
         ->with('khuVuc')
-        ->where('slug', $request->slug)->get();
+        ->where('slug', $request->slug)->first();
 
-        
+       
 
-        if (!$detail) {
-            return response()->json(['message' => 'Tòa nhà không tồn tại'], 404);
-        }
+        if (!$detail) return response()->json(['message' => 'Tòa nhà không tồn tại'], 404);
+
+         // Kiểm tra trạng thái khu vực 
+         $check_building = KhuVuc::where('id',$detail->khu_vuc_id)->exists();
+         if(!$check_building) return response()->json(['message' => 'Khu vực của tòa nhà này đã bị ẩn'], 404);
 
         // lấy danh sách bình luận
-        
-
         $result = $detail->map(function ($rows) {
             $list_cmt = BinhLuanToaNha::where('toa_nha_id', $rows->id)->with('user')->get();
             $result_list_cmt = $list_cmt->map(function ($cmt) {
