@@ -24,7 +24,9 @@ class HopDongController extends Controller
             $building = ToaNha::withTrashed()->where('id', $room->toa_nha_id)->get(['ten'])->first();
             return [
                 'id' => $row->id,
-                'status' => $row->ngay_ket_thuc > $this->date_now ? 'Đang hoạt động' : 'Hết hạn',
+                'status' => $row->ngay_ket_thuc < Carbon::now() ? 'Hết hạn' : ($row->ngay_ket_thuc >= Carbon::now()->subDays(29) && $row->ngay_ket_thuc > Carbon::now()
+                ? 'Sắp hết hạn' 
+                : 'Đang hoạt động'),
                 'id_room' => $row->phong_id,
                 'name_room' => $room->ten_phong,
                 'name_building' => $building->ten,
