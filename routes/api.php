@@ -152,6 +152,9 @@ Route::middleware(['Admin'])->group(function () {
 
     Route::prefix('hop-dong')->group(function () {
 
+        # Lấy tất cả
+        Route::get('/all', [HopDongController::class, 'all']);
+
         # Lấy danh sách đang hoạt động 
         Route::get('/hoat-dong', [HopDongController::class, 'index']);
 

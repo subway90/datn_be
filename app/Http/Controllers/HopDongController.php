@@ -14,6 +14,34 @@ use Illuminate\Support\Facades\Storage;
 
 class HopDongController extends Controller
 {
+    public function all()
+    {
+        $list = HopDong::orderBy('created_at', 'DESC')->get();
+        $result = $list->map(function ($row) {
+            $room = Phong::withTrashed()->with('toaNha')->where('id', $row->phong_id)->get(['toa_nha_id', 'ten_phong', 'hinh_anh'])->first();
+            $user = User::withTrashed()->where('id', $row->tai_khoan_id)->get(['name', 'avatar'])->first();
+            $building = ToaNha::withTrashed()->where('id', $room->toa_nha_id)->get(['ten'])->first();
+            return [
+                'id' => $row->id,
+                'status' => $row->ngay_ket_thuc > $this->date_now ? 'Đang hoạt động' : 'Hết hạn',
+                'id_room' => $row->phong_id,
+                'name_room' => $room->ten_phong,
+                'name_building' => $building->ten,
+                'image_room' => Str::before($room->hinh_anh, ';'),
+                'id_user' => $row->tai_khoan_id,
+                'name_user' => $user->name,
+                'avatar_user' => $user->avatar ?? 'avatar/user_default.png',
+                'so_luong_xe' => $row->so_luong_xe,
+                'so_luong_nguoi' => $row->so_luong_nguoi,
+                'file_hop_dong' => $row->file_hop_dong,
+                'date_start' => $row->ngay_bat_dau,
+                'date_end' => $row->ngay_ket_thuc,
+            ];
+        });
+    
+        return response()->json($result, 200);
+    }
+
     public function index()
     {
         $list = HopDong::where('ngay_ket_thuc', '>=', now())->orderBy('id', 'DESC')->get();
