@@ -14,9 +14,9 @@ class ToaNhaController extends Controller
 {
     public function detail(Request $request)
     {
-        $detail = ToaNha::with('phongTro')
-        ->with('khuVuc')
-        ->where('slug', $request->slug)->first();
+        $detail = ToaNha::with('phongTro')->with(['khuVuc' => function($query) {
+                $query->withTrashed(); // Lấy cả các bản ghi đã bị xóa mềm
+            }])->where('slug', $request->slug)->first();
 
        
 
@@ -27,8 +27,7 @@ class ToaNhaController extends Controller
          if(!$check_building) return response()->json(['message' => 'Khu vực của tòa nhà này đã bị ẩn'], 404);
 
         // lấy danh sách bình luận
-        $result = $detail->map(function ($rows) {
-            $list_cmt = BinhLuanToaNha::where('toa_nha_id', $rows->id)->with('user')->get();
+            $list_cmt = BinhLuanToaNha::where('toa_nha_id', $detail->id)->with('user')->get();
             $result_list_cmt = $list_cmt->map(function ($cmt) {
                 return [
                     'id_user' => $cmt->user->id,
@@ -38,22 +37,21 @@ class ToaNhaController extends Controller
                     'date' => $cmt->created_at->format('d').' Thg '.$cmt->created_at->format('m').' lúc '.$cmt->created_at->format('H').':'.$cmt->created_at->format('i'),
                 ];
             });
-            return [
-                'id' => $rows->id,
-                'khu_vuc_id' => $rows->khu_vuc_id,
-                'ten_khu_vuc' => $rows->khuVuc->ten,
-                'ten' => $rows->ten,
-                'image' => $rows->image,
-                'mo_ta' => $rows->mo_ta,
-                'tien_ich' => $rows->tien_ich,
-                'vi_tri' => $rows->vi_tri,
-                'luot_xem' => $rows->luot_xem,
-                'noi_bat' => $rows->noi_bat,
-                'phong_tro' => $rows->phongTro,
+            $result = [
+                'id' => $detail->id,
+                'khu_vuc_id' => $detail->khu_vuc_id,
+                'ten_khu_vuc' => $detail->khuVuc->ten,
+                'ten' => $detail->ten,
+                'image' => $detail->image,
+                'mo_ta' => $detail->mo_ta,
+                'tien_ich' => $detail->tien_ich,
+                'vi_tri' => $detail->vi_tri,
+                'luot_xem' => $detail->luot_xem,
+                'noi_bat' => $detail->noi_bat,
+                'phong_tro' => $detail->phongTro,
                 'list_cmt' => $result_list_cmt,
             ];
-        });
-        return response()->json($result->first(),200);
+        return response()->json($result,200);
     }
 
     public function listName()
