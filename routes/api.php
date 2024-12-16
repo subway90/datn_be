@@ -207,7 +207,7 @@ Route::middleware(['Admin'])->group(function () {
 
 
         # Khôi phục
-        Route::post('/restore/{id}', [LienHeDatPhongController::class, 'restore']);
+        Route::patch('/restore/{id}', [LienHeDatPhongController::class, 'restore']);
 
         # Xóa vĩnh viễn
         Route::delete('/delete/{id}', [LienHeDatPhongController::class, 'delete']);
