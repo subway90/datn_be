@@ -66,9 +66,9 @@ class PhongController extends Controller
 
         //Chuyển đổi kết quả
         $result = $list_room->map(function ($room) {
-            $toa_nha = ToaNha::where('id',$room->toa_nha_id)->first(['slug','ten','khu_vuc_id']);
-            $khu_vuc = khuVuc::where('id',$toa_nha->khu_vuc_id)->first(['slug','ten']);
-            $hop_dong = HopDong::where('phong_id',$room->id)->get();
+            $toa_nha = ToaNha::withTrashed()->where('id',$room->toa_nha_id)->first(['slug','ten','khu_vuc_id']);
+            $khu_vuc = khuVuc::withTrashed()->where('id',$toa_nha->khu_vuc_id)->first(['slug','ten']);
+            $hop_dong = HopDong::withTrashed()->where('phong_id',$room->id)->get();
             // Xác định trạng thái phòng
             $trang_thai = '';
             if(!$hop_dong->isEmpty()){
