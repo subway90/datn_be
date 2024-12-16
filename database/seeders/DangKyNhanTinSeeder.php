@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\DangKyNhanTin;
 use Ramsey\Uuid\Uuid;
 
-class DangKyNhanTInSeeder extends Seeder
+class DangKyNhanTinSeeder extends Seeder
 {
     /**
      * Run the database seeds.

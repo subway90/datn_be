@@ -53,12 +53,21 @@ class DatabaseSeeder extends Seeder
             'phone' => '0969455222',
         ]);
         User::create([
+            'name' => 'Tester 04',
+            'email' => 'hieunmps33151@fpt.edu.vn',
+            'password' => Hash::make('12345678'),
+            'born' => '2024-01-17',
+            'gender' => 2,
+            'phone' => '0969455222',
+        ]);
+        User::create([
             'name' => 'Võ Hữu Đạt',
             'email' => 'vohuudat282224@gmail.com',
             'password' => Hash::make('123456789'),
             'born' => '2024-02-28',
             'gender' => 2,
             'phone' => '0123456789',
+            'role' => 0, //admin
         ]);
     }
 }

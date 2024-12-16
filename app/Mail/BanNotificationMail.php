@@ -44,7 +44,7 @@ class BanNotificationMail extends Mailable
             <title>Thông báo tài khoản bị cấm</title>
         </head>
         <body>
-            <h6>Xin chào {$this->user->name},</h6>
+            <h3>Xin chào {$this->user->name},</h3>
             <p>Tài khoản của bạn đã bị cấm vào <strong>Ngày {$this->date_ban}</strong></p>
             <p>Vui lòng liên hệ bộ phận hỗ trợ nếu bạn có thắc mắc.</p>
             <p>Trân trọng,<br>Admin SGHouses</p>

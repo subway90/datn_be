@@ -285,10 +285,11 @@ class AuthController extends Controller
             return response()->json(['message' => 'Không được cấm tài khoản admin'], 400);
         }
 
-        // Xóa mềm
-        $user->delete();
+        // Cập nhật trạng thái
+        $user->update(['status'=>1,'updated_at'=>now()]);
 
-        $date_ban = $user->deleted_at->format('d').' Tháng '.$user->deleted_at->format('m').' Năm '.$user->deleted_at->format('Y').' lúc '.$user->deleted_at->format('H').':'.$user->deleted_at->format('i');
+        // Ngày cập nhật
+        $date_ban = $user->updated_at->format('d').' Tháng '.$user->updated_at->format('m').' Năm '.$user->updated_at->format('Y').' lúc '.$user->updated_at->format('H').':'.$user->updated_at->format('i');
 
         // Gửi email thông báo cấm tài khoản
         try {
@@ -301,13 +302,14 @@ class AuthController extends Controller
     }
     public function restoreUser($id)
     {
-        $user = User::onlyTrashed()->find($id);
+        $user = User::find($id);
 
         if (!$user) {
             return response()->json(['error' => 'Id user không tồn tại'], 404);
         }
 
-        $user->restore();
+        // Cập nhật trạng thái
+        $user->update(['status'=>0]);
 
         return response()->json(['message' => 'Khôi phục thành công!'], 200);
     }

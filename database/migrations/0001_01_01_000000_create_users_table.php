@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->tinyInteger('gender')->default(1); //1: nam, 2:nữ, 3:khác
             $table->text('address')->nullable();
             $table->string('google_id')->nullable();
+            $table->tinyInteger('status')->default(0); //1: đã bị ban, 0: bình thường
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

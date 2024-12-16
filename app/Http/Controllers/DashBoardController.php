@@ -120,7 +120,7 @@ class DashBoardController extends Controller
             'hop_dong_id' => $hoaDon->hop_dong_id,
             'email_user' =>$hoaDon->hopDong->user->email,
             'name_user' =>$hoaDon->hopDong->user->name,
-            'avatar_user' =>$hoaDon->hopDong->user->avatar ?? 'avatar/user_default.png.png',
+            'avatar_user' =>$hoaDon->hopDong->user->avatar ?? 'avatar/user_default.png',
             'total' => $hoaDon->tien_thue 
                 + ($hoaDon->tien_dien * $hoaDon->so_ki_dien) 
                 + ($hoaDon->tien_nuoc * $hoaDon->so_khoi_nuoc) 
