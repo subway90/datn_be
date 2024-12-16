@@ -15,16 +15,18 @@ class HoaDonController extends Controller
         // Xác thực dữ liệu đầu vào
         $validate = Validator::make($request->all(),[
             'id_hop_dong' => 'required|exists:hop_dong,id', // Kiểm tra hợp đồng tồn tại
-            'so_ki_dien' => 'required|numeric',
-            'so_khoi_nuoc' => 'required|numeric',
+            'so_ki_dien' => 'required|numeric|min:0',
+            'so_khoi_nuoc' => 'required|numeric|min:0',
             'noi_dung' => 'nullable|string',
         ],[
             'id_hop_dong.required' => 'Chưa nhập ID Hợp đồng',
             'id_hop_dong.exists' => 'ID hợp đồng này không tồn tại',
             'so_ki_dien.required' => 'Chưa nhập Số kí điện',
             'so_ki_dien.numeric' => 'Số kí điện phải là số',
+            'so_ki_dien.min' => 'Số kí điện không được nhỏ hơn 0',
             'so_khoi_nuoc.required' => 'Chưa nhập Số khối nước',
             'so_khoi_nuoc.numeric' => 'Số khối nước phải là số',
+            'so_khoi_nuoc.min' => 'Số khối nước không được nhỏ hơn 0',
             'noi_dung.string' => 'Nội dung phải là chuỗi',
         ]);
         if($validate->fails()) return response()->json(['message'=>$validate->errors()->all()],400);
