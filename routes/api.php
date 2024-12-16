@@ -51,10 +51,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('forgot/check', [ResetPasswordController::class, 'check']);
 # Quên mật khẩu : reset
 Route::post('forgot/reset', [ResetPasswordController::class, 'reset']);
-Route::prefix('google')->group(function () {
-    Route::post('/loginWithGoogle', [GoogleController::class, 'loginWithGoogle']);
-    Route::post('/registerWithGoogle', [GoogleController::class, 'registerWithGoogle']);
-});
+Route::post('google/loginWithGoogle', [GoogleController::class, 'loginWithGoogle']);
 # Những API cần đăng nhập
 Route::middleware(['CusTom'])->group(function () {
 
