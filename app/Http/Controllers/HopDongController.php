@@ -375,6 +375,15 @@ class HopDongController extends Controller
     {
         $hopDong = HopDong::onlyTrashed()->find($id);
         if(!$hopDong) return response()->json(['message' => 'Hợp đồng này không tồn tại'], 404);
+        // Kiểm tra hợp đồng này còn hạn không
+        if($hopDong->ngay_ket_thuc > Carbon::now()) {
+            // Kiểm tra xem phòng đang cho thuê chưa
+            $list_contract = HopDong::select('ngay_ket_thuc')->where('phong_id',$hopDong->phong_id)->get();
+            foreach ($list_contract as $contract) {
+                if($contract->ngay_ket_thuc > Carbon::now()) return response()->json(['message' => 'Phòng với ID = '.$hopDong->phong_id.' đang có hợp đồng khác, không thể khôi phục'], 404);
+            }
+        }
+        // Khôi phục
         $hopDong->restore();
 
         return response()->json(['message' => 'Khôi phục hợp đồng thành công'], 200);
