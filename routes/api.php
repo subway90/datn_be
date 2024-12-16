@@ -342,7 +342,7 @@ Route::middleware(['Admin'])->group(function () {
         Route::delete('/delete/{id}', [ToaNhaController::class, 'delete']);
 
         # Khôi phục
-        Route::post('/restore/{id}', [ToaNhaController::class, 'restore']);
+        Route::patch('/restore/{id}', [ToaNhaController::class, 'restore']);
 
         # Nhân bản theo ID
         Route::get('/duplicate/{id}', [ToaNhaController::class, 'duplicate']);
