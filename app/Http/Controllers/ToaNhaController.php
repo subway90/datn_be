@@ -23,7 +23,7 @@ class ToaNhaController extends Controller
         if (!$detail) return response()->json(['message' => 'Tòa nhà không tồn tại'], 404);
 
          // Kiểm tra trạng thái khu vực 
-         $check_building = KhuVuc::where('id',$detail->khu_vuc_id)->exists();
+         $check_building = KhuVuc::withTrashed()->where('id',$detail->khu_vuc_id)->exists();
          if(!$check_building) return response()->json(['message' => 'Khu vực của tòa nhà này đã bị ẩn'], 404);
 
         // lấy danh sách bình luận
@@ -276,7 +276,11 @@ class ToaNhaController extends Controller
     public function all()
     {
         // Lấy tất cả khu vực
-        $list = ToaNha::withCount('phongTro as count_room')->orderBy('id','DESC')->get();
+        $list = ToaNha::withCount('phongTro as count_room')->with(['khuVuc' => function($query) {
+                $query->withTrashed(); // Lấy cả các bản ghi đã bị xóa mềm
+            }])
+            ->orderBy('id', 'DESC')
+            ->get();
     
         // Kiểm tra nếu không có dữ liệu
         if ($list->isEmpty()) {
