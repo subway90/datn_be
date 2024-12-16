@@ -198,16 +198,11 @@ Route::middleware(['Admin'])->group(function () {
         # Lấy danh sách
         Route::get('/', [LienHeDatPhongController::class, 'all']);
 
-         # Lấy danh sách đã xóa
-         Route::get('/list_delete', [LienHeDatPhongController::class, 'list_delete']);
+        # Thay đổi trạng thái xử lí
+        Route::put('/xu-li/{id}', [LienHeDatPhongController::class, 'handle_contact']);
 
-        # Xóa
-        Route::delete('/delete/{id}', [LienHeDatPhongController::class, 'destroy']);
-
-        # Xóa cứng
-        Route::delete('/force_delete/{id}', [LienHeDatPhongController::class, 'force_delete']);
-
-
+        # Lấy danh sách đã xóa
+        Route::get('/list_delete', [LienHeDatPhongController::class, 'list_delete']);
 
         # Khôi phục
         Route::patch('/restore/{id}', [LienHeDatPhongController::class, 'restore']);

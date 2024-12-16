@@ -142,30 +142,24 @@ class LienHeDatPhongController extends Controller
         return response()->json($data, 200);
     }
 
-    public function destroy($id)
+    public function handle_contact($id)
     {
-        $one = LienHeDatPhong::find($id);
-        if (!$one) return response()->json(['message' => 'Liên hệ không tồn tại'], 404);
-        $one->delete();
-        return response()->json(['message' => 'Xóa thành công'], 200);
+        $get_contact = LienHeDatPhong::find($id);
+        // Kiểm tra tồn tại
+        if (!$get_contact) return response()->json(['message' => 'Liên hệ không tồn tại'], 404);
+        // Kiểm tra trạng thái
+        if ($get_contact->trang_thai) return response()->json(['message' => 'Liên hệ này đã được xử lí rồi'], 404);
+        // Thực hiện gửi mail
+
+        // Thay đổi trạng thái xử lí
+        $get_contact->update([
+            'trang_thai' => '1',
+        ]);
+
+        return response()->json(['message' => 'Thay đổi trạng thái Đã xử lí thành công !'], 200);
     }
+    
     public function delete($id)
-    {
-        // Tìm kiếm bản ghi (kể cả đã xóa mềm)
-        $one = LienHeDatPhong::withTrashed()->find($id); 
-
-        // Nếu không tồn tại bản ghi
-        if (!$one) {
-            return response()->json(['message' => 'Liên hệ không tồn tại'], 404);
-        }
-
-        // Thực hiện xóa vĩnh viễn
-        $one->forceDelete();
-        
-        return response()->json(['message' => 'Xóa  thành công'], 200);
-    }
-
-    public function force_delete($id)
     {
         $one = LienHeDatPhong::onlyTrashed()->find($id);
         if (!$one) return response()->json(['message' => 'Liên hệ chưa được xử lí hoặc không tồn tại'], 404);
