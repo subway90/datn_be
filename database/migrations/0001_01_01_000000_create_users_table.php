@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -22,7 +21,7 @@ return new class extends Migration
             $table->date('born')->nullable();
             $table->tinyInteger('gender')->default(1); //1: nam, 2:nữ, 3:khác
             $table->text('address')->nullable();
-            $table->string('noi_dung_cam', 255)->nullable();
+            $table->string('google_id')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
