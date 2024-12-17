@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
 
         User::create([
             'name' => 'Nguyễn Minh Hiếu',
-            'email' => 'nguyenhieu3105@gmail.com',
+            'email' => 'admin@gmail.com',
             'avatar' => 'avatar/img0.jpg',
             'password' => Hash::make('12345678'),
             'born' => '2024-05-31',
@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
         ]);
         User::create([
             'name' => 'Tester 04',
-            'email' => 'hieunmps33151@fpt.edu.vn',
+            'email' => 'nguyenhieu3105@gmail.com',
             'password' => Hash::make('12345678'),
             'born' => '2024-01-17',
             'gender' => 2,
