@@ -87,4 +87,10 @@ class ConfigWebsiteController extends Controller
             'data' => $config,
         ]);
     }
+    public function getall(){
+        $getall = ConfigWebsite::all();
+        return [
+            'getall'=>$getall,
+        ];
+    }
 }
