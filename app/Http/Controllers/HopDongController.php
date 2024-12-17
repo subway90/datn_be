@@ -22,11 +22,13 @@ class HopDongController extends Controller
             $room = Phong::withTrashed()->with('toaNha')->where('id', $row->phong_id)->get(['toa_nha_id', 'ten_phong', 'hinh_anh'])->first();
             $user = User::withTrashed()->where('id', $row->tai_khoan_id)->get(['name', 'avatar'])->first();
             $building = ToaNha::withTrashed()->where('id', $room->toa_nha_id)->get(['ten'])->first();
+            $date_start = Carbon::parse($row->ngay_bat_dau);
+            $date_end = Carbon::parse($row->ngay_ket_thuc);
+
             return [
                 'id' => $row->id,
-                'status' => $row->ngay_ket_thuc < Carbon::now() ? 'Hết hạn' : ($row->ngay_ket_thuc >= Carbon::now()->subDays(29) && $row->ngay_ket_thuc > Carbon::now()
-                ? 'Sắp hết hạn' 
-                : 'Đang hoạt động'),
+                'status' => $date_end < Carbon::now() ? 'Hết hạn' 
+                : ($date_end->copy()->subDays(10) < Carbon::now() ? 'Sắp hết hạn' : 'Đang hoạt động'),
                 'id_room' => $row->phong_id,
                 'name_room' => $room->ten_phong,
                 'name_building' => $building->ten,
@@ -37,8 +39,8 @@ class HopDongController extends Controller
                 'so_luong_xe' => $row->so_luong_xe,
                 'so_luong_nguoi' => $row->so_luong_nguoi,
                 'file_hop_dong' => $row->file_hop_dong,
-                'date_start' => $row->ngay_bat_dau,
-                'date_end' => $row->ngay_ket_thuc,
+                'date_start' => $date_start->format('d').' Tháng '.$date_start->format('m').' năm '.$date_start->format('Y'),
+                'date_end' => $date_end->format('d').' Tháng '.$date_end->format('m').' năm '.$date_end->format('Y'),
             ];
         });
     
