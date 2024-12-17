@@ -236,6 +236,9 @@ Route::middleware(['Admin'])->group(function () {
 
         # Lấy danh sách hợp đồng 
         Route::get('/hop_dong', [DashBoardController::class, 'hop_dong']);
+
+        # Lấy danh sách thống kê theo quận
+        Route::get('/distric', [DashBoardController::class, 'distric']);
         
     
     });
