@@ -151,9 +151,10 @@ class DashBoardController extends Controller
     $sap_het_han = HopDong::where('ngay_ket_thuc', '>=', $today)
         ->where('ngay_ket_thuc', '<=', $saphethan)
         ->count();
-
+    $tong = $het_han + $dang_thue + $sap_het_han;
     // Trả về kết quả JSON
     return response()->json([
+        'tong_hop_dong' => $tong,
         'dang_thue' => $dang_thue,
         'het_han' => $het_han,
         'sap_het_han' => $sap_het_han

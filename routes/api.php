@@ -213,6 +213,7 @@ Route::middleware(['Admin'])->group(function () {
 
     Route::prefix('config_website')->group(function(){
         Route::post('/{id}',[ConfigWebsiteController::class, 'edit']);
+        Route::get('/getall', [ConfigWebsiteController::class, 'getall']);
     });
 
 
