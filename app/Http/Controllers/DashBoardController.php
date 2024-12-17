@@ -11,6 +11,7 @@ use App\Models\LienHeDatPhong;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class DashBoardController extends Controller
@@ -174,10 +175,10 @@ class DashBoardController extends Controller
 
     public function distric(){
         // Lấy tất cả quận từ bảng khu_vuc
-    $districts = KhuVuc::all();
+        $districts = KhuVuc::all();
 
          // Duyệt từng quận
-        $result = $districts->map(function ($district) {
+     $result = $districts->map(function ($district) {
         // Lấy tất cả tòa nhà thuộc quận hiện tại
         $buildings = ToaNha::where('khu_vuc_id', $district->id)->get();
 
@@ -209,4 +210,26 @@ class DashBoardController extends Controller
 
     return response()->json($result, 200);
     }
+    public function thongkehoadon($year){
+        // Lọc dữ liệu hóa đơn theo năm và nhóm theo tháng
+        $hoaDonByMonth = HoaDon::selectRaw('MONTH(created_at) as month, COUNT(*) as tong_hoa_don')
+        ->whereYear('created_at', $year)  // Lọc theo năm
+        ->groupByRaw('MONTH(created_at)')  // Nhóm theo tháng
+        ->orderByRaw('MONTH(created_at)')
+        ->pluck('tong_hoa_don', 'month');
+
+        // Tạo mảng kết quả
+        $result = [];
+        for ($month = 1; $month <= 12; $month++) {
+        $result[] = [
+            'month' => $month,
+            'tong_hoa_don' => $hoaDonByMonth[$month] ?? 0, // Nếu không có hóa đơn cho tháng, gán 0
+        ];
+        }
+
+        // Trả về kết quả JSON theo cấu trúc yêu cầu
+        return response()->json([
+        'year' => $year,
+        'data' => $result
+        ], 200);}
 }
