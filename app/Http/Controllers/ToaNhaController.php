@@ -18,8 +18,6 @@ class ToaNhaController extends Controller
                 $query->withTrashed(); // Lấy cả các bản ghi đã bị xóa mềm
             }])->where('slug', $request->slug)->first();
 
-       
-
         if (!$detail) return response()->json(['message' => 'Tòa nhà không tồn tại'], 404);
 
          // Kiểm tra trạng thái khu vực 
@@ -97,12 +95,14 @@ class ToaNhaController extends Controller
 
         // Chuyển đổi dữ liệu để trả JSON
         $result = $toaNhas->map(function ($toaNha) {
+            $min_price = Phong::where('toa_nha_id',$toaNha->id)->min('gia_thue');
+            $max_price = Phong::where('toa_nha_id',$toaNha->id)->max('gia_thue');
             return [
                 'id' => $toaNha->id,
                 'slug' => $toaNha->slug,
                 'name' => $toaNha->ten,
                 'image' => Str::before($toaNha->image, ';'),
-                'gia_thue' => $toaNha->gia_thue,
+                'gia_thue' => number_format($min_price, 0, '.', '.').' - '.number_format($max_price, 0, '.', '.').' vnđ',
                 'count_rooms' => $toaNha->so_luong_phong,
                 'name_area' =>$toaNha->khuVuc->ten,
             ];
@@ -153,13 +153,15 @@ class ToaNhaController extends Controller
 
         // Chuyển đổi dữ liệu để trả JSON
         $result = $toaNhas->map(function ($toaNha) {
+            $min_price = Phong::where('toa_nha_id',$toaNha->id)->min('gia_thue');
+            $max_price = Phong::where('toa_nha_id',$toaNha->id)->max('gia_thue');
             return [
                 'id' => $toaNha->id,
                 'slug' => $toaNha->slug,
                 'name' => $toaNha->ten,
                 'image' => Str::before($toaNha->image, ';'),
                 'luot_xem' => $toaNha->luot_xem,
-                'gia_thue' => $toaNha->gia_thue,
+                'gia_thue' => number_format($min_price, 0, '.', '.').' - '.number_format($max_price, 0, '.', '.').' vnđ',
                 'count_rooms' => $toaNha->so_luong_phong,
                 'name_area' =>$toaNha->khuVuc->ten,
             ];
@@ -190,12 +192,14 @@ class ToaNhaController extends Controller
 
         // Chuyển đổi dữ liệu để trả JSON
         $result = $toaNhas->map(function ($toaNha) {
+            $min_price = Phong::where('toa_nha_id',$toaNha->id)->min('gia_thue');
+            $max_price = Phong::where('toa_nha_id',$toaNha->id)->max('gia_thue');
             return [
                 'id' => $toaNha->id,
                 'slug' => $toaNha->slug,
                 'name' => $toaNha->ten,
                 'image' => Str::before($toaNha->image, ';'),
-                'gia_thue' => $toaNha->gia_thue,
+                'gia_thue' => number_format($min_price, 0, '.', '.').' - '.number_format($max_price, 0, '.', '.').' vnđ',
                 'count_rooms' => $toaNha->so_luong_phong,
                 'name_area' =>$toaNha->khuVuc->ten,
             ];
