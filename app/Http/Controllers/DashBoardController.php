@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Models\HoaDon;
+use App\Models\KhuVuc;
 use App\Models\Phong;
+use App\Models\ToaNha;
 use App\Models\User;
 use App\Models\HopDong;
 use App\Models\LienHeDatPhong;
@@ -159,7 +161,7 @@ class DashBoardController extends Controller
         'het_han' => $het_han,
         'sap_het_han' => $sap_het_han
     ], 200);
-}
+    }
 
     public function total_contact() {
         $da_xu_ly = LienHeDatPhong::where('trang_thai',1)->count();
@@ -170,4 +172,41 @@ class DashBoardController extends Controller
         ], 200);
     }
 
+    public function distric(){
+        // Lấy tất cả quận từ bảng khu_vuc
+    $districts = KhuVuc::all();
+
+         // Duyệt từng quận
+        $result = $districts->map(function ($district) {
+        // Lấy tất cả tòa nhà thuộc quận hiện tại
+        $buildings = ToaNha::where('khu_vuc_id', $district->id)->get();
+
+        // Duyệt từng tòa nhà
+        $buildingData = $buildings->map(function ($building) {
+            // Đếm số phòng theo trạng thái (0: trống, 1: cho thuê)
+            $trong = Phong::where('toa_nha_id', $building->id)
+                ->where('trang_thai', 0) // Phòng trống
+                ->count();
+
+            $cho_thue = Phong::where('toa_nha_id', $building->id)
+                ->where('trang_thai', 1) // Phòng cho thuê
+                ->count();
+            
+            return [
+                'name' => $building->ten,  // Tên tòa nhà
+                'trong' => $trong,         // Số phòng trống
+                'cho_thue' => $cho_thue,   // Số phòng cho thuê
+            ];
+        });
+
+        return [
+            'District' => [
+                'name' => $district->ten,   // Tên quận
+                'buildings' => $buildingData, // Danh sách tòa nhà trong quận
+            ],
+        ];
+    });
+
+    return response()->json($result, 200);
+    }
 }

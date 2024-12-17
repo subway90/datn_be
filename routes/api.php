@@ -236,6 +236,8 @@ Route::middleware(['Admin'])->group(function () {
 
          # Thống kê tổng liên hệ
          Route::get('/total_contact', [DashBoardController::class, 'total_contact']);
+        # Lấy danh sách thống kê theo quận
+        Route::get('/distric', [DashBoardController::class, 'distric']);
         
     
     });
