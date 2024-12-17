@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\BinhLuanToaNhaController;
 use App\Http\Controllers\BinhLuanTinTucController;
+use App\Http\Controllers\ConfigWebsiteController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\HoaDonController;
 use App\Http\Controllers\TienIchToaNhaController;
+use Database\Seeders\ConfigWebsiteSeeder;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
@@ -209,6 +211,9 @@ Route::middleware(['Admin'])->group(function () {
 
     });
 
+    Route::prefix('config_website')->group(function(){
+        Route::post('/{id}',[ConfigWebsiteController::class, 'edit']);
+    });
 
 
     Route::prefix('dashboard')->group(function () {
@@ -224,6 +229,9 @@ Route::middleware(['Admin'])->group(function () {
         
         # Lấy danh sách trễ hạn, mặc định là qua 0h00 ngày 1 hằng tháng
         Route::get('/tre_han', [DashBoardController::class, 'trehan']);
+
+        # Lấy danh sách hợp đồng 
+        Route::get('/hop_dong', [DashBoardController::class, 'hop_dong']);
         
     
     });

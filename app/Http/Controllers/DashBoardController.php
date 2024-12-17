@@ -136,4 +136,28 @@ class DashBoardController extends Controller
         'hoa_don_tre_han' => $data,
     ], 200);
     }
+    public function hop_dong()
+{
+    $today = now();
+    $saphethan = $today->copy()->addDays(10);
+
+    // Đếm số hợp đồng đang thuê
+    $dang_thue = HopDong::where('ngay_ket_thuc', '>=', $today)->count();
+
+    // Đếm số hợp đồng hết hạn
+    $het_han = HopDong::where('ngay_ket_thuc', '<', $today)->count();
+
+    // Đếm số hợp đồng sắp hết hạn (trong vòng 10 ngày)
+    $sap_het_han = HopDong::where('ngay_ket_thuc', '>=', $today)
+        ->where('ngay_ket_thuc', '<=', $saphethan)
+        ->count();
+
+    // Trả về kết quả JSON
+    return response()->json([
+        'dang_thue' => $dang_thue,
+        'het_han' => $het_han,
+        'sap_het_han' => $sap_het_han
+    ], 200);
+}
+
 }
