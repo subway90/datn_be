@@ -239,6 +239,9 @@ Route::middleware(['Admin'])->group(function () {
 
         # Lấy danh sách thống kê theo quận
         Route::get('/distric', [DashBoardController::class, 'distric']);
+
+        # Thống kê hóa đơn theo quận và theo tháng 
+        Route::get('/hoa_don/{year}', [DashBoardController::class, 'thongkehoadon']);
         
     
     });
