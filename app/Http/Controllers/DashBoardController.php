@@ -160,4 +160,13 @@ class DashBoardController extends Controller
     ], 200);
 }
 
+    public function total_contact() {
+        $da_xu_ly = LienHeDatPhong::where('trang_thai',1)->count();
+        $chua_xu_ly = LienHeDatPhong::where('trang_thai',0)->count();
+        return response()->json([
+            'da_xu_ly' => $da_xu_ly,
+            'chua_xu_ly' => $chua_xu_ly,
+        ], 200);
+    }
+
 }
