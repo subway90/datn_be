@@ -6,7 +6,6 @@ use App\Http\Controllers\ConfigWebsiteController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\HoaDonController;
 use App\Http\Controllers\TienIchToaNhaController;
-use Database\Seeders\ConfigWebsiteSeeder;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
@@ -69,15 +68,17 @@ Route::post('login', [AuthController::class, 'login']);
 
 # Quên mật khẩu : check
 Route::post('forgot/check', [ResetPasswordController::class, 'check']);
+
 # Quên mật khẩu : reset
 Route::post('forgot/reset', [ResetPasswordController::class, 'reset']);
+
 Route::post('google/loginWithGoogle', [GoogleController::class, 'loginWithGoogle']);
+
 # Những API cần đăng nhập
 Route::middleware(['CusTom'])->group(function () {
 
     # Tạo thanh toán VNPAY
     Route::get('pay/{token}', [ThanhToanController::class, 'pay']);
-
 
     # Danh sách liên hệ thông qua token của người đó
     Route::get('contact_room/list', [LienHeDatPhongController::class, 'contactList']);
@@ -98,8 +99,10 @@ Route::middleware(['CusTom'])->group(function () {
     Route::put('updateProfile', [AuthController::class, 'updateProfile']);
 
     Route::prefix('hop-dong')->group(function () {
+
         # Hiển thị thông tin hợp đồng của người dùng
         Route::get('/show', [HopDongController::class, 'show']);
+
     });
 
     # Bình luận tin tức
@@ -108,15 +111,18 @@ Route::middleware(['CusTom'])->group(function () {
     # Cập nhật bình luận
     Route::put('blog/update_comment', [BinhLuanTinTucController::class, 'updateComment']);
 
-    #
+    # Cập nhật avatar
     Route::post('updateAvatar', [AuthController::class, 'updateAvatar']);
 
     # Thay đổi mật khẩu
     Route::post('change_password', [AuthController::class, 'changePassword']);
 
-    #
     Route::prefix('yeu-thich')->group(function () {
+
+        # Lấy danh sách
         Route::get('get', [YeuThichController::class, 'index']);
+
+        # Cập nhật thêm/xóa
         Route::post('add', [YeuThichController::class, 'create']);
     });
 
@@ -212,7 +218,11 @@ Route::middleware(['Admin'])->group(function () {
     });
 
     Route::prefix('config_website')->group(function(){
+
+        # Chỉnh sửa
         Route::post('/{id}',[ConfigWebsiteController::class, 'edit']);
+
+        # Lấy thông tin
         Route::get('/getall', [ConfigWebsiteController::class, 'getall']);
     });
 
@@ -296,8 +306,6 @@ Route::middleware(['Admin'])->group(function () {
         # Nhân bản theo ID
         Route::get('duplicate/{id}', [AuthController::class, 'duplicateUser']);
 
-        // # Cấm tài khoản
-        // Route::delete('banUser/{id}', [AuthController::class, 'banUser']);
     });
 
 
